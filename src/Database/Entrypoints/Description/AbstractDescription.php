@@ -47,7 +47,7 @@ abstract class AbstractDescription {
     private $__entitiesActions = [];
     /**
      * @var array List of returned data values.
-     * Please note that a "data value" is a value that is calculated and returned by the SGBDR.
+     * Please note that a "data value" is a value that is calculated and returned by the database server.
      * A "data value" is not a field's value.
      * SQL requests and procedures may return "data values".
      */
