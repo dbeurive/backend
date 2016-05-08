@@ -1,5 +1,5 @@
 {
-  "version": "0.0.7",
+  "version": "0.0.1",
   "name": "dbeurive/backend",
   "description": "This package contains the database interface",
   "license": "MIT",
@@ -24,8 +24,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "dbeurive\\Backend\\": "src",
-      "dbeurive\\BackendTest\\": "tests"
+      "dbeurive\\Backend\\": "src"
     }
   },
   "bin": ["src/Cli/Bin/backend"]
