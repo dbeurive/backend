@@ -33,7 +33,7 @@ class Option {
      */
     const PROC_REPO_PATH = 'procedure-repository-path';
     /**
-     * This constant defines the name of the configuration parameter that represents the RDBMS handler.
+     * This constant defines the name of the configuration parameter that represents an instanciated database link.
      */
-    const DB_LINK = 'rdbms-handler';
+    const DB_LINK = 'db-link';
 }

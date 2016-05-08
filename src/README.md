@@ -6,6 +6,14 @@ The database is accessed through PHP procedures. You can think about traditional
 
 Therefore, instead of being embedded within the database, the access layer is implemented within the database's client. This design has a major drawback: data management is slower. However, PHP implementation on the database's access layer is much easier to implement an maintain.
 
+
+
+
+
+
+
+
+
 # Environment configuration
 
 The database's access layer is a collection of (PHP) procedures that access the database through SQL requests.

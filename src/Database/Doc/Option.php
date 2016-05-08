@@ -21,7 +21,7 @@ class Option {
      */
     const DOC_DB_REPO_PATH = 'doc-db-repository-path';
     /**
-     * This constant defines the name of the parameter used to specify the base name of the file used to store the generated documentation.
+     * This constant defines the name of the parameter used to specify the base name of the files used to store the generated documentation.
      * In practice, there are two files: a ".sqlite" file and a ".json" file.
      */
     const DOC_DB_FILE_BASENAME = 'doc-db-basename';

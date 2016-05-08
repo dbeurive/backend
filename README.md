@@ -39,7 +39,7 @@ Sure, that would be nice !
 
 You could instantly find where, in your code, a specific action on some data is done.
 
-If you modify your database's schema, you could find out very quickly, and very accurately, the impacts on the code. 
+If you modify your database's schema, you could evaluate very quickly, and very accurately, the impacts on the code. 
 
 If you are new to the application, having a very flexible documentary referential should be a great help.  
 
@@ -48,13 +48,13 @@ If you are new to the application, having a very flexible documentary referentia
 In order to make your first wish come true, you need to build a relational database that organises all the information about SQL requests and procedures.
 Once you've injected all the information about SQL requests and procedures into a relational database, then you can use SQL to express your requests for information. 
 
-In order to make your second wish come true, you need to identify SQL requests and procedures into PHP constructs that can be identified by your IDE.
+In order to make your second wish come true, you need to identify SQL requests and procedures using PHP constructs that can be identified by your IDE.
 [Constants](http://php.net/manual/fr/language.constants.php) or [classes’ constants](http://php.net/manual/fr/language.oop5.constants.php) are perfectly suited for this use.
 
 In practice:
 
 * _Database entry points_ (SQL requests and procedures) are (PHP) classes which fully qualified names and paths follow the [PSR4 specification](http://www.php-fig.org/psr/psr-4/).
-* Classes that implements database entry points implement an interface that is used to extract information about the database entry points. 
+* Classes that implement _database entry points_ implement an interface that is used to extract information about the database entry points. 
   This information will be injected into a documentary relational database.
 * The [fully qualified name](https://en.wikipedia.org/wiki/Fully_qualified_name) (FQN) of the class that implements a _database entry points_ is a [URI](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier).
 * All fully qualified names of the classes that implement _database entry points_ associated to a given database must share a common [namespace](http://php.net/manual/en/language.namespaces.php).
