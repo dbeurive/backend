@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+    <title><![CDATA[Documentation for \dbeurive\Tree]]></title>
+    <parser>
+        <target>data/api</target>
+    </parser>
+    <transformer>
+        <target>doc/api</target>
+    </transformer>
+    <!--
+    <transformations>
+        <template name="responsive" />
+    </transformations>
+    -->
+    <files>
+        <directory>./src</directory>
+        <ignore>./src/Database/Doc/export*</ignore>
+    </files>
+    <logging>
+        <level>warn</level>
+        <paths>
+            <default>./data/log/default.log</default>
+            <errors>./data/log/errors.log</errors>
+            <warnings>./data/log/warnings.log</warnings>
+        </paths>
+    </logging>
+
+</phpdoc>

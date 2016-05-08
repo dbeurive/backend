@@ -1,0 +1,28 @@
+#!/usr/bin/env php
+<?php
+
+$path = ['..', '..', '..', 'vendor', 'autoload.php'];
+
+$autoload = __DIR__ . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $path);
+
+if (! file_exists($autoload)) {
+    $path = ['..', '..', '..', '..', '..', 'autoload.php'];
+    $autoload = __DIR__ . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $path);
+}
+
+require $autoload;
+
+use Symfony\Component\Console\Application;
+use dbeurive\Backend\Cli\CliWriter;
+
+CliWriter::init();
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Create and run the application that will extract options from the command line.
+// Please note that this application only returns the CLI configuration.
+// ---------------------------------------------------------------------------------------------------------------------
+
+$application = new Application();
+$application->setAutoExit(true);
+$application->add(new dbeurive\Backend\Cli\Adapter\Database\DocWriter\MySql());
+$application->run();
