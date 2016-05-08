@@ -8,7 +8,7 @@ This directory contains the *documentation writer* component. This component per
 
 # Configuration
 
-The configuration for this component is the following:
+The configuration for this component an associative array with the following keys: 
 
 | Parameter                 | Description                                                                                   |
 |---------------------------|-----------------------------------------------------------------------------------------------|
