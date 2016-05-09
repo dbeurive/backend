@@ -57,11 +57,12 @@ WHERE      "tag"."tag"="authentication"
 
 ...
 
+# Overview
 
+![Generic overview](https://github.com/dbeurive/backend/blob/master/doc/overview.png)
 
 # Contents
 
-* [Why did I write this database access layer?](https://github.com/dbeurive/backend/blob/master/doc/WHY.md)
 * [Installation notes](https://github.com/dbeurive/backend/blob/master/doc/INSTALL.md)
 * General description of entry points (SQL requests and procedures)
   * [Writing SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/README.md)
