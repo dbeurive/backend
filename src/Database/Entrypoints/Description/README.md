@@ -114,3 +114,64 @@ Note:
 | The type of request ("select", "update", "insert", "delete", "upsert").  |                                                                                            |
 | The SQL request itself.                                                  |                                                                                            |
 
+
+
+
+# Synopsis
+
+## Document an SQL request
+
+Note: this is a fictional example.
+
+```php
+    public function getDescription() {
+
+        $doc = new \dbeurive\Backend\Database\Entrypoints\Description\Sql();
+        $doc->setDescription('This request checks that the authentication data is valid.')
+            ->addTags('authentication')
+            ->addOutputDataValue('authenticated', 'This value indicates whether the user is authenticated or not.')
+            ->addEntityActionsRelationship('user', 'authenticate')
+            ->setType('select')
+            ->setSql('SELECT 1 AS authenticated, `user`.`id`, `user`.`login`, `user`.`password` FROM USER WHERE `user`.`login`=? AND `user`.`password`=?')
+            ->addTable('user')
+            ->setSelectedFields(['user.*']) // <=> ->setSelectedFields($this->_getTableFieldsNames('user', self::FIELDS_FULLY_QUALIFIED_AS_ARRAY, false))
+            ->setConditionFields(['user.login', 'user.password']);
+
+        return $doc;
+    }
+```
+
+See [examples](https://github.com/dbeurive/backend/tree/master/tests/EntryPoints/Brands/MySql/Sqls/User).
+
+Please note that you should use constants to define elements of documentation (tags, entities' names...).
+By using constants:
+
+* You ensure that you don't make any typo.
+* You can rely on your IDE's search capacity.
+
+## Document procedure
+
+```php
+    public function getDescription() {
+    
+        $doc = new Description\Procedure();
+        $doc->setDescription("This procedure is used to authenticate a user based on a provided set of login and password.")
+            ->setRequests(['User/Authenticate'])
+            ->addTags('authentication')
+            ->setMandatoryInputFields([['user.login'], ['user.password']])
+            ->addOutputField('user.*')
+            ->addOutputDataValue('authenticated', 'This flag indicates whether the user has been successfully authenticated or not. TRUE: authentication succeed, FALSE: authentication failed.')
+            ->addEntityActionsRelationship('user', 'authenticate');
+
+        return $doc;
+    }
+```
+
+See [examples](https://github.com/dbeurive/backend/tree/master/tests/EntryPoints/Brands/MySql/Procedures/User).
+
+Please note that you should use constants to define elements of documentation (tags, entities' names...).
+By using constants:
+
+* You ensure that you don't make any typo.
+* You can rely on your IDE's search capacity.
+
