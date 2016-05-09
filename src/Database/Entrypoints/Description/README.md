@@ -149,7 +149,7 @@ By using constants:
 * You ensure that you don't make any typo.
 * You can rely on your IDE's search capacity.
 
-## Document procedure
+## Document a procedure
 
 ```php
     public function getDescription() {

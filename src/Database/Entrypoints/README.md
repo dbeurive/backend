@@ -20,6 +20,8 @@ You can think about traditional databases' stored procedures that act as an acce
 
 # Synopsis
 
+> Since all the PHP code is documented using PhpDoc annotations, you should be able to exploit the auto completion feature from your favourite IDE.
+> If you are using Eclipse, NetBeans or PhPStorm, using this API should be pretty intuitive.
 
 
 
