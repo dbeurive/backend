@@ -9,7 +9,7 @@ This project is an attempt to make using SQL an even more pragmatic approach by 
 What does this is all about ?
 
 This is all about documentation. Please read: [why did I write this database access layer?](https://github.com/dbeurive/backend/blob/master/doc/WHY.md)
-If you access you database through this API, then you can get a SQLite database than organises all information about your SQL requests and your procedures.
+If you access you database through this API, then you can get a SQLite database that organises all information about your SQL requests and your procedures.
 
 * Click [here](https://github.com/dbeurive/backend/blob/master/src/Database/Doc/schema.php) to get the schema for the generated SQLite database.
 * You can download an example of generated database [here](https://github.com/dbeurive/backend/blob/master/tests/cache/mysql_db_schema.sqlite).
