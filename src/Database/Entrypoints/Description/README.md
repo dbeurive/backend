@@ -12,7 +12,7 @@ The description for an API's entry point is composed of:
 
 
 
-# <a name="vocabulary"></a>Vocabulary
+# Vocabulary
 
 **Data value** (for SQL requests and procedures)
 
@@ -43,7 +43,7 @@ The description for an API's entry point is composed of:
 *  The name of the API's entry point.
 *  A textual description.
 *  A list of tags.
-*  A list of (output) [data values](#vocabulary).
+*  A list of (output) [data values](#Vocabulary).
 *  A list of entity-action relationships.
 
 See class [\dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/Description/AbstractDescription.php).
@@ -60,7 +60,7 @@ See class [\dbeurive\Backend\Database\Entrypoints\Description\AbstractDescriptio
 * The list of inserted fields.
 * The list of "upserted" fields.
 * The list of fields used to organise the request's result (`ORDER BY id`, for example).
-* The list of [parameters' values](#vocabulary).
+* The list of [parameters' values](#Vocabulary).
 * The type of request ("select", "update", "insert", "delete", "upsert").
 * The SQL request itself. Please note that you are free to choose your own formalism. Plain text should be enough.
   But in rare occasions, you may want to use another formalism. 
@@ -78,7 +78,7 @@ See class [\dbeurive\Backend\Database\Entrypoints\Sql.php\Description](https://g
 * The list of mandatory parameters.
 * The list of optional parameters.
 * The list of output fields.
-* The list of [output values](#vocabulary).
+* The list of [output values](#Vocabulary).
 * A flag that indicates whether the result of the procedure is an array of rows or not.
   
 Note: 
@@ -101,7 +101,7 @@ Note:
 | The name of the entry point.                                             | The name of the entry point.                                                               |
 | A textual description.                                                   | A textual description.                                                                     |
 | A list of tags.                                                          | A list of tags.                                                                            |
-| A list of (output) [data values](#vocabulary).                           | A list of (output) [data values](#vocabulary).                                             |
+| A list of (output) [data values](#Vocabulary).                           | A list of (output) [data values](#Vocabulary).                                             |
 | A list of entity-action relationships.                                   | A list of entity-action relationships.                                                     |
 | The list of tables used by the request.                                  | The list of SQL requests used by the procedure.                                            |
 | The list of selected fields.                                             | The list of mandatory fields.                                                              |
@@ -109,8 +109,8 @@ Note:
 | The list of fields that are used within _conditions_.                    | The list of mandatory parameters.                                                          |
 | The list of inserted fields.                                             | The list of optional parameters.                                                           |
 | The list of "upserted" fields.                                           | The list of output fields.                                                                 |
-| The list of fields used to organise the request's result.                | The list of [output values](#vocabulary).                                                  |
-| The list of [parameters' values](#vocabulary).                           | A flag that indicates whether the result of the procedure is an array of rows or not.      |
+| The list of fields used to organise the request's result.                | The list of [output values](#Vocabulary).                                                  |
+| The list of [parameters' values](#Vocabulary).                           | A flag that indicates whether the result of the procedure is an array of rows or not.      |
 | The type of request ("select", "update", "insert", "delete", "upsert").  |                                                                                            |
 | The SQL request itself.                                                  |                                                                                            |
 
