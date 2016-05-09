@@ -16,21 +16,21 @@ The description for an API's entry point is composed of:
 
 **Data value** (for SQL requests and procedures)
 
-A data value is a value that is calculated and returned by the database server (and NOT by the PHP code).
-A data value is NOT a field's value.
-
-Example: `SELECT count(id) AS number FROM user`. `number` is a data value.     
+> A data value is a value that is calculated and returned by the database server (and NOT by the PHP code).
+> A data value is NOT a field's value.
+> 
+> Example: `SELECT count(id) AS number FROM user`. `number` is a data value.     
  
 **Parameter value** (for SQL requests only)
 
-A value used to parameter an SQL request.
-
-Example: `SELECT * FROM user LIMIT 10`. 10 is a parameter value.
+> A value used to parameter an SQL request.
+> 
+> Example: `SELECT * FROM user LIMIT 10`. 10 is a parameter value.
 
 **Output value** (for procedures only)
 
-A value that has been calculated by the PHP code within a procedure.
-An "output value" is not returned by the SGBDR. Values returned by the SGBDR are called "data values".
+> A value that has been calculated by the PHP code within a procedure.
+> An "output value" is not returned by the SGBDR. Values returned by the SGBDR are called "data values".
 
 
 
@@ -93,17 +93,16 @@ Note:
 
 
 
+
 ## Summary
 
 | SQL requests                                                             | Procedures                                                                                 |
 |--------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
-|                                                                       Common                                                                                          |
 | The name of the entry point.                                             | The name of the entry point.                                                               |
 | A textual description.                                                   | A textual description.                                                                     |
 | A list of tags.                                                          | A list of tags.                                                                            |
 | A list of (output) [data values](#vocabulary).                           | A list of (output) [data values](#vocabulary).                                             |
 | A list of entity-action relationships.                                   | A list of entity-action relationships.                                                     |
-|                                                                       Specific                                                                                        |
 | The list of tables used by the request.                                  | The list of SQL requests used by the procedure.                                            |
 | The list of selected fields.                                             | The list of mandatory fields.                                                              |
 | The list of updated fields.                                              | The list of optional fields.                                                               |
