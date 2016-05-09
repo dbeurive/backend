@@ -12,7 +12,7 @@ This is all about documentation. Please read: [why did I write this database acc
 If you access you database through this API, then you can get a SQLite database that organises all information about your SQL requests and your procedures.
 
 * Click [here](https://github.com/dbeurive/backend/blob/master/src/Database/Doc/schema.php) to get the schema for the generated SQLite database.
-* You can download an example of generated database [here](https://github.com/dbeurive/backend/blob/master/tests/cache/mysql_db_schema.sqlite).
+* You can download an example of the generated database [here](https://github.com/dbeurive/backend/blob/master/tests/cache/mysql_db_schema.sqlite).
 
 ```sqlite
 $ sqlite3 mysql_db_schema.sqlite
