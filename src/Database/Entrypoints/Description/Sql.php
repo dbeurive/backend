@@ -16,14 +16,30 @@ namespace dbeurive\Backend\Database\Entrypoints\Description;
 
 class Sql extends \dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription
 {
-
-    const TYPE_SELECT     = 'select';
-    const TYPE_UPDATE     = 'update';
-    const TYPE_DELETE     = 'delete';
-    const TYPE_INSERT     = 'insert';
-    const TYPE_UPSERT     = 'upsert';
     const KEY_NAME        = 'name';
     const KEY_DESCRIPTION = 'description';
+
+    /**
+     * This request performs a selection.
+     */
+    const TYPE_SELECT = 'select';
+    /**
+     * This request updates records.
+     */
+    const TYPE_UPDATE = 'update';
+    /**
+     * his request deletes records.
+     */
+    const TYPE_DELETE = 'delete';
+    /**
+     * This request inserts reqords.
+     */
+    const TYPE_INSERT = 'insert';
+    /**
+     * This request updates a record, or inserts a new record, depending on the context.
+     */
+    const TYPE_UPSERT = 'upsert';
+
 
     /**
      * @var array List of tables used by this request.
@@ -57,9 +73,11 @@ class Sql extends \dbeurive\Backend\Database\Entrypoints\Description\AbstractDes
      * @var array List of values used to configure the request (ex: LIMIT...).
      */
     private $__parameterValues = [];
-
     /**
-     * @var string|array One, or several, SQL requests.
+     * @var string|array The QL request.
+     *      Please note that you are free to choose your own formalism. Plain text should be enough.
+     *      But in rare occasions, you may want to use another formalism. In this case, you should give an array.
+     *      The content of the array does not matter (you can put anything you want inside), as long as you provide a software component to interpret its content.
      */
     private $__sql = null;
     /**
@@ -67,11 +85,13 @@ class Sql extends \dbeurive\Backend\Database\Entrypoints\Description\AbstractDes
      *      It can be: \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_SELECT,
      *                 \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_UPDATE,
      *                 \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_DELETE,
-     *                 \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_INSERT.
+     *                 \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_INSERT,
+     *                 \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_UPSERT
      * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_SELECT
      * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_UPDATE
      * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_DELETE
      * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_INSERT
+     * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_UPSERT
      */
     private $__type = null;
 
@@ -204,6 +224,9 @@ class Sql extends \dbeurive\Backend\Database\Entrypoints\Description\AbstractDes
     /**
      * Set the SQL request(s) for this request.
      * @param string|array $inSql SQL request(s) used by this request.
+     *        Please note that you are free to choose your own formalism. Plain text should be enough.
+     *        But in rare occasions, you may want to use another formalism. In this case, you should give an array.
+     *        The content of the array does not matter (you can put anything you want inside), as long as you provide a software component to interpret its content.
      * @return $this
      */
     public function setSql($inSql) {
