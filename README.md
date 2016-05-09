@@ -64,8 +64,8 @@ WHERE      "tag"."tag"="authentication"
 * [Why did I write this database access layer?](https://github.com/dbeurive/backend/blob/master/doc/WHY.md)
 * [Installation notes](https://github.com/dbeurive/backend/blob/master/doc/INSTALL.md)
 * General description of entry points (SQL requests and procedures)
-  * [First overview](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/README.md)
-  * [Second overview](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/Application/README.md)
+  * [Writing SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/README.md)
+  * [Using SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/Application/README.md)
 * Writing entry points
   * [Procedures](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/Application/Procedure/README.md)
   * [SQL requests](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/Application/Sql/README.md)
@@ -73,7 +73,7 @@ WHERE      "tag"."tag"="authentication"
 * [The database link](https://github.com/dbeurive/backend/blob/master/src/Database/Link/README.md)
 * [The database interface](https://github.com/dbeurive/backend/blob/master/src/Database/README.md)
 * [Extension for PHP Unit](https://github.com/dbeurive/backend/tree/master/src/Phpunit)
-* [Generating the database's access layer documentation](https://github.com/dbeurive/backend/blob/master/src/Cli/Bin/README.md)
+* [Generating the database's access layer documentation](https://github.com/dbeurive/backend/blob/master/src/Cli/Bin/README.md) - that is: the SQLite database.
 
 # Additional notes
 
