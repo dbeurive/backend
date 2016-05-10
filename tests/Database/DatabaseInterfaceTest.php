@@ -12,8 +12,9 @@ class DatabaseInterfaceTest extends \PHPUnit_Framework_TestCase
     use \dbeurive\BackendTest\SetUp;
 
     public function setUp() {
-        // print "\nExecuting " . __METHOD__ . "\n";
-        $this->__createMysqlDatabase();
+        $this->__init();
+        $this->__createMySqlPdo();
+        $this->__createMySqlDatabase();
         $this->__createDatabaseInterface();
         // No link to the database is created.
     }
@@ -24,7 +25,7 @@ class DatabaseInterfaceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDbLinkOnError() {
         $this->expectException(\Exception::class);
-        $this->__di->getDbLink(); // The link has not been set.
+        $this->__di->getDbConnector(); // The link has not been set.
     }
 
     public function testGetEntryPointProvider() {
@@ -38,11 +39,11 @@ class DatabaseInterfaceTest extends \PHPUnit_Framework_TestCase
 
     public function testSetPhpDatabaseRepresentationPath() {
         // We will specify a path to a file that does not exist.
-        $referencePath = $this->__generalConfiguration['application'][DocOption::PHP_DB_DESC_PATH] . '__';
+        $referencePath = $this->__generalConfiguration['application'][DocOption::SCHEMA_PATH] . '__';
         $this->assertFalse($this->__di->setPhpDatabaseRepresentationPath($referencePath));
 
         // We will specify a path to a file that does exist.
-        $referencePath = $this->__generalConfiguration['application'][DocOption::PHP_DB_DESC_PATH];
+        $referencePath = $this->__generalConfiguration['application'][DocOption::SCHEMA_PATH];
         $this->assertTrue($this->__di->setPhpDatabaseRepresentationPath($referencePath));
     }
 
@@ -57,12 +58,12 @@ class DatabaseInterfaceTest extends \PHPUnit_Framework_TestCase
     public function testGetTableFieldsNames() {
 
         // Load the schema of the database.
-        $reference = require $this->__generalConfiguration['application'][DocOption::PHP_DB_DESC_PATH];
+        $reference = require $this->__generalConfiguration['application'][DocOption::SCHEMA_PATH];
         $reference = $reference['user'];
 
         // Create a link to the database, but do not establish the connexion.
-        $this->__createLink('mysql');
-        $this->__di->setDbLink($this->__link);
+        $this->__createConnector('mysql');
+        $this->__di->setDbConnector($this->__connector);
 
         $fields = $this->__di->getTableFieldsNames('user', DatabaseInterface::FIELDS_RAW_AS_ARRAY, false);
         $this->assertCount(0, array_diff($reference, $fields));

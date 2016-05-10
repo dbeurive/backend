@@ -13,18 +13,16 @@
 namespace dbeurive\Backend\Database\Doc;
 
 
+use dbeurive\Backend\Database\DatabaseInterface;
 use dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription;
-use dbeurive\Backend\Database\Link\AbstractLink;
-use dbeurive\Backend\Database\Link\Option as LinkOption;
+use dbeurive\Backend\Database\Connector\Option as ConnectorOption;
 use dbeurive\Backend\Database\Entrypoints\Description\Element\Field;
 use dbeurive\Backend\Database\Entrypoints\Description\Element\Table;
 use dbeurive\Backend\Database\Entrypoints\Option as EntryPointOption;
 use dbeurive\Backend\Database\Doc\Option as DocOption;
 use dbeurive\Backend\Database\Entrypoints\Description\Procedure as ProcedureDescription;
 use dbeurive\Backend\Database\Entrypoints\Description\Sql as SqlDescription;
-use dbeurive\Util\UtilData;
 use dbeurive\Backend\Database\Entrypoints\Description\Element\Tag as Tag;
-use dbeurive\Backend\Database\DatabaseInterface;
 use dbeurive\Backend\Cli\Lib\CliWriter;
 use dbeurive\Input\SpecificationsSet;
 use dbeurive\Input\Specification;
@@ -45,15 +43,12 @@ class Writer {
      */
     static public function checkConfiguration(array $inConfiguration) {
         $set = new SpecificationsSet();
-        $set->addInputSpecification(new Specification(DocOption::DOC_DB_REPO_PATH))
-            ->addInputSpecification(new Specification(DocOption::DOC_DB_FILE_BASENAME))
-            ->addInputSpecification(new Specification(DocOption::PHP_DB_DESC_PATH))
+        $set->addInputSpecification(new Specification(DocOption::DOC_PATH))
+            ->addInputSpecification(new Specification(DocOption::SCHEMA_PATH))
             ->addInputSpecification(new Specification(EntryPointOption::PROC_BASE_NS))
             ->addInputSpecification(new Specification(EntryPointOption::SQL_BASE_NS))
             ->addInputSpecification(new Specification(EntryPointOption::PROC_REPO_PATH))
-            ->addInputSpecification(new Specification(EntryPointOption::SQL_REPO_PATH))
-            ->addInputSpecification(new Specification(LinkOption::LINK_NAME))
-            ->addInputSpecification(new Specification(LinkOption::LINK_CONFIG));
+            ->addInputSpecification(new Specification(EntryPointOption::SQL_REPO_PATH));
 
         if ($set->check($inConfiguration)) {
             return [];
@@ -64,7 +59,7 @@ class Writer {
 
     /**
      * Given the raw representation of the database, this method returns the corresponding "high-level" representation.
-     * @param array $inRawSchema Schema of the database, as returned by the method `\dbeurive\Backend\Database\Link\AbstractLink::getDatabaseSchema()`.
+     * @param array $inRawSchema Schema of the database, as returned by the method `\dbeurive\Backend\Database\Connector\AbstractConnector::getDatabaseSchema()`.
      *              This is an associative array:
      *              array(   <table name> => array(<field name>, <field name>...),
      *                       <table name> => array(<field name>, <field name>...),
@@ -97,20 +92,29 @@ class Writer {
 
     /**
      * Create a SQLite database that contains the information extracted from all the API's entry points.
+     *
      * @param array $inConfiguration Configuration.
      *        This array must contain the following entries;
-     *           * \dbeurive\Backend\Database\Doc\Option::DOC_DB_REPO_PATH
-     *           * \dbeurive\Backend\Database\Doc\Option::DOC_DB_FILE_BASENAME
-     *           * \dbeurive\Backend\Database\Doc\Option::PHP_DB_DESC_PATH
+     *           * \dbeurive\Backend\Database\Doc\Option::DOC_PATH
+     *           * \dbeurive\Backend\Database\Doc\Option::SCHEMA_PATH
      *           * \dbeurive\Backend\Database\Entrypoints\Option::SQL_BASE_NS
      *           * \dbeurive\Backend\Database\Entrypoints\Option::PROC_BASE_NS
      *           * \dbeurive\Backend\Database\Entrypoints\Option::SQL_REPO_PATH
      *           * \dbeurive\Backend\Database\Entrypoints\Option::PROC_REPO_PATH
-     *           * \dbeurive\Backend\Database\Link\Option::LINK_NAME
-     *           * \dbeurive\Backend\Database\Link\Option::LINK_CONFIG
+     *           * \dbeurive\Backend\Database\Connector\Option::CONNECTOR_NAME
+     *
      * @return bool Upon successful completion the method returns the value true.
      *         Otherwise an exception is thrown.
+     *
      * @throws \Exception
+     *
+     * @see \dbeurive\Backend\Database\Doc\Option::DOC_PATH
+     * @see \dbeurive\Backend\Database\Doc\Option::SCHEMA_PATH
+     * @see \dbeurive\Backend\Database\Entrypoints\Option::SQL_BASE_NS
+     * @see \dbeurive\Backend\Database\Entrypoints\Option::PROC_BASE_NS
+     * @see \dbeurive\Backend\Database\Entrypoints\Option::SQL_REPO_PATH
+     * @see \dbeurive\Backend\Database\Entrypoints\Option::PROC_REPO_PATH
+     * @see \dbeurive\Backend\Database\Connector\Option::CONNECTOR_NAME
      */
     static public function writer(array $inConfiguration)
     {
@@ -120,38 +124,27 @@ class Writer {
         // Extract data from the configuration.
         // -------------------------------------------------------------------------------------------------------------
 
-        $docRepositoryDir        = $inConfiguration[DocOption::DOC_DB_REPO_PATH];
-        $docRepositoryName       = $inConfiguration[DocOption::DOC_DB_FILE_BASENAME];
-        $phpDbDescription        = $inConfiguration[DocOption::PHP_DB_DESC_PATH];
+        $sqlitePath              = $inConfiguration[DocOption::DOC_PATH];
+        $phpDbDescription        = $inConfiguration[DocOption::SCHEMA_PATH];
         $sqlBaseNamespace        = $inConfiguration[EntryPointOption::SQL_BASE_NS];
         $procedureBaseNamespace  = $inConfiguration[EntryPointOption::PROC_BASE_NS];
         $sqlRepositoryPath       = $inConfiguration[EntryPointOption::SQL_REPO_PATH];
         $procedureRepositoryPath = $inConfiguration[EntryPointOption::PROC_REPO_PATH];
-        $linkClassName           = $inConfiguration[LinkOption::LINK_NAME];
-        $linkConfig              = $inConfiguration[LinkOption::LINK_CONFIG];
+        $connectorClassName      = $inConfiguration[ConnectorOption::CONNECTOR_NAME];
 
-        $docBaseName = $docRepositoryDir . DIRECTORY_SEPARATOR . $docRepositoryName;
         $sqliteSchemaPath = __DIR__ . DIRECTORY_SEPARATOR . 'schema.php';
 
         // -------------------------------------------------------------------------------------------------------------
-        // Initialize the database adaptor and execute it in order to get the database' schema.
+        // Load the database schema
         // -------------------------------------------------------------------------------------------------------------
 
-        /** @var AbstractLink $link */
-        $link = new $linkClassName();
-        $link->setConfiguration($linkConfig);
-        $link->connect();
-        $dataInterface = DatabaseInterface::getInstance();
-        $dataInterface->setDbLink($link);
-
-        CliWriter::echoInfo("Extracting data from the __REAL__ database.");
-        CliWriter::echoInfo('   Get the list of all tables and fields in the database.');
+        if (! file_exists($phpDbDescription)) {
+            CliWriter::echoError("Database schema ${$phpDbDescription} not found!");
+            exit(1);
+        }
 
         /* @var array $rawDatabaseSchema */
-        $rawDatabaseSchema = $link->getDatabaseSchema();
-        if (false === $rawDatabaseSchema) {
-            throw new \Exception("Error while extracting the schema of the database! " . $link->getErrorMessage());
-        }
+        $rawDatabaseSchema = require $phpDbDescription;
 
         /* @var array $databaseSchema */
         $databaseSchema = self::__buildDatabaseSchema($rawDatabaseSchema);
@@ -165,12 +158,14 @@ class Writer {
         // Configure the database service's provider, then execute it.
         // -------------------------------------------------------------------------------------------------------------
 
+        $dataInterface = DatabaseInterface::getInstance('default');
+
         $dataInterface->setSqlRepositoryBasePath($sqlRepositoryPath);
         $dataInterface->setProcedureRepositoryBasePath($procedureRepositoryPath);
         $dataInterface->setSqlBaseNameSpace($sqlBaseNamespace);
         $dataInterface->setProcedureBaseNameSpace($procedureBaseNamespace);
         $dataInterface->setPhpDatabaseRepresentationPath($phpDbDescription);
-        $dataInterface->setDatabaseSchema($rawDatabaseSchema);
+        $dataInterface->setDbConnectorClassName($connectorClassName);
 
         CliWriter::echoInfo("Extracting data from PHP codes (SQL requests and procedures).");
 
@@ -198,36 +193,10 @@ class Writer {
         // Delete the SQLite database.
         // -------------------------------------------------------------------------------------------------------------
 
-        $dbSqlite = "${docBaseName}.sqlite";
-        CliWriter::echoInfo("   Delete the SQLite database \"${dbSqlite}\".");
-        if (file_exists($dbSqlite)) {
-            if (!unlink($dbSqlite)) {
-                CliWriter::echoError("Can not delete file ${dbSqlite}.");
-                exit(1);
-            }
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        // Delete the JSON database.
-        // -------------------------------------------------------------------------------------------------------------
-
-        $dbJson = "${docBaseName}.json";
-        CliWriter::echoInfo("   Delete the JSON file \"${dbJson}\" representation.");
-        if (file_exists($dbJson)) {
-            if (!unlink($dbJson)) {
-                CliWriter::echoError("Can not delete file ${dbJson}.");
-                exit(1);
-            }
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        // Delete the PHP file that represents the database' schema.
-        // -------------------------------------------------------------------------------------------------------------
-
-        CliWriter::echoInfo("   Delete the PHP file \"${phpDbDescription}\" the represents the database' schema.");
-        if (file_exists($phpDbDescription)) {
-            if (!unlink($phpDbDescription)) {
-                CliWriter::echoError("Can not delete file ${phpDbDescription}.");
+        CliWriter::echoInfo("   Delete the SQLite database \"${sqlitePath}\".");
+        if (file_exists($sqlitePath)) {
+            if (!unlink($sqlitePath)) {
+                CliWriter::echoError("Can not delete file ${sqlitePath}.");
                 exit(1);
             }
         }
@@ -237,13 +206,13 @@ class Writer {
         // -------------------------------------------------------------------------------------------------------------
 
         $pdo = null;
-        CliWriter::echoInfo("   Open the SQLite database \"${dbSqlite}\"");
+        CliWriter::echoInfo("   Open the SQLite database \"${sqlitePath}\"");
         try {
-            $pdo = new \PDO("sqlite:${dbSqlite}");
+            $pdo = new \PDO("sqlite:${sqlitePath}");
             $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
             $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION); // ERRMODE_WARNING | ERRMODE_EXCEPTION | ERRMODE_SILENT
         } catch (\Exception $e) {
-            CliWriter::echoError("Can not open the SQLite database \"${dbSqlite}\" : " . $e->getMessage());
+            CliWriter::echoError("Can not open the SQLite database \"${sqlitePath}\" : " . $e->getMessage());
             exit(1);
         }
 
@@ -253,7 +222,7 @@ class Writer {
         // Create the database.
         // -------------------------------------------------------------------------------------------------------------
 
-        CliWriter::echoInfo("   Create the SQLite database \"${dbSqlite}\".");
+        CliWriter::echoInfo("   Create the SQLite database \"${sqlitePath}\".");
         $schema = require $sqliteSchemaPath;
         foreach ($schema as $_sql) {
             if (false === $pdo->query($_sql)) {
@@ -274,7 +243,7 @@ class Writer {
             $sql = "INSERT INTO 'table' (name) VALUES (:name)";
             $req = $pdo->prepare($sql);
             if (false === $req->execute(['name' => $_table->getName()])) {
-                CliWriter::echoError("Can not insert table's name \"${_table}\" into SQLite database \"${dbSqlite}\".");
+                CliWriter::echoError("Can not insert table's name \"${_table}\" into SQLite database \"${sqlitePath}\".");
                 exit(1);
             }
             $_table->setId($pdo->lastInsertId());
@@ -290,7 +259,7 @@ class Writer {
             $sql = "INSERT INTO 'entity' (name) VALUES (:name)";
             $req = $pdo->prepare($sql);
             if (false === $req->execute(['name' => $entity->getName()])) {
-                CliWriter::echoError("Can not insert entity's name \"${_entityName}\" into SQLite database \"${dbSqlite}\".");
+                CliWriter::echoError("Can not insert entity's name \"${_entityName}\" into SQLite database \"${sqlitePath}\".");
                 exit(1);
             }
             $entity->setId($pdo->lastInsertId());
@@ -307,7 +276,7 @@ class Writer {
             $sql = "INSERT INTO 'action' (name) VALUES (:name)";
             $req = $pdo->prepare($sql);
             if (false === $req->execute(['name' => $action->getName()])) {
-                CliWriter::echoError("Can not insert action's name \"${_actionName}\" into SQLite database \"${dbSqlite}\".");
+                CliWriter::echoError("Can not insert action's name \"${_actionName}\" into SQLite database \"${sqlitePath}\".");
                 exit(1);
             }
             $action->setId($pdo->lastInsertId());
@@ -327,7 +296,7 @@ class Writer {
             if (false === $req->execute(['table_id' => $tableId,
                     'name' => $fieldName])
             ) {
-                CliWriter::echoError("Can not insert table's field name \"${fieldName}\" into SQLite database ${dbSqlite}.");
+                CliWriter::echoError("Can not insert table's field name \"${fieldName}\" into SQLite database ${sqlitePath}.");
                 exit(1);
             }
             $_field->setId($pdo->lastInsertId());
@@ -352,7 +321,7 @@ class Writer {
                 $sql = "INSERT INTO tag (tag) VALUES (:tag)";
                 $req = $pdo->prepare($sql);
                 if (false === $req->execute(['tag' => $tag->getName()])) {
-                    CliWriter::echoError("Can not insert SQL request tag \"{$tag->getName()}\" into SQLite database ${dbSqlite}.");
+                    CliWriter::echoError("Can not insert SQL request tag \"{$tag->getName()}\" into SQLite database ${sqlitePath}.");
                     exit(1);
                 }
 
@@ -383,7 +352,7 @@ class Writer {
                     'name' => $_description->getName_(),
                     'type' => $_description->getType_()])
             ) {
-                CliWriter::echoError("Can not insert data into SQLite database \"${dbSqlite}\".");
+                CliWriter::echoError("Can not insert data into SQLite database \"${sqlitePath}\".");
                 exit(1);
             }
 
@@ -404,7 +373,7 @@ class Writer {
                     'name' => $_description->getName_(),
                     'multi' => $_description->isOutputMulti_() ? 1 : 0])
             ) {
-                CliWriter::echoError("Can not insert data into SQLite database \"${dbSqlite}\".");
+                CliWriter::echoError("Can not insert data into SQLite database \"${sqlitePath}\".");
                 exit(1);
             }
 
@@ -434,7 +403,7 @@ class Writer {
                 $sql = "INSERT INTO requestSelectionField (request_id, field_id) VALUES (:request_id, :field_id)";
                 $req = $pdo->prepare($sql);
                 if (false === $req->execute(['request_id' => $_description->getId_(), 'field_id' => $field->getId()])) {
-                    CliWriter::echoError("Can not insert data into SQLite database \"${dbSqlite}\".");
+                    CliWriter::echoError("Can not insert data into SQLite database \"${sqlitePath}\".");
                     exit(1);
                 }
             }
@@ -449,7 +418,7 @@ class Writer {
                 $sql = "INSERT INTO requestUpdateField (request_id, field_id) VALUES (:request_id, :field_id)";
                 $req = $pdo->prepare($sql);
                 if (false === $req->execute(['request_id' => $_description->getId_(), 'field_id' => $field->getId()])) {
-                    CliWriter::echoError("Can not insert data into SQLite database \"${dbSqlite}\".");
+                    CliWriter::echoError("Can not insert data into SQLite database \"${sqlitePath}\".");
                     exit(1);
                 }
             }
@@ -464,7 +433,7 @@ class Writer {
                 $sql = "INSERT INTO requestInsertField (request_id, field_id) VALUES (:request_id, :field_id)";
                 $req = $pdo->prepare($sql);
                 if (false === $req->execute(['request_id' => $_description->getId_(), 'field_id' => $field->getId()])) {
-                    CliWriter::echoError("Can not insert data into SQLite database \"${dbSqlite}\".");
+                    CliWriter::echoError("Can not insert data into SQLite database \"${sqlitePath}\".");
                     exit(1);
                 }
             }
@@ -479,7 +448,7 @@ class Writer {
                 $sql = "INSERT INTO requestUpsertField (request_id, field_id) VALUES (:request_id, :field_id)";
                 $req = $pdo->prepare($sql);
                 if (false === $req->execute(['request_id' => $_description->getId_(), 'field_id' => $field->getId()])) {
-                    CliWriter::echoError("Can not insert data into SQLite database \"${dbSqlite}\".");
+                    CliWriter::echoError("Can not insert data into SQLite database \"${sqlitePath}\".");
                     exit(1);
                 }
             }
@@ -494,7 +463,7 @@ class Writer {
                 $sql = "INSERT INTO requestConditionField (request_id, field_id) VALUES (:request_id, :field_id)";
                 $req = $pdo->prepare($sql);
                 if (false === $req->execute(['request_id' => $_description->getId_(), 'field_id' => $field->getId()])) {
-                    CliWriter::echoError("Can not insert data into SQLite database \"${dbSqlite}\".");
+                    CliWriter::echoError("Can not insert data into SQLite database \"${sqlitePath}\".");
                     exit(1);
                 }
             }
@@ -509,7 +478,7 @@ class Writer {
                 $sql = "INSERT INTO requestPresentationField (request_id, field_id) VALUES (:request_id, :field_id)";
                 $req = $pdo->prepare($sql);
                 if (false === $req->execute(['request_id' => $_description->getId_(), 'field_id' => $field->getId()])) {
-                    CliWriter::echoError("Can not insert data into SQLite database \"${dbSqlite}\".");
+                    CliWriter::echoError("Can not insert data into SQLite database \"${sqlitePath}\".");
                     exit(1);
                 }
             }
@@ -520,7 +489,7 @@ class Writer {
                 $sql = "INSERT INTO requestTag (tag_id, request_id) VALUES (:tag_id, :request_id)";
                 $req = $pdo->prepare($sql);
                 if (false === $req->execute(['tag_id' => $tag->getId(), 'request_id' => $_description->getId_()])) {
-                    CliWriter::echoError("Can not insert data into SQLite database \"${dbSqlite}\".");
+                    CliWriter::echoError("Can not insert data into SQLite database \"${sqlitePath}\".");
                     exit(1);
                 }
             }
@@ -532,7 +501,7 @@ class Writer {
                 $sql = "INSERT INTO requestOutputDataValue (request_id, name, description) VALUES (:request_id, :name, :description)";
                 $req = $pdo->prepare($sql);
                 if (false === $req->execute(['request_id' => $_description->getId_(), 'name' => $name, 'description' => $apiEntryPointDescriptions])) {
-                    CliWriter::echoError("Can not insert data into SQLite database \"${dbSqlite}\".");
+                    CliWriter::echoError("Can not insert data into SQLite database \"${sqlitePath}\".");
                     exit(1);
                 }
             }
@@ -547,7 +516,7 @@ class Writer {
                         'name' => $name,
                         'description' => is_null($description) ? '' : $description])
                 ) {
-                    CliWriter::echoError("Can not insert data into SQLite database \"${dbSqlite}\".");
+                    CliWriter::echoError("Can not insert data into SQLite database \"${sqlitePath}\".");
                     exit(1);
                 }
             }
@@ -570,7 +539,7 @@ class Writer {
                     $sql = "INSERT INTO requestEntityAction (request_id, entity_id, action_id) VALUES (:request_id, :entity_id, :action_id)";
                     $req = $pdo->prepare($sql);
                     if (false === $req->execute(['request_id' => $_description->getId_(), 'entity_id' => $entity->getId(), 'action_id' => $action->getId()])) {
-                        CliWriter::echoError("Can not declare the relation between the SQL request {$_description->getName_()} and the entity {$entity->getName()} for action {$action->getName()} in the SQLite database ${dbSqlite}.");
+                        CliWriter::echoError("Can not declare the relation between the SQL request {$_description->getName_()} and the entity {$entity->getName()} for action {$action->getName()} in the SQLite database ${sqlitePath}.");
                         exit(1);
                     }
                 }
@@ -591,7 +560,7 @@ class Writer {
                 $sql = "INSERT INTO procedureTag (procedure_id, tag_id) VALUES (:procedure_id, :tag_id)";
                 $req = $pdo->prepare($sql);
                 if (false === $req->execute(['tag_id' => $tag->getId(), 'procedure_id' => $_description->getId_()])) {
-                    CliWriter::echoError("Can not insert data into SQLite database \"${dbSqlite}\".");
+                    CliWriter::echoError("Can not insert data into SQLite database \"${sqlitePath}\".");
                     exit(1);
                 }
             }
@@ -609,7 +578,7 @@ class Writer {
                         'procedure_id' => $_description->getId_(),
                         'request_id' => $request->getId_()])
                 ) {
-                    CliWriter::echoError("Can not insert data into SQLite database \"${dbSqlite}\".");
+                    CliWriter::echoError("Can not insert data into SQLite database \"${sqlitePath}\".");
                     exit(1);
                 }
             }
@@ -631,7 +600,7 @@ class Writer {
                 try {
                     $req = $pdo->prepare($sql);
                     if (false === $req->execute($params)) {
-                        CliWriter::echoError("Can not insert data into SQLite database \"${dbSqlite}\".");
+                        CliWriter::echoError("Can not insert data into SQLite database \"${sqlitePath}\".");
                     }
                 } catch (\Exception $e) {
                     echo "\nCould not execute the SQL request: ${sql}. The list of parameters is\n" . print_r($params, true) . "\n" .
@@ -651,7 +620,7 @@ class Writer {
                         'mandatory' => 0,
                         'description' => is_null($apiEntryPointDescriptions) ? '' : $apiEntryPointDescriptions])
                 ) {
-                    CliWriter::echoError("Can not insert data into SQLite database \"${dbSqlite}\".");
+                    CliWriter::echoError("Can not insert data into SQLite database \"${sqlitePath}\".");
                     exit(1);
                 }
             }
@@ -668,7 +637,7 @@ class Writer {
                         'mandatory' => $always ? 2 : 1,
                         'description' => is_null($apiEntryPointDescriptions) ? '' : $apiEntryPointDescriptions])
                 ) {
-                    CliWriter::echoError("Can not insert data into SQLite database \"${dbSqlite}\".");
+                    CliWriter::echoError("Can not insert data into SQLite database \"${sqlitePath}\".");
                     exit(1);
                 }
             }
@@ -684,7 +653,7 @@ class Writer {
                         'mandatory' => 0,
                         'description' => is_null($apiEntryPointDescriptions) ? '' : $apiEntryPointDescriptions])
                 ) {
-                    CliWriter::echoError("Can not insert data into SQLite database \"${dbSqlite}\".");
+                    CliWriter::echoError("Can not insert data into SQLite database \"${sqlitePath}\".");
                     exit(1);
                 }
             }
@@ -700,7 +669,7 @@ class Writer {
                         'field_id' => $field->getId(),
                         'description' => is_null($apiEntryPointDescriptions) ? '' : $apiEntryPointDescriptions])
                 ) {
-                    CliWriter::echoError("Can not insert data into SQLite database \"${dbSqlite}\".");
+                    CliWriter::echoError("Can not insert data into SQLite database \"${sqlitePath}\".");
                     exit(1);
                 }
             }
@@ -715,7 +684,7 @@ class Writer {
                         ProcedureDescription::KEY_NAME => $valueName,
                         ProcedureDescription::KEY_DESCRIPTION => is_null($apiEntryPointDescriptions) ? '' : $apiEntryPointDescriptions])
                 ) {
-                    CliWriter::echoError("Can not insert data into SQLite database \"${dbSqlite}\".");
+                    CliWriter::echoError("Can not insert data into SQLite database \"${sqlitePath}\".");
                     exit(1);
                 }
             }
@@ -730,7 +699,7 @@ class Writer {
                         ProcedureDescription::KEY_NAME => $valueName,
                         ProcedureDescription::KEY_DESCRIPTION => is_null($apiEntryPointDescriptions) ? '' : $apiEntryPointDescriptions])
                 ) {
-                    CliWriter::echoError("Can not insert data into SQLite database \"${dbSqlite}\".");
+                    CliWriter::echoError("Can not insert data into SQLite database \"${sqlitePath}\".");
                     exit(1);
                 }
             }
@@ -753,7 +722,7 @@ class Writer {
                     $sql = "INSERT INTO procedureEntityAction (procedure_id, entity_id, action_id) VALUES (:procedure_id, :entity_id, :action_id)";
                     $req = $pdo->prepare($sql);
                     if (false === $req->execute(['procedure_id' => $_description->getId_(), 'entity_id' => $entity->getId(), 'action_id' => $action->getId()])) {
-                        CliWriter::echoError("Can not declare the relation between the procedure {$_description->getName_()} and the entity {$entity->getName()} for action {$action->getName()} in the SQLite database ${dbSqlite}.");
+                        CliWriter::echoError("Can not declare the relation between the procedure {$_description->getName_()} and the entity {$entity->getName()} for action {$action->getName()} in the SQLite database ${sqlitePath}.");
                         exit(1);
                     }
                 }
@@ -761,30 +730,10 @@ class Writer {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        // Save the PHP/Json representation of the database.
-        // -------------------------------------------------------------------------------------------------------------
-
-        CliWriter::echoInfo("   Create the JSON representation of the database in file \"${dbJson}\".");
-        if (false === file_put_contents($dbJson, json_encode($rawDatabaseSchema))) {
-            CliWriter::echoError("Can not create file \"${dbJson}\".");
-            exit(1);
-        }
-
-        CliWriter::echoInfo("   Create the PHP representation of the database in file \"${phpDbDescription}\".");
-        try {
-            UtilData::to_callable_php_file($rawDatabaseSchema, $phpDbDescription);
-        } catch (\Exception $e) {
-            CliWriter::echoError($e->getMessage());
-            exit(1);
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
         // Save the PHP representation on the authorization' specifications.
         // -------------------------------------------------------------------------------------------------------------
 
-        CliWriter::echoSuccess("Database representation \"${dbSqlite}\" successfully created.");
-        CliWriter::echoSuccess("Database representation \"${dbJson}\" successfully created.");
-        CliWriter::echoSuccess("Database representation \"${phpDbDescription}\" successfully created.");
+        CliWriter::echoSuccess("Database documentation \"${sqlitePath}\" successfully created.");
         return true;
     }
 

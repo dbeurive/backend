@@ -5,7 +5,7 @@
  */
 
 namespace dbeurive\Backend\Database\Entrypoints;
-use dbeurive\Backend\Database\Link\AbstractLink;
+use dbeurive\Backend\Database\Connector\AbstractConnector;
 use dbeurive\Backend\Database\DatabaseInterface;
 
 /**
@@ -47,9 +47,9 @@ abstract class AbstractEntryPoint {
      */
     protected $_execConfig = [];
     /**
-     * @var AbstractLink Handler to the relational database management system.
+     * @var AbstractConnector Handler to the database connector.
      */
-    protected $_link = null;
+    protected $_connector = null;
     /**
      * @var \dbeurive\Backend\Database\Entrypoints\Provider Entry point provider.
      *      This attribute has been introduced for the procedures.
@@ -61,13 +61,13 @@ abstract class AbstractEntryPoint {
 
     /**
      * Create a new API's entry point.
-     * @param null|AbstractLink $inLink Handler to the database link associated to this entry point.
+     * @param null|AbstractConnector $inConnector Handler to the database connector.
      * @param Provider $inEntryPointProvider Entry point provider that handles this entry point.
      * @param array $inOptInitConfig Configuration for the entry point's initialization.
      */
-    public function __construct(AbstractLink $inLink, Provider $inEntryPointProvider, array $inOptInitConfig=[]) {
-        if (! is_null($inLink)) {
-            $this->_link = $inLink;
+    public function __construct(AbstractConnector $inConnector, Provider $inEntryPointProvider, array $inOptInitConfig=[]) {
+        if (! is_null($inConnector)) {
+            $this->_connector = $inConnector;
         }
         $this->_provider = $inEntryPointProvider;
         $this->_init($inOptInitConfig);
@@ -89,10 +89,10 @@ abstract class AbstractEntryPoint {
     /**
      * Execute an API's entry point (an SQL request or a procedure).
      * Please note that the data required for the execution of the entry point can be found within the property.
-     * @param AbstractLink $inLink The database link.
+     * @param AbstractConnector $inConnector Handler to the database connector.
      * @return \dbeurive\Backend\Database\Entrypoints\Application\Sql\Result|\dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result
      */
-    abstract protected function _execute(AbstractLink $inLink);
+    abstract protected function _execute(AbstractConnector $inConnector);
 
     /**
      * Initialize the entry point.
@@ -179,7 +179,7 @@ abstract class AbstractEntryPoint {
             throw new \Exception("The configuration for the API's execution is not valid.\n${outErrorMessage}\nGiven configuration is: " . print_r($this->_execConfig, true));
         }
 
-        $this->_result = $this->_execute($this->_link);
+        $this->_result = $this->_execute($this->_connector);
         return $this->_result;
     }
 

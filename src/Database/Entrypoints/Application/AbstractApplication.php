@@ -8,7 +8,7 @@
  */
 
 namespace dbeurive\Backend\Database\Entrypoints\Application;
-use dbeurive\Backend\Database\Link\AbstractLink;
+use dbeurive\Backend\Database\Connector\AbstractConnector;
 use dbeurive\Backend\Database\DatabaseInterface;
 use dbeurive\Backend\Database\Entrypoints\Provider;
 
@@ -51,9 +51,9 @@ abstract class AbstractApplication {
      */
     protected $_executionConfig = [];
     /**
-     * @var AbstractLink Handler to the database link.
+     * @var AbstractConnector Handler to the database connector.
      */
-    protected $_link = null;
+    protected $_connector = null;
     /**
      * @var \dbeurive\Backend\Database\Entrypoints\Provider Entry point provider.
      *      This attribute has been introduced for the procedures (procedures need to get SQL requests).
@@ -67,19 +67,37 @@ abstract class AbstractApplication {
      */
     protected $_hasBeenExecuted = false;
 
-
-
     /**
      * Create a new API's entry point.
-     * @param null|AbstractLink $inLink Handler to the database link.
+     *
+     * Please note that instantiation of entry points takes place in two contexts:
+     *    * During the documentation process.
+     *    * During the application's execution.
+     *
+     * **Documentation process**
+     *
+     * During the documentation process, no connexion to the database is established.
+     * Therefore, in this context, no "database connector" is created (`$inOptLink = null`).
+     *
+     * **Application's execution**
+     *
+     * During the application's execution, a connexion to the database is established.
+     * Therefore, in this context, a "database connector" is created.
+     *
      * @param Provider $inEntryPointProvider Entry point provider that handles this entry point.
+     * @param null|AbstractConnector $inOptConnector Handler to the database connector.
+     *        Please note that, depending on the context, this parameter is defined or not.
      * @param array $inOptInitConfig Configuration for the entry point's initialization.
+     *
+     * @uses \dbeurive\Backend\Database\Entrypoints\Provider::__getDescriptions
+     * @uses \dbeurive\Backend\Database\Entrypoints\Provider::getSql
+     * @uses \dbeurive\Backend\Database\Entrypoints\Provider::getProcedure
      */
-    final public function __construct($inLink, Provider $inEntryPointProvider, array $inOptInitConfig=[]) {
-        if (! is_null($inLink)) {
-            $this->_link = $inLink;
-        }
+    final public function __construct(Provider $inEntryPointProvider, AbstractConnector $inOptConnector=null, array $inOptInitConfig=[]) {
         $this->_provider = $inEntryPointProvider;
+        if (! is_null($inOptConnector)) {
+            $this->_connector = $inOptConnector;
+        }
         $this->_init($inOptInitConfig);
     }
 
@@ -99,10 +117,10 @@ abstract class AbstractApplication {
     /**
      * Execute the API's entry point.
      * @param array $inExecutionConfig Configuration for the execution.
-     * @param AbstractLink $inLink The database link.
+     * @param AbstractConnector $inConnector Handler to the database connector.
      * @return \dbeurive\Backend\Database\Entrypoints\Application\Sql\Result|\dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result
      */
-    abstract protected function _execute(array $inExecutionConfig, AbstractLink $inLink);
+    abstract protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector);
 
     /**
      * Initialize the API's entry point.
@@ -207,7 +225,7 @@ abstract class AbstractApplication {
 
         $this->_hasBeenExecuted = true;
         $this->_result = null;
-        $this->_result = $this->_execute($this->_executionConfig, $this->_link);
+        $this->_result = $this->_execute($this->_executionConfig, $this->_connector);
         return $this->_result;
     }
 

@@ -7,7 +7,7 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command;
-use dbeurive\Backend\Database\Link\Option as LinkOption;
+use dbeurive\Backend\Database\Connector\Option as ConnectorOption;
 
 
 /**
@@ -40,7 +40,7 @@ class MySql extends Command {
 
         $script = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR. 'src' . DIRECTORY_SEPARATOR . 'Cli' . DIRECTORY_SEPARATOR . 'Bin' . DIRECTORY_SEPARATOR . 'backend';
 
-        $all = array_merge($config['application'], $config['mysql'][LinkOption::LINK_CONFIG], [LinkOption::LINK_NAME => $config['mysql'][LinkOption::LINK_NAME]]);
+        $all = $config['application'];
 
         $options = [$script, "\tdb:doc-mysql", "\t-v"];
         foreach ($all as $_name => $_value) {

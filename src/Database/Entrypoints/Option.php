@@ -33,7 +33,11 @@ class Option {
      */
     const PROC_REPO_PATH = 'procedure-repository-path';
     /**
-     * This constant defines the name of the configuration parameter that represents an instanciated database link.
+     * This constant defines the name of the configuration parameter that represents an instance of a database connector.
      */
-    const DB_LINK = 'db-link';
+    const DB_CONNECTOR = 'db-connector';
+    /**
+     * This constant defines the name of the configuration parameter that represents an fully qualified name of the class that implements the connector.
+     */
+    const DB_CONNECTOR_CLASS_NAME = 'db-connector-class-name';
 }

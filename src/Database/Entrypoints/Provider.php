@@ -5,7 +5,7 @@
  */
 
 namespace dbeurive\Backend\Database\Entrypoints;
-use dbeurive\Backend\Database\Link\AbstractLink;
+use dbeurive\Backend\Database\Connector\AbstractConnector;
 use dbeurive\Backend\Database\DatabaseInterface;
 
 /**
@@ -40,9 +40,9 @@ class Provider
      */
     private $__dataInterfaceName = null;
     /**
-     * @var AbstractLink Database link.
+     * @var AbstractConnector Handler to the database connector.
      */
-    private $__link = null;
+    private $__connector = null;
 
     /**
      * Create a provider.
@@ -134,7 +134,7 @@ class Provider
         $class = self::__getFullyQualifiedClassName($this->__sqlBaseNameSpace, $inName);
         $class = new \ReflectionClass($class);
         /* @var \dbeurive\Backend\Database\Entrypoints\Application\Sql\AbstractApplication $sql */
-        $sql = $class->newInstanceArgs([$this->__getLink(), $this, $inInitConfig]);
+        $sql = $class->newInstanceArgs([$this, $this->__getConnector(), $inInitConfig]);
         if (!is_null($inExecutionConfig)) {
             $sql->setExecutionConfig($inExecutionConfig);
         }
@@ -156,7 +156,7 @@ class Provider
         $class = self::__getFullyQualifiedClassName($this->__procedureBaseNameSpace, $inName);
         $class = new \ReflectionClass($class);
         /* @var \dbeurive\Backend\Database\Entrypoints\Application\Procedure\AbstractApplication $procedure */
-        $procedure = $class->newInstanceArgs([$this->__getLink(), $this, $inInitConfig]);
+        $procedure = $class->newInstanceArgs([$this, $this->__getConnector(), $inInitConfig]);
         if (!is_null($inExecutionConfig)) {
             $procedure->setExecutionConfig($inExecutionConfig);
         }
@@ -281,14 +281,14 @@ class Provider
     }
 
     /**
-     * Return the handler to the database link.
-     * @return AbstractLink The method returns the handler to the database link.
+     * Return the handler to the database connector.
+     * @return AbstractConnector The method returns the handler to the database connector.
      */
-    private function __getLink() {
-        if (is_null($this->__link)) {
-            $this->__link = $this->getDataInterface()->getDbLink();
+    private function __getConnector() {
+        if (is_null($this->__connector)) {
+            $this->__connector = $this->getDataInterface()->getDbConnector();
         }
-        return $this->__link;
+        return $this->__connector;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -321,7 +321,7 @@ class Provider
             $class = new \ReflectionClass($class);
 
             /* @var \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication $element */
-            $element = $class->newInstanceArgs([null, $this]);
+            $element = $class->newInstanceArgs([$this]);
             $description = $element->getDescription();
             $description->setName_($name);
             $descriptions[] = $description;

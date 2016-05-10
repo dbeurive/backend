@@ -5,7 +5,7 @@ namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls\User;
 use dbeurive\Backend\Database\Entrypoints\Application\BaseResult;
 use dbeurive\Backend\Database\Entrypoints\Application\Sql\AbstractApplication;
 use dbeurive\Backend\Database\Entrypoints\Description;
-use dbeurive\Backend\Database\Link\AbstractLink;
+use dbeurive\Backend\Database\Connector\AbstractConnector;
 
 use dbeurive\BackendTest\EntryPoints\Constants\Entities;
 use dbeurive\BackendTest\EntryPoints\Constants\Actions;
@@ -42,9 +42,9 @@ class Update extends AbstractApplication {
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
      */
-    protected function _execute(array $inExecutionConfig, AbstractLink $inLink) {
+    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector) {
         /* @var \PDO $pdo */
-        $pdo = $inLink->getDatabaseConnexionHandler();
+        $pdo = $inConnector->getDatabaseHandler();
 
         // Build the __UPDATE__ statement.
         $update = [];
@@ -52,7 +52,7 @@ class Update extends AbstractApplication {
             if ('user.id' == $_field) {
                 continue;
             }
-            $update[] = $inLink->quoteFieldName($_field) . " = " . $inLink->quoteValue($_value);
+            $update[] = $inConnector->quoteFieldName($_field) . " = " . $inConnector->quoteValue($_value);
         }
 
         $update = implode(',', $update);

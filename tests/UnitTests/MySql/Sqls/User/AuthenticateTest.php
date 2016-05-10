@@ -18,10 +18,13 @@ class AuthenticateTest extends PHPUnit_Backend_TestCase
 
     protected function setUp() {
         // Drop and re-create all the databases.
-        $this->__createMysqlDatabase();
-        $this->__createLink('mysql', true);
+        $this->__init();
+        $this->__createMySqlPdo();
+        $this->__createMySqlDatabase();
+        $this->__createMySqlConnector();
+        $this->__connectorMySql->connect();
         $this->__createDatabaseInterface();
-        $this->__di->setDbLink($this->__link);
+        $this->__di->setDbConnector($this->__connectorMySql);
     }
 
     public function testIt() {

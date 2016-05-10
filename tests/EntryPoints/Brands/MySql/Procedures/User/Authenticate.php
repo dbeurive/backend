@@ -5,7 +5,7 @@ namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Procedures\User;
 use dbeurive\Backend\Database\Entrypoints\Application\Procedure\AbstractApplication;
 use dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result;
 use dbeurive\Backend\Database\Entrypoints\Description;
-use dbeurive\Backend\Database\Link\AbstractLink;
+use dbeurive\Backend\Database\Connector\AbstractConnector;
 
 use dbeurive\BackendTest\EntryPoints\Constants\Tags;
 use dbeurive\BackendTest\EntryPoints\Constants\Entities;
@@ -46,7 +46,7 @@ class Authenticate extends AbstractApplication {
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
      */
-    protected function _execute(array $inExecutionConfig, AbstractLink $inLink) {
+    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector) {
         $sql = $this->_getSql(self::SQL_AUTHENTICATE, [], $this->_getInputFields());
         $resultSql = $sql->execute();
         $result = new Result(Result::STATUS_SUCCESS,

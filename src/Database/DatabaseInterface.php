@@ -7,7 +7,8 @@
 
 namespace dbeurive\Backend\Database;
 use dbeurive\Backend\Database\Entrypoints\Provider as EntryPointProvider;
-use dbeurive\Backend\Database\Link\AbstractLink;
+use dbeurive\Backend\Database\Connector\AbstractConnector;
+use dbeurive\Backend\Database\Connector\Option as ConnectorOption;
 use dbeurive\Backend\Database\Entrypoints\Option as EntryPointOption;
 use dbeurive\Backend\Database\Doc\Option as DocOption;
 
@@ -56,12 +57,25 @@ class DatabaseInterface {
      * @var string Name of this interface.
      */
     private $__name = null;
-
     /**
-     * @var AbstractLink Database link.
+     * @var AbstractConnector Handler to the database connector.
+     *      Note: this property is used when the application is running.
+     *      $__connectorClassName and $__connector should not be specified simultaneously.
+     * @see $__connectorClassName
+     * @see setDbConnector
      */
-    private $__link = null;
-
+    private $__connector = null;
+    /**
+     * @var string Fully qualified class name of the connector.
+     *      Note: this property is only used when the software build the QLite database that organises information about all procedures and SQL requests.
+     *      SQL requests may use one static method defined within this class (the method `quoteFieldName()`) within the method `getDescription()`.
+     *      $__connectorClassName and $__connector should not be specified simultaneously.
+     * @see $__connector
+     * @see setDbConnectorClassName
+     * @see \dbeurive\Backend\Database\Connector\InterfaceConnector::quoteFieldName
+     * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint::getDescription
+     */
+    private $__connectorClassName = null;
     /**
      * @var EntryPointProvider Entry point provider.
      */
@@ -99,17 +113,33 @@ class DatabaseInterface {
 
     /**
      * Create a new data interface ot get an existing one.
+     *
      * @param string $inName Name of the interface to create or to get.
      * @param array|null $inOptConfig Optional configuration.
-     *        Options are:
-     *        use dbeurive\Backend\Database\Entrypoints\Option as EntryPointOption;
-     *        use dbeurive\Backend\Database\Doc\Option as DocOption;
-     *        EntryPointOption::SQL_REPO_PATH
-     *        EntryPointOption::SQL_BASE_NS
-     *        EntryPointOption::PROC_REPO_PATH
-     *        EntryPointOption::PROC_BASE_NS
-     *        DocOption::PHP_DB_DESC_PATH
+     *        Configuration parameters are:
+     *
+     *        Mandatory (these parameters may also be set by using mutators):
+     *          EntryPointOption::SQL_REPO_PATH
+     *          EntryPointOption::SQL_BASE_NS
+     *          EntryPointOption::PROC_REPO_PATH
+     *          EntryPointOption::PROC_BASE_NS
+     *          DocOption::SCHEMA_PATH
+     *
+     *        Optional:
+     *          EntryPointOption::DB_CONNECTOR (when the application is running)
+     *          ConnectorOption::CONNECTOR_NAME (when we build the SQLite database)
+     *
      * @return DatabaseInterface The method returns a new data interface.
+     *
+     * @see EntryPointOption::SQL_REPO_PATH
+     * @see EntryPointOption::SQL_BASE_NS
+     * @see EntryPointOption::PROC_REPO_PATH
+     * @see EntryPointOption::PROC_BASE_NS
+     * @see DocOption::SCHEMA_PATH
+     * @see EntryPointOption::DB_CONNECTOR
+     * @see ConnectorOption::CONNECTOR_NAME
+     * @see setDbConnector
+     * @see setDbConnectorClassName
      */
     static public function getInstance($inName='default', array $inOptConfig=null) {
 
@@ -123,10 +153,14 @@ class DatabaseInterface {
             $di->setSqlBaseNameSpace($inOptConfig[EntryPointOption::SQL_BASE_NS]);
             $di->setProcedureRepositoryBasePath($inOptConfig[EntryPointOption::PROC_REPO_PATH]);
             $di->setProcedureBaseNameSpace($inOptConfig[EntryPointOption::PROC_BASE_NS]);
-            $di->setPhpDatabaseRepresentationPath($inOptConfig[DocOption::PHP_DB_DESC_PATH]);
+            $di->setPhpDatabaseRepresentationPath($inOptConfig[DocOption::SCHEMA_PATH]);
 
-            if (array_key_exists(EntryPointOption::DB_LINK, $inOptConfig)) {
-                $di->setDbLink($inOptConfig[EntryPointOption::DB_LINK]);
+            if (array_key_exists(EntryPointOption::DB_CONNECTOR, $inOptConfig)) {
+                $di->setDbConnector($inOptConfig[EntryPointOption::DB_CONNECTOR]);
+            }
+
+            if (array_key_exists(ConnectorOption::CONNECTOR_NAME, $inOptConfig)) {
+                $di->setDbConnector($inOptConfig[ConnectorOption::CONNECTOR_NAME]);
             }
         }
 
@@ -140,10 +174,18 @@ class DatabaseInterface {
 
     /**
      * Set the database handler.
-     * @param AbstractLink $inLink Database link.
+     * @param AbstractConnector $inConnector Handler to the database connector.
      */
-    public function setDbLink(AbstractLink $inLink) {
-        $this->__link = $inLink;
+    public function setDbConnector(AbstractConnector $inConnector) {
+        $this->__connector = $inConnector;
+    }
+
+    /**
+     * Set the fully qualified name of the class that implements the database connector.
+     * @param string $inClassName Fully qualified name of the class that implements the database connector.
+     */
+    public function setDbConnectorClassName($inClassName) {
+        $this->__connectorClassName = $inClassName;
     }
 
     /**
@@ -180,15 +222,15 @@ class DatabaseInterface {
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * Return the handler to the relational database management system.
-     * @return AbstractLink The method returns the relational database management system.
+     * Return the handler to the database connector.
+     * @return AbstractConnector The method returns the handler to the database connector.
      */
-    public function getDbLink() {
-        if (is_null($this->__link)) {
-            throw new \Exception("You did not set the link to the relational database management system! Please call setDbLink() first!");
+    public function getDbConnector() {
+        if (is_null($this->__connector)) {
+            throw new \Exception("You did not set the database connector! Please call setDbConnector() first!");
         }
 
-        return $this->__link;
+        return $this->__connector;
     }
 
     /**
@@ -230,6 +272,7 @@ class DatabaseInterface {
      *        For example, with MySql, you can quote "user.id" into "`user`.`id`".
      * @return array The method returns the list of fields within the table.
      * @throws \Exception
+     * @uses $__connectorClassName
      */
     public function getTableFieldsNames($inTableName, $inOptFormat=self::FIELDS_RAW_AS_ARRAY, $inOptQuote=true) {
 
@@ -237,13 +280,16 @@ class DatabaseInterface {
 
         if ($inOptQuote) {
 
-            if (is_null($this->__link)) {
-                throw new \Exception("In order to quote fields names according to the database server brand name, you need a valid instance of the link.");
+            if (is_null($this->__connector)) {
+                if (is_null($this->__connectorClassName)) {
+                    throw new \Exception("In order to quote fields names according to the database server brand name, you need (1) to specify the fully qualified name of the class used a connector or (2) give an instance of the connector!");
+                }
             }
 
-            $link = $this->__link;
-            $quoter = function ($fieldName) use ($link) {
-                return $link->quoteFieldName($fieldName);
+            $connectorClass = is_null($this->__connector) ? $this->__connectorClassName : $this->__connector->getFullyQualifiedClassName();
+
+            $quoter = function ($fieldName) use ($connectorClass) {
+                return call_user_func("${connectorClass}::quoteFieldName", $fieldName);
             };
         }
 
@@ -406,7 +452,7 @@ class DatabaseInterface {
      * @throws \Exception
      */
     public function getDatabaseHandler() {
-        return $this->getDbLink()->getDatabaseConnexionHandler();
+        return $this->getDbConnector()->getDatabaseConnexionHandler();
     }
 
 }

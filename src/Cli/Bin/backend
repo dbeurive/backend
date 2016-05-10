@@ -13,7 +13,7 @@ if (! file_exists($autoload)) {
 require $autoload;
 
 use Symfony\Component\Console\Application;
-use dbeurive\Backend\Cli\CliWriter;
+use dbeurive\Backend\Cli\Lib\CliWriter;
 
 CliWriter::init();
 

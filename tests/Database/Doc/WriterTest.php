@@ -8,6 +8,7 @@ use dbeurive\BackendTest\EntryPoints\Constants\Entities;
 use dbeurive\BackendTest\EntryPoints\Constants\Tags;
 use dbeurive\BackendTest\EntryPoints\Constants\Actions;
 use dbeurive\Backend\Database\Doc\Option as DocOption;
+use dbeurive\Backend\Database\Connector\Option as ConnectorOption;
 
 // @runTestsInSeparateProcesses
 
@@ -25,8 +26,9 @@ class WriterTest extends \PHPUnit_Framework_TestCase
     private $__pathSQLite;
 
     public function setUp() {
-        // print "\nExecuting " . __METHOD__ . "\n";
-        $this->__createMysqlDatabase();
+        $this->__init();
+        $this->__createMySqlPdo();
+        $this->__createMySqlDatabase();
         // No link to the database is created.
     }
 
@@ -262,16 +264,15 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         // Generate the SQLite database.
         // -------------------------------------------------------------------------------------------------------------
 
-        $config = array_merge($this->__generalConfiguration['application'], $this->__generalConfiguration['mysql']);
+        $config = $this->__generalConfiguration['application'];
+        $config[ConnectorOption::CONNECTOR_NAME] = $this->__generalConfiguration['mysql'][ConnectorOption::CONNECTOR_NAME];
         Writer::writer($config);
 
         // -------------------------------------------------------------------------------------------------------------
         // Open the SQLite database.
         // -------------------------------------------------------------------------------------------------------------
 
-        $dbSqlitePath = $config[DocOption::DOC_DB_REPO_PATH] . DIRECTORY_SEPARATOR .
-                        $config[DocOption::DOC_DB_FILE_BASENAME] .
-                        '.sqlite';
+        $dbSqlitePath = $config[DocOption::DOC_PATH];
         $this->__pathSQLite = $dbSqlitePath;
 
         if (! file_exists($dbSqlitePath)) {

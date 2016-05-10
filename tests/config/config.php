@@ -2,8 +2,8 @@
 
 use dbeurive\Backend\Database\Entrypoints\Option as EntryPointOption;
 use dbeurive\Backend\Database\Doc\Option as DocOption;
-use dbeurive\Backend\Database\Link\Option as LinkOption;
-use dbeurive\Backend\Database\Link\MySql;
+use dbeurive\Backend\Database\Connector\Option as ConnectorOption;
+use dbeurive\Backend\Database\Connector\MySql;
 
 
 return call_user_func(function() {
@@ -47,11 +47,10 @@ return call_user_func(function() {
      * procedure-repository-path: Path to the directory that contains all the procedures
      * sql-base-namespace:        Base namespace for all the SQL requests
      * procedure-base-namespace:  Base namespace for all the procedures
-     * doc-db-repository-path:    Path to the directory used to store the generated documentation
-     * doc-db-basename:           Base name for the generated files used to store the documentation
-     * php-db-desc-path:          Path to the generated PHP file used to store the list of tables and fields within the database
-     * db-link-class-name:        Name of the class that implements the database link
-     * db-link-config:            Configuration for the database link
+     * doc-path:                  Path to the SQLite database that will be generated.
+     * schema-path:               Path to the generated PHP file used to store the list of tables and fields within the database
+     * db-connector-class-name:   Fully qualified name of the class that implements the connector.
+     * db-connector-config:       Configuration for the database connector
      */
     $conf = [
         'test' => [
@@ -60,17 +59,18 @@ return call_user_func(function() {
             'dir.references' => $TEST_BASE_DIR . DIRECTORY_SEPARATOR . 'references',
         ],
         'application' => [
-            EntryPointOption::SQL_REPO_PATH     => $baseEntryPointDir . DIRECTORY_SEPARATOR . 'Sqls',
-            EntryPointOption::PROC_REPO_PATH    => $baseEntryPointDir . DIRECTORY_SEPARATOR . 'Procedures',
-            EntryPointOption::SQL_BASE_NS       => '\\dbeurive\\BackendTest\\EntryPoints\\Brands\\MySql\\Sqls',
-            EntryPointOption::PROC_BASE_NS      => '\\dbeurive\\BackendTest\\EntryPoints\\Brands\\MySql\\Procedures',
-            DocOption::DOC_DB_REPO_PATH         => $TEST_BASE_DIR . DIRECTORY_SEPARATOR . 'cache',
-            DocOption::DOC_DB_FILE_BASENAME     => 'mysql_db_schema',
-            DocOption::PHP_DB_DESC_PATH         => $TEST_BASE_DIR . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'mysql_db_schema.php'
+            EntryPointOption::SQL_REPO_PATH  => $baseEntryPointDir . DIRECTORY_SEPARATOR . 'Sqls',
+            EntryPointOption::PROC_REPO_PATH => $baseEntryPointDir . DIRECTORY_SEPARATOR . 'Procedures',
+            EntryPointOption::SQL_BASE_NS    => '\\dbeurive\\BackendTest\\EntryPoints\\Brands\\MySql\\Sqls',
+            EntryPointOption::PROC_BASE_NS   => '\\dbeurive\\BackendTest\\EntryPoints\\Brands\\MySql\\Procedures',
+            DocOption::DOC_PATH              => $TEST_BASE_DIR . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'mysql_doc.sqlite',
+            DocOption::SCHEMA_PATH           => $TEST_BASE_DIR . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'mysql_schema.php'
         ],
         'mysql' => [
-            LinkOption::LINK_NAME               => '\\dbeurive\\Backend\\Database\\Link\\MySql',
-            LinkOption::LINK_CONFIG             => $mysqlConf
+            // This parameter is used for the extraction of entry points' descriptions.
+            ConnectorOption::CONNECTOR_NAME   => '\\dbeurive\\Backend\\Database\\Connector\\MySql',
+            // This parameter is used when the application is running.
+            ConnectorOption::CONNECTOR_CONFIG => $mysqlConf
         ]
     ];
 

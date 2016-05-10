@@ -2,8 +2,8 @@
 
 namespace dbeurive\BackendTest;
 
-use dbeurive\Backend\Database\Link\Option as LinkOption;
-use dbeurive\Backend\Database\Link\MySql;
+use dbeurive\Backend\Database\Connector\Option as ConnectorOption;
+use dbeurive\Backend\Database\Connector\MySql;
 use dbeurive\Backend\Database\DatabaseInterface;
 
 
@@ -17,98 +17,38 @@ trait SetUp
     private $__di;
     /** @var array */
     private $__generalConfiguration;
-    /** @var array */
-    private $__linkConfiguration;
-    /** @var \PDO */
-    private $__pdo;
-    /** @var \dbeurive\Backend\Database\Link\AbstractLink */
-    private $__link;
 
-    /**
-     * Load the configuration for the tests.
-     * @return array
-     */
-    private function __loadConfig() {
-        return require __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.php';
-    }
+    // -----------------------------------------------------------------------------------------------------------------
+    // MySql
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /** @var \PDO */
+    private $__pdoMySql = null;
+    /** @var array */
+    private $__connectorMySqlConfiguration;
+    /** @var \dbeurive\Backend\Database\Connector\MySql */
+    private $__connectorMySql;
+
+
+    /** @var \dbeurive\Backend\Database\Connector\AbstractConnector */
+    private $__connector;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // General initialization
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Initialize the tests.
      */
     public function __init() {
-        $this->__generalConfiguration = $this->__loadConfig();
-    }
-
-    /**
-     *
-     * @throws \Exception
-     */
-    private function __createMysqlDatabase()
-    {
-        $this->__init();
-
-        // -------------------------------------------------------------------------------------------------------------
-        // Load the configuration and open a connection to the database.
-        // -------------------------------------------------------------------------------------------------------------
-
-        $schema = require $this->__generalConfiguration['test']['dir.fixtures'] . DIRECTORY_SEPARATOR . 'MySql' . DIRECTORY_SEPARATOR . 'schema.php';
-        $this->__linkConfiguration = $this->__generalConfiguration['mysql'][LinkOption::LINK_CONFIG];
-        $dsn = "mysql:host=" . $this->__linkConfiguration[MySql::DB_HOST] . ";port=" . $this->__linkConfiguration[MySql::DB_PORT];
-        $this->__pdo = new \PDO($dsn, $this->__linkConfiguration[MySql::DB_USER], $this->__linkConfiguration[MySql::DB_PASSWORD], []);
-
-        // -------------------------------------------------------------------------------------------------------------
-        // Drop the database, then re-create.
-        // -------------------------------------------------------------------------------------------------------------
-
-        foreach ($schema as $_request) {
-            $req = $this->__pdo->prepare($_request);
-            if (false === $req->execute([])) {
-                throw new \Exception("Can not create the database.");
-            }
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        // Load data into the database.
-        // -------------------------------------------------------------------------------------------------------------
-
-        $dataPath = $this->__generalConfiguration['test']['dir.fixtures'] . DIRECTORY_SEPARATOR . 'MySql' . DIRECTORY_SEPARATOR . 'data.php';
-        \dbeurive\Util\UtilCode::require_with_args($dataPath, ['pdo' => $this->__pdo]);
-
-    }
-
-    /**
-     * Create the link to the database from a given database brand name.
-     * @param string $inDbName Database brand name ("mysql").
-     * @param bool $inOptConnect This flag indicates whether the link should open a connection to the database or not.
-     *        * This the value of this parameter is true, then the link is created, and the connexion to the database is established.
-     *        * Otherwise, the link is created, but the connexion to the database is not established.
-     * @throws \Exception
-     */
-    public function __createLink($inDbName, $inOptConnect=false)
-    {
-        $this->__init();
-
-        // -------------------------------------------------------------------------------------------------------------
-        // Initialise the link to the database.
-        // -------------------------------------------------------------------------------------------------------------
-
-        $linkType = $this->__generalConfiguration[$inDbName][LinkOption::LINK_NAME];
-        $linkConf = $this->__generalConfiguration[$inDbName][LinkOption::LINK_CONFIG];
-        /** @var \dbeurive\Backend\Database\Link\MySql $link */
-        $this->__link = new $linkType();
-        $errors = $this->__link->setConfiguration($linkConf);
-        if (count($errors) > 0) {
-            throw new \Exception("Invalid configuration: " . implode(", ", $errors));
-        }
-        if ($inOptConnect) {
-            $this->__link->connect();
-        }
+        $this->__generalConfiguration = require __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.php';
+        $this->__connectorMySqlConfiguration = $this->__generalConfiguration['mysql'][ConnectorOption::CONNECTOR_CONFIG];
     }
 
     /**
      * Create the database interface.
      * Please note that the created database interface is not fully initialized.
-     * The database link ($this->__link) is not injected into the database interface.
+     * The database connector is not injected into the database interface.
      */
     public function __createDatabaseInterface() {
 
@@ -127,7 +67,7 @@ trait SetUp
         //          EntryPointOption::SQL_BASE_NS
         //          EntryPointOption::PROC_REPO_PATH
         //          EntryPointOption::PROC_BASE_NS
-        //          DocOption::PHP_DB_DESC_PATH
+        //          DocOption::SCHEMA_PATH
         //
         //  Please note that all these configuration parameters may be set through the use of mutators once the instance
         //  is created.
@@ -135,5 +75,92 @@ trait SetUp
 
         $this->__di = \dbeurive\Backend\Database\DatabaseInterface::getInstance('default', $this->__generalConfiguration['application']);
     }
+
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // MySql initialization
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Create and return the PDO handler for MySql.
+     * Please call __init() first.
+     * @return \PDO
+     */
+    private function __createMySqlPdo() {
+        if (is_null($this->__pdoMySql)) {
+            $this->__init();
+            $dsn = "mysql:host=" . $this->__connectorMySqlConfiguration[MySql::DB_HOST] . ";port=" . $this->__connectorMySqlConfiguration[MySql::DB_PORT];
+            $this->__pdoMySql = new \PDO($dsn, $this->__connectorMySqlConfiguration[MySql::DB_USER], $this->__connectorMySqlConfiguration[MySql::DB_PASSWORD], []);
+        }
+        return $this->__pdoMySql;
+    }
+
+    /**
+     * Create the MSql database.
+     * Please call __init() and __createMySqlPdo() first.
+     */
+    private function __createMySqlDatabase()
+    {
+        // -------------------------------------------------------------------------------------------------------------
+        // Load the configuration and open a connection to the database.
+        // -------------------------------------------------------------------------------------------------------------
+
+        $schema = require $this->__generalConfiguration['test']['dir.fixtures'] . DIRECTORY_SEPARATOR . 'MySql' . DIRECTORY_SEPARATOR . 'schema.php';
+
+        // -------------------------------------------------------------------------------------------------------------
+        // Drop the database, then re-create.
+        // -------------------------------------------------------------------------------------------------------------
+
+        foreach ($schema as $_request) {
+            $req = $this->__pdoMySql->prepare($_request);
+            if (false === $req->execute([])) {
+                throw new \Exception("Can not create the database.");
+            }
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        // Load data into the database.
+        // -------------------------------------------------------------------------------------------------------------
+
+        $dataPath = $this->__generalConfiguration['test']['dir.fixtures'] . DIRECTORY_SEPARATOR . 'MySql' . DIRECTORY_SEPARATOR . 'data.php';
+        \dbeurive\Util\UtilCode::require_with_args($dataPath, ['pdo' => $this->__pdoMySql]);
+    }
+
+    /**
+     * Create the MSql connector.
+     * Please call __init(), __createMySqlPdo() and __createMySqlDatabase() first.
+     */
+    private function __createMySqlConnector()
+    {
+        $this->__connectorMySql = new \dbeurive\Backend\Database\Connector\MySql($this->__connectorMySqlConfiguration);
+    }
+
+    /**
+     * Create the link to the database from a given database brand name.
+     * @param string $inDbName Database brand name ("mysql").
+     * @param bool $inOptConnect This flag indicates whether the link should open a connection to the database or not.
+     *        * This the value of this parameter is true, then the link is created, and the connexion to the database is established.
+     *        * Otherwise, the link is created, but the connexion to the database is not established.
+     * @throws \Exception
+     */
+    public function __createConnector($inDbName, $inOptConnect=false)
+    {
+        $this->__init();
+
+        // -------------------------------------------------------------------------------------------------------------
+        // Initialise the connector to the database.
+        // -------------------------------------------------------------------------------------------------------------
+
+        $connectorName = $this->__generalConfiguration[$inDbName][ConnectorOption::CONNECTOR_NAME];
+        $connectorConf = $this->__generalConfiguration[$inDbName][ConnectorOption::CONNECTOR_CONFIG];
+
+        $this->__connector = new $connectorName($connectorConf);
+
+        if ($inOptConnect) {
+            $this->__connector->connect();
+
+        }
+    }
+
 
 }
