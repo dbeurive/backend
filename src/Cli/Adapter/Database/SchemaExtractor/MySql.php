@@ -13,23 +13,21 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 
 
+
 /**
  * Class MySql
- *
- * This class implements the "documentation writer" targeted for MySql.
- *
- * @package dbeurive\Backend\Cli\Adapter\Database\DocWriter
+ * @package dbeurive\Backend\Cli\Adapter\Database\SchemaExtractor
  */
 
-class MySql extends AbstractDocWriter {
+class MySql extends AbstractSchemaExtractor {
 
     /**
      * {@inheritDoc}
      * @see \Symfony\Component\Console\Command\Command
      */
     protected function configure() {
-        $this->setName('db:doc-mysql')
-            ->setDescription("Extract data from a MySql database, and from all API's entry points.")
+        $this->setName('db:schema-mysql')
+            ->setDescription("Extract the schema os a specified MySql database.")
             ->addOption(Connector\MySql::DB_HOST,     null, InputOption::VALUE_OPTIONAL, 'Host that runs the MySql server (default: localhost)', 'localhost')
             ->addOption(Connector\MySql::DB_USER,     null, InputOption::VALUE_REQUIRED, 'Database user', null)
             ->addOption(Connector\MySql::DB_PASSWORD, null, InputOption::VALUE_OPTIONAL, "User's password", '')
@@ -39,23 +37,22 @@ class MySql extends AbstractDocWriter {
 
     /**
      * {@inheritDoc}
-     * @see \dbeurive\Backend\Cli\Adapter\Database\DocWriter\AbstractDocWriter
+     * @see AbstractSchemaExtractor
      */
     protected function _getSpecificOptions(InputInterface $input) {
-        return [Connector\MySql::DB_HOST        => $input->getOption(Connector\MySql::DB_HOST),
-            Connector\MySql::DB_USER            => $input->getOption(Connector\MySql::DB_USER),
-            Connector\MySql::DB_PASSWORD        => $input->getOption(Connector\MySql::DB_PASSWORD),
-            Connector\MySql::DB_PORT            => $input->getOption(Connector\MySql::DB_PORT),
-            Connector\MySql::DB_NAME            => $input->getOption(Connector\MySql::DB_NAME),
-            Connector\Option::CONNECTOR_NAME    => \dbeurive\Backend\Database\Connector\MySql::getFullyQualifiedClassName()
+        return [Connector\MySql::DB_HOST  => $input->getOption(Connector\MySql::DB_HOST),
+            Connector\MySql::DB_USER      => $input->getOption(Connector\MySql::DB_USER),
+            Connector\MySql::DB_PASSWORD  => $input->getOption(Connector\MySql::DB_PASSWORD),
+            Connector\MySql::DB_PORT      => $input->getOption(Connector\MySql::DB_PORT),
+            Connector\MySql::DB_NAME      => $input->getOption(Connector\MySql::DB_NAME)
         ];
     }
 
     /**
      * {@inheritDoc}
-     * @see \dbeurive\Backend\Cli\Adapter\Database\DocWriter\InterfaceDocWriter
+     * @see AbstractSchemaExtractor
      */
-    static public function checkConfiguration(array $inConfiguration) {
+    protected function _checkConfiguration(array $inConfiguration) {
         $set = new SpecificationsSet();
         $set->addInputSpecification(new Specification(Connector\MySql::DB_HOST,      true, true))
             ->addInputSpecification(new Specification(Connector\MySql::DB_USER,      true, true))
