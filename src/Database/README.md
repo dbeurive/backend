@@ -61,10 +61,9 @@ $pdoConfiguration = [
      'db-password'  => 'password'
 ];
 
-$connector = new \dbeurive\Backend\Database\Connector\MySqlPdo($pdoConfiguration);
-
 try {
-    $databaseLink = new \dbeurive\Backend\Database\Link\Mysql();
+    // The second argument (true) means "auto connect".
+    $connector = new \dbeurive\Backend\Database\Connector\MySqlPdo($pdoConfiguration, true);
 } catch (\Exception $e) {
     /* ... */
 }
