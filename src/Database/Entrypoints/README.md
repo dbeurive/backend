@@ -52,7 +52,7 @@ class Authenticate extends AbstractApplication
     protected function _validateExecutionConfig(array $inExecutionConfig, &$outErrorMessage) { /* ... */ }
 
     // Execute request.
-    protected function _execute(array $inExecutionConfig, AbstractLink $inLink) { /* ... */ } 
+    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector) { /* ... */ } 
 
     // Document the request.
     public function getDescription() {
@@ -104,7 +104,7 @@ class Authenticate extends AbstractApplication {
     protected function _validateExecutionConfig(array $inExecutionConfig, &$outErrorMessage) { /* ... */ }
 
     // Execute the procedure.
-    protected function _execute(array $inExecutionConfig, AbstractLink $inLink) { /* ... */ }
+    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector) { /* ... */ }
 
     // Document the procedure/
     public function getDescription() {
