@@ -13,7 +13,7 @@ If you access you database through this API, then you can get a SQLite database 
 
 * Click [here](https://github.com/dbeurive/backend/blob/master/src/Database/Doc/schema.php) to get the schema for the generated SQLite database.
 * You can download an example of the generated database [here](https://github.com/dbeurive/backend/blob/master/tests/cache/mysql_doc.sqlite).
-* Click [here](https://github.com/dbeurive/backend/blob/master/doc/SQLITE_USAGE.md) to have an overview of what you can do with the DSLite that contains the generated documentation.
+* Click [here](https://github.com/dbeurive/backend/blob/master/doc/SQLITE_USAGE.md) to have an overview of what you can do with the DSQLite database that contains the generated documentation.
 
 # Overview
 
