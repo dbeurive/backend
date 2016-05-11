@@ -29,7 +29,7 @@ If you access you database through this API, then you can get a SQLite database 
   * [Procedures](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/Application/Procedure/README.md)
   * [SQL requests](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/Application/Sql/README.md)
 * [Documenting entry points](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/Description/README.md)
-* [The database link](https://github.com/dbeurive/backend/blob/master/src/Database/Link/README.md)
+* [The database connector](https://github.com/dbeurive/backend/blob/master/src/Database/Connector/README.md)
 * [The database interface](https://github.com/dbeurive/backend/blob/master/src/Database/README.md)
 * [Extension for PHP Unit](https://github.com/dbeurive/backend/tree/master/src/Phpunit)
 * [Generating the database's access layer documentation](https://github.com/dbeurive/backend/blob/master/src/Cli/Bin/README.md) - that is: the SQLite database.
