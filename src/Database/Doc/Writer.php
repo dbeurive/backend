@@ -14,7 +14,6 @@ namespace dbeurive\Backend\Database\Doc;
 
 use dbeurive\Backend\Database\DatabaseInterface;
 use dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription;
-use dbeurive\Backend\Database\Connector\Option as ConnectorOption;
 use dbeurive\Backend\Database\Entrypoints\Description\Element\Field;
 use dbeurive\Backend\Database\Entrypoints\Description\Element\Table;
 use dbeurive\Backend\Database\Entrypoints\Option as EntryPointOption;
@@ -123,6 +122,22 @@ class Writer {
         // -------------------------------------------------------------------------------------------------------------
         // Extract data from the configuration.
         // -------------------------------------------------------------------------------------------------------------
+
+        $mandatories = [
+            DocOption::DOC_PATH,
+            DocOption::SCHEMA_PATH,
+            EntryPointOption::SQL_BASE_NS,
+            EntryPointOption::PROC_BASE_NS,
+            EntryPointOption::SQL_REPO_PATH,
+            EntryPointOption::PROC_REPO_PATH,
+            SqlServiceOption::SQL_SERVICE_NAME
+        ];
+
+        foreach ($mandatories as $_index => $_name) {
+            if (! array_key_exists($_name, $inConfiguration)) {
+                throw new \Exception("Configuration parameter \"" . $_name . "\" is missing !");
+            }
+        }
 
         $sqlitePath                  = $inConfiguration[DocOption::DOC_PATH];
         $phpDbDescription            = $inConfiguration[DocOption::SCHEMA_PATH];

@@ -297,7 +297,7 @@ class DatabaseInterface {
 
             if (is_null($this->__connector)) {
                 if (is_null($this->__sqlServiceClassName)) {
-                    throw new \Exception("In order to quote fields names according to the database server brand name, you need (1) to specify the fully qualified name of the class used a connector or (2) give an instance of the connector!");
+                    throw new \Exception("In order to quote fields names according to the database server brand name, you need (1) to specify the fully qualified name of the class used as SQL service provider (2) give an instance of the connector!");
                 }
             }
 

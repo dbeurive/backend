@@ -7,6 +7,7 @@
  */
 
 namespace dbeurive\BackendTest\config;
+use dbeurive\Backend\Database\SqlService\Option as SqlServiceOption;
 
 class MySqlDocConfLoader implements \dbeurive\Backend\Cli\InterfaceConfigLoader
 {
@@ -19,6 +20,7 @@ class MySqlDocConfLoader implements \dbeurive\Backend\Cli\InterfaceConfigLoader
      *          * \dbeurive\Backend\Database\Entrypoints\Option::PROC_BASE_NS
      *          * \dbeurive\Backend\Database\Entrypoints\Option::SQL_REPO_PATH
      *          * \dbeurive\Backend\Database\Entrypoints\Option::PROC_REPO_PATH
+     *          * \dbeurive\Backend\Database\SqlService\Option::SQL_SERVICE_NAME
      *
      *  @see \dbeurive\Backend\Database\Doc\Option::DOC_PATH
      *  @see \dbeurive\Backend\Database\Doc\Option::SCHEMA_PATH
@@ -26,10 +28,13 @@ class MySqlDocConfLoader implements \dbeurive\Backend\Cli\InterfaceConfigLoader
      *  @see \dbeurive\Backend\Database\Entrypoints\Option::PROC_BASE_NS
      *  @see \dbeurive\Backend\Database\Entrypoints\Option::SQL_REPO_PATH
      *  @see \dbeurive\Backend\Database\Entrypoints\Option::PROC_REPO_PATH
+     *  @see \dbeurive\Backend\Database\SqlService\Option::SQL_SERVICE_NAME
      */
     public function load() {
         $config = require __DIR__ . DIRECTORY_SEPARATOR . 'config.php';
-        return $config['application'];
+        $conf = $config['application'];
+        $conf[SqlServiceOption::SQL_SERVICE_NAME] = $config['mysql'][SqlServiceOption::SQL_SERVICE_NAME];
+        return $conf;
     }
 }
 
