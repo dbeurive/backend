@@ -48,21 +48,26 @@ Exploit the result:
 
 # Initialization in details
 
-First you crate a ["database link"](https://github.com/dbeurive/backend/tree/master/src/Database/Link).
+First you crate a ["database connector"](https://github.com/dbeurive/backend/tree/master/src/Database/Connector).
 
 ```php
-$linkConfiguration = [
+
+// Create a connector for MySql, that uses PDO (class \dbeurive\Backend\Database\Connector\MySqlPdo).
+
+$pdoConfiguration = [
      'db-host'      => 'localhost',
      'db-name'      => 'MyDatabase',
      'db-user'      => 'admin',
      'db-password'  => 'password'
 ];
-$databaseLink = new \dbeurive\Backend\Database\Link\Mysql();
-$errors = $databaseLink->setConfiguration($linkConfiguration);
-if (count($errors) > 0) {
-    throw new \Exception("Invalid configuration: " . implode(", ", $errors));
+
+$connector = new \dbeurive\Backend\Database\Connector\MySqlPdo($pdoConfiguration);
+
+try {
+    $databaseLink = new \dbeurive\Backend\Database\Link\Mysql();
+} catch (\Exception $e) {
+    /* ... */
 }
-$databaseLink->connect();
 ```
  
 Then you get an instance of the database interface:
@@ -75,11 +80,12 @@ $diConfiguration = [
             'procedure-repository-path'    => '/Users/denisbeurive/php-public/backend/tests/EntryPoints/Brands/MySql/Procedures',
             'sql-base-namespace'           => '\\dbeurive\\BackendTest\\EntryPoints\\Brands\\MySql\\Sqls',
             'procedure-base-namespace'     => '\\dbeurive\\BackendTest\\EntryPoints\\Brands\\MySql\\Procedures',
-            'php-db-desc-path'             => '/Users/denisbeurive/php-public/backend/tests/cache/mysql_db_schema.php'
+            'schema-path'                  => '/Users/denisbeurive/php-public/backend/tests/cache/mysql_db_schema.php',
+            'db-connector'                 => $connector
 ];
 
 $databaseInterface = \dbeurive\Backend\Database\DatabaseInterface::getInstance('default', $diConfiguration);
-$databaseInterface->setDbLink($databaseLink);
+
 ```
 
 Or, example 2:
@@ -90,11 +96,11 @@ $diConfiguration = [
             'procedure-repository-path'    => '/Users/denisbeurive/php-public/backend/tests/EntryPoints/Brands/MySql/Procedures',
             'sql-base-namespace'           => '\\dbeurive\\BackendTest\\EntryPoints\\Brands\\MySql\\Sqls',
             'procedure-base-namespace'     => '\\dbeurive\\BackendTest\\EntryPoints\\Brands\\MySql\\Procedures',
-            'php-db-desc-path'             => '/Users/denisbeurive/php-public/backend/tests/cache/mysql_db_schema.php',
-            'db-link'                      => $databaseLink
+            'schema-path'                  => '/Users/denisbeurive/php-public/backend/tests/cache/mysql_db_schema.php'
 ];
 
 $databaseInterface = \dbeurive\Backend\Database\DatabaseInterface::getInstance('default', $diConfiguration);
+$databaseInterface->setDbConnector($connector);
 ```
 
 Or, example 3:
@@ -106,7 +112,7 @@ $databaseInterface->setSqlBaseNameSpace($inOptConfig['/Users/denisbeurive/php-pu
 $databaseInterface->setProcedureRepositoryBasePath('\\dbeurive\\BackendTest\\EntryPoints\\Brands\\MySql\\Sqls');
 $databaseInterface->setProcedureBaseNameSpace($inOptConfig['\\dbeurive\\BackendTest\\EntryPoints\\Brands\\MySql\\Procedures');
 $databaseInterface->setPhpDatabaseRepresentationPath($inOptConfig['/Users/denisbeurive/php-public/backend/tests/cache/mysql_db_schema.php');
-$databaseInterface->setDbLink($databaseLink);
+$databaseInterface->setDbConnector($connector);
 ```
 
 > NOTE: The three examples above are strictly equivalent.

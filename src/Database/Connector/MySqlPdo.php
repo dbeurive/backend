@@ -1,20 +1,20 @@
 <?php
 
 /**
- * This file implements the "connector" for MySql.
+ * This file implements the "connector" for MySql, using PDO as database handler.
  */
 
 namespace dbeurive\Backend\Database\Connector;
 
 /**
- * Class MySql
+ * Class MySqlPdo
  *
- * This class implements the "connector" for MySql.
+ * This class implements the "connector" for MySql, using PDO as database handler.
  *
  * @package dbeurive\Backend\Database\Connector
  */
 
-class MySql extends AbstractConnector
+class MySqlPdo extends AbstractConnector
 {
     /**
      * This constant defines the name of the parameter used to specify the name, or the IP address, of the host that runs the database' server.

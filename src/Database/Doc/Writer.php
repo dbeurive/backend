@@ -5,9 +5,8 @@
  * This process is invoked within the execution of all "documentation writers".
  *
  * "Documentation writers" performs the following actions:
- *     1. Extract information from the database.
- *     2. Extract information from all the API's entry points.
- *     3. Organize the information previously extracted.
+ *     1. Extract information from all the API's entry points.
+ *     2. Organize the information previously extracted.
  */
 
 namespace dbeurive\Backend\Database\Doc;

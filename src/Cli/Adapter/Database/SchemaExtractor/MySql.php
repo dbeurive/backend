@@ -29,11 +29,11 @@ class MySql extends AbstractSchemaExtractor {
     protected function configure() {
         $this->setName('db:schema-mysql')
             ->setDescription("Extract the schema os a specified MySql database.")
-            ->addOption(Connector\MySql::DB_HOST,     null, InputOption::VALUE_OPTIONAL, 'Host that runs the MySql server (default: localhost)', 'localhost')
-            ->addOption(Connector\MySql::DB_USER,     null, InputOption::VALUE_REQUIRED, 'Database user', null)
-            ->addOption(Connector\MySql::DB_PASSWORD, null, InputOption::VALUE_OPTIONAL, "User's password", '')
-            ->addOption(Connector\MySql::DB_PORT,     null, InputOption::VALUE_OPTIONAL, 'Server TCP port (default: 3306)', 3306)
-            ->addOption(Connector\MySql::DB_NAME,     null, InputOption::VALUE_REQUIRED, 'Name of the MySql database', null);
+            ->addOption(Connector\MySqlPdo::DB_HOST,     null, InputOption::VALUE_OPTIONAL, 'Host that runs the MySql server (default: localhost)', 'localhost')
+            ->addOption(Connector\MySqlPdo::DB_USER,     null, InputOption::VALUE_REQUIRED, 'Database user', null)
+            ->addOption(Connector\MySqlPdo::DB_PASSWORD, null, InputOption::VALUE_OPTIONAL, "User's password", '')
+            ->addOption(Connector\MySqlPdo::DB_PORT,     null, InputOption::VALUE_OPTIONAL, 'Server TCP port (default: 3306)', 3306)
+            ->addOption(Connector\MySqlPdo::DB_NAME,     null, InputOption::VALUE_REQUIRED, 'Name of the MySql database', null);
     }
 
     /**
@@ -41,11 +41,11 @@ class MySql extends AbstractSchemaExtractor {
      * @see AbstractSchemaExtractor
      */
     protected function _getSpecificOptions(InputInterface $input) {
-        return [Connector\MySql::DB_HOST  => $input->getOption(Connector\MySql::DB_HOST),
-            Connector\MySql::DB_USER      => $input->getOption(Connector\MySql::DB_USER),
-            Connector\MySql::DB_PASSWORD  => $input->getOption(Connector\MySql::DB_PASSWORD),
-            Connector\MySql::DB_PORT      => $input->getOption(Connector\MySql::DB_PORT),
-            Connector\MySql::DB_NAME      => $input->getOption(Connector\MySql::DB_NAME)
+        return [Connector\MySqlPdo::DB_HOST  => $input->getOption(Connector\MySqlPdo::DB_HOST),
+            Connector\MySqlPdo::DB_USER      => $input->getOption(Connector\MySqlPdo::DB_USER),
+            Connector\MySqlPdo::DB_PASSWORD  => $input->getOption(Connector\MySqlPdo::DB_PASSWORD),
+            Connector\MySqlPdo::DB_PORT      => $input->getOption(Connector\MySqlPdo::DB_PORT),
+            Connector\MySqlPdo::DB_NAME      => $input->getOption(Connector\MySqlPdo::DB_NAME)
         ];
     }
 
@@ -55,11 +55,11 @@ class MySql extends AbstractSchemaExtractor {
      */
     protected function _checkConfiguration(array $inConfiguration) {
         $set = new SpecificationsSet();
-        $set->addInputSpecification(new Specification(Connector\MySql::DB_HOST,      true, true))
-            ->addInputSpecification(new Specification(Connector\MySql::DB_USER,      true, true))
-            ->addInputSpecification(new Specification(Connector\MySql::DB_PASSWORD,  true, true))
-            ->addInputSpecification(new Specification(Connector\MySql::DB_PORT,      true, true))
-            ->addInputSpecification(new Specification(Connector\MySql::DB_NAME,      true, true));
+        $set->addInputSpecification(new Specification(Connector\MySqlPdo::DB_HOST,      true, true))
+            ->addInputSpecification(new Specification(Connector\MySqlPdo::DB_USER,      true, true))
+            ->addInputSpecification(new Specification(Connector\MySqlPdo::DB_PASSWORD,  true, true))
+            ->addInputSpecification(new Specification(Connector\MySqlPdo::DB_PORT,      true, true))
+            ->addInputSpecification(new Specification(Connector\MySqlPdo::DB_NAME,      true, true));
 
         if ($set->check($inConfiguration)) {
             return [];

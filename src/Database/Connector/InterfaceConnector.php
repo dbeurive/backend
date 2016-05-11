@@ -21,11 +21,11 @@ interface InterfaceConnector
 {
     /**
      * Quote a field's name.
-     * Example: \dbeurive\Backend\Database\Connector\MySql::quoteFieldName
+     * Example: \dbeurive\Backend\Database\Connector\MySqlPdo::quoteFieldName
      * @param string $inFieldName Name of the field to quote.
      * @return string The method returns the quoted field.
      *
-     * @see \dbeurive\Backend\Database\Connector\MySql::quoteFieldName
+     * @see \dbeurive\Backend\Database\Connector\MySqlPdo::quoteFieldName
      */
     static public function quoteFieldName($inFieldName);
 }

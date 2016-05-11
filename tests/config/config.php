@@ -3,7 +3,7 @@
 use dbeurive\Backend\Database\Entrypoints\Option as EntryPointOption;
 use dbeurive\Backend\Database\Doc\Option as DocOption;
 use dbeurive\Backend\Database\Connector\Option as ConnectorOption;
-use dbeurive\Backend\Database\Connector\MySql;
+use dbeurive\Backend\Database\Connector\MySqlPdo;
 
 
 return call_user_func(function() {
@@ -23,11 +23,11 @@ return call_user_func(function() {
      * Please, customise the values.
      */
     $mysqlConf = [
-        MySql::DB_HOST      => 'localhost',
-        MySql::DB_NAME      => 'phptools',
-        MySql::DB_USER      => 'root',
-        MySql::DB_PASSWORD  => '',
-        MySql::DB_PORT      => 3306
+        MySqlPdo::DB_HOST      => 'localhost',
+        MySqlPdo::DB_NAME      => 'phptools',
+        MySqlPdo::DB_USER      => 'root',
+        MySqlPdo::DB_PASSWORD  => '',
+        MySqlPdo::DB_PORT      => 3306
     ];
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -68,7 +68,7 @@ return call_user_func(function() {
         ],
         'mysql' => [
             // This parameter is used for the extraction of entry points' descriptions.
-            ConnectorOption::CONNECTOR_NAME   => '\\dbeurive\\Backend\\Database\\Connector\\MySql',
+            ConnectorOption::CONNECTOR_NAME   => '\\dbeurive\\Backend\\Database\\Connector\\MySqlPdo',
             // This parameter is used when the application is running.
             ConnectorOption::CONNECTOR_CONFIG => $mysqlConf
         ]

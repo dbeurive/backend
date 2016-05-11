@@ -20,13 +20,13 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
 
     public function testFailure() {
 
-        $connector = new \dbeurive\Backend\Database\Connector\MySql($this->__connectorMySqlConfiguration);
+        $connector = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__connectorMySqlConfiguration);
         $this->expectException(\Exception::class);
         $connector->getDatabaseHandler(); // The connexion is not established.
     }
 
     public function testGetConfiguration() {
-        $connector = new \dbeurive\Backend\Database\Connector\MySql($this->__connectorMySqlConfiguration);
+        $connector = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__connectorMySqlConfiguration);
         $conf = $connector->getConfiguration();
         $this->assertTrue(is_array($conf));
     }
@@ -37,7 +37,7 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
 
     public function testMysqlConnect() {
 
-        $connector = new \dbeurive\Backend\Database\Connector\MySql($this->__connectorMySqlConfiguration);
+        $connector = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__connectorMySqlConfiguration);
         $connector->connect();
         /** @var \PDO $pdo */
         $pdo = $connector->getDatabaseHandler(); // The connexion is not established.
@@ -49,20 +49,20 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
 
     public function testMySqlGetConfiguration() {
 
-        $connector = new \dbeurive\Backend\Database\Connector\MySql($this->__connectorMySqlConfiguration);
+        $connector = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__connectorMySqlConfiguration);
         $conf = $connector->getConfiguration();
         $this->assertTrue(is_array($conf));
 
         foreach ($connector->getConfigurationOptions() as $_option) {
             $this->assertTrue(is_array($_option));
-            $options[] = $_option[\dbeurive\Backend\Database\Connector\MySql::OPTION_NAME];
+            $options[] = $_option[\dbeurive\Backend\Database\Connector\MySqlPdo::OPTION_NAME];
         }
 
-        $expected = [   \dbeurive\Backend\Database\Connector\MySql::DB_HOST,
-                        \dbeurive\Backend\Database\Connector\MySql::DB_NAME,
-                        \dbeurive\Backend\Database\Connector\MySql::DB_PASSWORD,
-                        \dbeurive\Backend\Database\Connector\MySql::DB_PORT,
-                        \dbeurive\Backend\Database\Connector\MySql::DB_USER];
+        $expected = [   \dbeurive\Backend\Database\Connector\MySqlPdo::DB_HOST,
+                        \dbeurive\Backend\Database\Connector\MySqlPdo::DB_NAME,
+                        \dbeurive\Backend\Database\Connector\MySqlPdo::DB_PASSWORD,
+                        \dbeurive\Backend\Database\Connector\MySqlPdo::DB_PORT,
+                        \dbeurive\Backend\Database\Connector\MySqlPdo::DB_USER];
         sort($expected);
         sort($options);
 
@@ -71,14 +71,14 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
 
     public function testMySqlQuoteValue() {
         $value = "10";
-        $connector = new \dbeurive\Backend\Database\Connector\MySql($this->__connectorMySqlConfiguration);
+        $connector = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__connectorMySqlConfiguration);
         $connector->connect();
         $this->assertEquals("'$value'", $connector->quoteValue($value));
     }
 
     public function testMySqlQuoteFieldName() {
         $fieldName = 'user.id';
-        $this->assertEquals('`user`.`id`', \dbeurive\Backend\Database\Connector\MySql::quoteFieldName($fieldName));
+        $this->assertEquals('`user`.`id`', \dbeurive\Backend\Database\Connector\MySqlPdo::quoteFieldName($fieldName));
     }
 
 }

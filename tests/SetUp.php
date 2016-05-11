@@ -3,7 +3,7 @@
 namespace dbeurive\BackendTest;
 
 use dbeurive\Backend\Database\Connector\Option as ConnectorOption;
-use dbeurive\Backend\Database\Connector\MySql;
+use dbeurive\Backend\Database\Connector\MySqlPdo;
 use dbeurive\Backend\Database\DatabaseInterface;
 
 
@@ -26,7 +26,7 @@ trait SetUp
     private $__pdoMySql = null;
     /** @var array */
     private $__connectorMySqlConfiguration;
-    /** @var \dbeurive\Backend\Database\Connector\MySql */
+    /** @var \dbeurive\Backend\Database\Connector\MySqlPdo */
     private $__connectorMySql;
 
 
@@ -89,8 +89,8 @@ trait SetUp
     private function __createMySqlPdo() {
         if (is_null($this->__pdoMySql)) {
             $this->__init();
-            $dsn = "mysql:host=" . $this->__connectorMySqlConfiguration[MySql::DB_HOST] . ";port=" . $this->__connectorMySqlConfiguration[MySql::DB_PORT];
-            $this->__pdoMySql = new \PDO($dsn, $this->__connectorMySqlConfiguration[MySql::DB_USER], $this->__connectorMySqlConfiguration[MySql::DB_PASSWORD], []);
+            $dsn = "mysql:host=" . $this->__connectorMySqlConfiguration[MySqlPdo::DB_HOST] . ";port=" . $this->__connectorMySqlConfiguration[MySqlPdo::DB_PORT];
+            $this->__pdoMySql = new \PDO($dsn, $this->__connectorMySqlConfiguration[MySqlPdo::DB_USER], $this->__connectorMySqlConfiguration[MySqlPdo::DB_PASSWORD], []);
         }
         return $this->__pdoMySql;
     }
@@ -132,7 +132,7 @@ trait SetUp
      */
     private function __createMySqlConnector()
     {
-        $this->__connectorMySql = new \dbeurive\Backend\Database\Connector\MySql($this->__connectorMySqlConfiguration);
+        $this->__connectorMySql = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__connectorMySqlConfiguration);
     }
 
     /**

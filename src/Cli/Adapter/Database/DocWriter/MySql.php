@@ -38,7 +38,7 @@ class MySql extends AbstractDocWriter {
      */
     protected function _getSpecificOptions(InputInterface $input) {
         return [
-            Connector\Option::CONNECTOR_NAME => \dbeurive\Backend\Database\Connector\MySql::getFullyQualifiedClassName()
+            Connector\Option::CONNECTOR_NAME => \dbeurive\Backend\Database\Connector\MySqlPdo::getFullyQualifiedClassName()
         ];
     }
 }

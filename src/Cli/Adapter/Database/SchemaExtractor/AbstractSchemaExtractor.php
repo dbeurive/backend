@@ -105,7 +105,7 @@ abstract class AbstractSchemaExtractor extends Command
         }
 
         // Create a connector.
-        $connector = new \dbeurive\Backend\Database\Connector\MySql($options);
+        $connector = new \dbeurive\Backend\Database\Connector\MySqlPdo($options);
         $connector->connect();
 
         // Create the schema extractor.

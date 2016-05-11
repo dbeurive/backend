@@ -28,7 +28,7 @@ class MySql extends AbstractSchemaExtractor
         /** @var \PDO $pdo */
         $pdo = $inConnector->getDatabaseHandler(); // Throws an exception if the connexion is not established.
 
-        $dbName = $inConnector->getConfiguration()[\dbeurive\Backend\Database\Connector\MySql::DB_NAME];
+        $dbName = $inConnector->getConfiguration()[\dbeurive\Backend\Database\Connector\MySqlPdo::DB_NAME];
 
         $sql = "select TABLE_NAME from information_schema.tables where TABLE_SCHEMA={$pdo->quote($dbName)}";
         $tables = $pdo->query($sql);
