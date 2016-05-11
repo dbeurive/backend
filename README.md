@@ -12,50 +12,8 @@ This is all about documentation. Please read: [why did I write this database acc
 If you access you database through this API, then you can get a SQLite database that organises all information about your SQL requests and your procedures.
 
 * Click [here](https://github.com/dbeurive/backend/blob/master/src/Database/Doc/schema.php) to get the schema for the generated SQLite database.
-* You can download an example of the generated database [here](https://github.com/dbeurive/backend/blob/master/tests/cache/mysql_db_schema.sqlite).
-
-```sqlite
-$ sqlite3 mysql_db_schema.sqlite
-sqlite> .schema
-sqlite> .mode line
-sqlite> .table
-sqlite> .schema requestTag
-```
-
-Select all SQL requests tagged "authentication":
-
-```sql
-SELECT     "request"."name" as "request.name"
-FROM       "request" 
-INNER JOIN "requestTag" ON "requestTag"."request_id"="request"."id"
-INNER JOIN "tag" ON "requestTag"."tag_id"="tag"."id"
-WHERE      "tag"."tag"="authentication";
-```
-
-Select all SQL requests that select the field "user.id":
-
-```sql
-SELECT     "request"."name" as "request.name"
-FROM       "request"
-INNER JOIN "requestSelectionField" ON "request"."id"="requestSelectionField"."request_id"
-INNER JOIN "field" ON "field"."id"="requestSelectionField"."field_id"
-WHERE      "field"."name"="user.id";
-```
-
-Select all SQL requests tagged "authentication", and that select the field "user.id":
-
-```sql
-SELECT     "request"."name" as "request.name"
-FROM       "request" 
-INNER JOIN "requestTag" ON "requestTag"."request_id"="request"."id"
-INNER JOIN "tag" ON "requestTag"."tag_id"="tag"."id"
-INNER JOIN "requestSelectionField" ON "request"."id"="requestSelectionField"."request_id"
-INNER JOIN "field" ON "field"."id"="requestSelectionField"."field_id"
-WHERE      "tag"."tag"="authentication"
-  AND      "field"."name"="user.id";
-```
-
-...
+* You can download an example of the generated database [here](https://github.com/dbeurive/backend/blob/master/tests/cache/mysql_doc.sqlite).
+* Click [here](https://github.com/dbeurive/backend/blob/master/doc/SQLITE_USAGE.md) to have an overview of what you can do with the DSLite that contains the generated documentation.
 
 # Overview
 
