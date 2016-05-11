@@ -1,8 +1,21 @@
 <?php
 
+/**
+ * This file implements the base class for all "schema extractor".
+ *
+ * Schema extractors are software components that return all the fields of a given database.
+ */
+
 namespace dbeurive\Backend\Database\SchemaExtractor;
 use dbeurive\Backend\Database\Connector\AbstractConnector;
 
+/**
+ * Class AbstractSchemaExtractor
+ *
+ * The class is the base class for all "schema extractor".
+ *
+ * @package dbeurive\Backend\Database\SchemaExtractor
+ */
 abstract class AbstractSchemaExtractor
 {
     /** @var AbstractConnector Connector for the database. */

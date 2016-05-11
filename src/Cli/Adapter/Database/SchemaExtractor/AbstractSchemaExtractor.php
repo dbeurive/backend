@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * This file implements the base class for all "scheme extractors".
+ */
+
 namespace dbeurive\Backend\Cli\Adapter\Database\SchemaExtractor;
 
 use dbeurive\Backend\Database\Doc\Option as DocOption;
@@ -11,6 +15,13 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class AbstractSchemaExtractor
+ *
+ * This class is the base class for all "scheme extractors".
+ *
+ * @package dbeurive\Backend\Cli\Adapter\Database\SchemaExtractor
+ */
 
 abstract class AbstractSchemaExtractor extends Command
 {
@@ -43,8 +54,8 @@ abstract class AbstractSchemaExtractor extends Command
     abstract protected function _getSpecificOptions(InputInterface $input);
 
     /**
-     * Check the configuration from the specific "schema extractor" being executed.
-     * @param array $inConfiguration List of parameters that define the configuration.
+     * Check the configuration for the specific "schema extractor" being executed.
+     * @param array $inConfiguration List of parameters that define the configuration to check.
      * @return array If the given configuration is valid, then the method returns an empty array.
      *         Otherwise, the method returns a list of error messages.
      */
@@ -53,9 +64,13 @@ abstract class AbstractSchemaExtractor extends Command
     /**
      * This method is called by the Symfony's console class.
      * It executes the (specific: MySql, PostgreSql...) CLI adapter.
-     * @see Symfony\Component\Console\Command\Command
+     *
      * @param InputInterface $input Input interface.
      * @param OutputInterface $output Output interface.
+     * @return bool If the execution is successful, then the method returns true.
+     *         Otherwise, it returns false.
+     *
+     * @see \Symfony\Component\Console\Command\Command
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
 
@@ -101,6 +116,7 @@ abstract class AbstractSchemaExtractor extends Command
 
         // Now, write the schema.
         \dbeurive\Util\UtilData::to_callable_php_file($schema, $options[DocOption::SCHEMA_PATH]);
+        return true;
     }
 
 }

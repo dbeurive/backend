@@ -1,9 +1,19 @@
 <?php
 
+/**
+ * This file implements the "schema extractor" for MySql.
+ */
+
 namespace dbeurive\Backend\Database\SchemaExtractor;
 use dbeurive\Backend\Database\Connector\AbstractConnector;
 
-
+/**
+ * Class MySql
+ *
+ * This class implements the "schema extractor" for MySql.
+ *
+ * @package dbeurive\Backend\Database\SchemaExtractor
+ */
 
 class MySql extends AbstractSchemaExtractor
 {

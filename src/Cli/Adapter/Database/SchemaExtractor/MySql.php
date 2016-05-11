@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file implements the "documentation writer" for MySql.
+ * This file implements the "schema extractor" for MySql.
  */
 
 namespace dbeurive\Backend\Cli\Adapter\Database\SchemaExtractor;
@@ -12,10 +12,11 @@ use dbeurive\Backend\Database\Connector;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-
-
 /**
  * Class MySql
+ *
+ * This class implements the "schema extractor" for MySql.
+ *
  * @package dbeurive\Backend\Cli\Adapter\Database\SchemaExtractor
  */
 

@@ -1,6 +1,35 @@
 <?php
 
+/**
+ * This file implements the base class for all "connectors".
+ *
+ * Connectors encapsulate a low-level database handler, such as PDO ot mysqli.
+ * This low-level database handler is passed to the API's entry points, so they can use it directly.
+ * Please note that the user can use any low-level connexion handler (PDO, mysqli...).
+ *
+ * Connectors provide functionalities that are specific to a given brand of database server, but that is not provided by the low level database handler.
+ * Right now, there is only on such functionality: quoting fully qualified fields' names.
+ * For example (MySql): user.id => `user`.`id`.
+ * Please note that, because these functionalities does not require an open connexion to the database, they are implemented as static methods.
+ * These functionalities can be used without configuring the connector first. See the interface "\dbeurive\Backend\Database\Connector\InterfaceConnector".
+ *
+ * And because all low-level database handlers don't have a standardised API, the connector's API encapsulates these functionalities, so the underlying software layer does not rely on a specific database handler.
+ * As an example, to quote a value:
+ *   * Using PDO: \PDO::quote()
+ *   * Using mysqli: mysqli::escape_string()
+ *
+ * @see \dbeurive\Backend\Database\Connector\InterfaceConnector
+ */
+
 namespace dbeurive\Backend\Database\Connector;
+
+/**
+ * Class AbstractConnector
+ *
+ * This class is the base class for all connectors.
+ *
+ * @package dbeurive\Backend\Database\Connector
+ */
 
 abstract class AbstractConnector implements InterfaceConnector
 {

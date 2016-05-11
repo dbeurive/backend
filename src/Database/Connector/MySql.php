@@ -1,6 +1,18 @@
 <?php
 
+/**
+ * This file implements the "connector" for MySql.
+ */
+
 namespace dbeurive\Backend\Database\Connector;
+
+/**
+ * Class MySql
+ *
+ * This class implements the "connector" for MySql.
+ *
+ * @package dbeurive\Backend\Database\Connector
+ */
 
 class MySql extends AbstractConnector
 {
