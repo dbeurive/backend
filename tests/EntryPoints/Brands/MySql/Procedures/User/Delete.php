@@ -36,7 +36,7 @@ class Delete extends AbstractApplication {
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
      */
-    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector, SqlService $inSqlService) {
+    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector) {
         $sql = $this->_getSql(self::SQL_DELETE, [], $this->_getInputFields());
         $resultSql = $sql->execute();
         $result = new Result(Result::STATUS_SUCCESS,

@@ -69,22 +69,4 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(json_encode($expected), json_encode($options));
     }
 
-    public function testMySqlQuoteValue() {
-        $value = "10";
-        $connector = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__connectorMySqlConfiguration);
-        $connector->connect();
-        $this->assertEquals("'$value'", $connector->quoteValue($value));
-    }
-
-    public function testMySqlQuoteFieldName() {
-        $fieldName = 'user.id';
-        $connector = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__connectorMySqlConfiguration);
-        $sqlServiceClassName = $connector->getSqlServiceProvider();
-        /** @var \dbeurive\Backend\Database\SqlService\MySql $sqlService */
-        $sqlService = new $sqlServiceClassName();
-
-
-        $this->assertEquals('`user`.`id`', $sqlService->quoteFieldName($fieldName));
-    }
-
 }

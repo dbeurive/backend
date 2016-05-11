@@ -24,8 +24,6 @@ use dbeurive\Backend\Database\Entrypoints\Description\Element\Tag as Tag;
 use dbeurive\Backend\Cli\Lib\CliWriter;
 use dbeurive\Input\SpecificationsSet;
 use dbeurive\Input\Specification;
-use dbeurive\Backend\Database\SqlService\Option as SqlServiceOption;
-
 
 /**
  * Class Writer
@@ -100,7 +98,6 @@ class Writer {
      *           * \dbeurive\Backend\Database\Entrypoints\Option::PROC_BASE_NS
      *           * \dbeurive\Backend\Database\Entrypoints\Option::SQL_REPO_PATH
      *           * \dbeurive\Backend\Database\Entrypoints\Option::PROC_REPO_PATH
-     *           * \dbeurive\Backend\Database\SqlService\Option::SQL_SERVICE_NAME
      *
      * @return bool Upon successful completion the method returns the value true.
      *         Otherwise an exception is thrown.
@@ -113,7 +110,6 @@ class Writer {
      * @see \dbeurive\Backend\Database\Entrypoints\Option::PROC_BASE_NS
      * @see \dbeurive\Backend\Database\Entrypoints\Option::SQL_REPO_PATH
      * @see \dbeurive\Backend\Database\Entrypoints\Option::PROC_REPO_PATH
-     * @see \dbeurive\Backend\Database\SqlService\Option::SQL_SERVICE_NAME
      */
     static public function writer(array $inConfiguration)
     {
@@ -129,8 +125,7 @@ class Writer {
             EntryPointOption::SQL_BASE_NS,
             EntryPointOption::PROC_BASE_NS,
             EntryPointOption::SQL_REPO_PATH,
-            EntryPointOption::PROC_REPO_PATH,
-            SqlServiceOption::SQL_SERVICE_NAME
+            EntryPointOption::PROC_REPO_PATH
         ];
 
         foreach ($mandatories as $_index => $_name) {
@@ -145,7 +140,6 @@ class Writer {
         $procedureBaseNamespace      = $inConfiguration[EntryPointOption::PROC_BASE_NS];
         $sqlRepositoryPath           = $inConfiguration[EntryPointOption::SQL_REPO_PATH];
         $procedureRepositoryPath     = $inConfiguration[EntryPointOption::PROC_REPO_PATH];
-        $sqlServiceProviderClassName = $inConfiguration[SqlServiceOption::SQL_SERVICE_NAME];
 
         $sqliteSchemaPath = __DIR__ . DIRECTORY_SEPARATOR . 'schema.php';
 
@@ -180,7 +174,6 @@ class Writer {
         $dataInterface->setSqlBaseNameSpace($sqlBaseNamespace);
         $dataInterface->setProcedureBaseNameSpace($procedureBaseNamespace);
         $dataInterface->setPhpDatabaseRepresentationPath($phpDbDescription);
-        $dataInterface->setSqlServiceClassName($sqlServiceProviderClassName);
 
         CliWriter::echoInfo("Extracting data from PHP codes (SQL requests and procedures).");
 

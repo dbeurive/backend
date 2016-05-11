@@ -31,4 +31,26 @@ interface InterfaceSqlService
      * @see \dbeurive\Backend\Database\SqlService\MySql::quoteFieldName
      */
     static public function quoteFieldName($inFieldName);
+
+    /**
+     * Take an array of fields' names and return a array of fully qualified fields' names.
+     * Example: getFullyQualifiedFieldsAsArray('user', ['id', 'name']) => ['user.id', 'user.name']
+     * @param string $inTableName Name of the table.
+     * @param array $inFields List of fields.
+     * @return array The method returns an array of fully qualified fields' names.
+     */
+    static public function getFullyQualifiedFieldsAsArray($inTableName, $inFields);
+
+    /**
+     * Take an array of fields' names and return an SQL fragment that contains fully qualified fields' names.
+     * Exemple: getFullyQualifiedFieldsAsSql('user', ['id', 'name']) => "user.id as 'user.id', user.name as 'user.name'".
+     * @param string $inTableName Name of the table.
+     * @param array $inFields List of fields.
+     * @return string The method returns an SQL fragment.
+     */
+    static public function getFullyQualifiedFieldsAsSql($inTableName, $inFields);
+
+    static public function getFullyQualifiedQuotedFieldsAsArray($inTableName, $inFields);
+
+    static public function getFullyQualifiedQuotedFieldsAsSql($inTableName, $inFields);
 }

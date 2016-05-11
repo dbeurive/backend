@@ -265,7 +265,6 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         // -------------------------------------------------------------------------------------------------------------
 
         $config = $this->__generalConfiguration['application'];
-        $config[SqlServiceOption::SQL_SERVICE_NAME] = $this->__generalConfiguration['mysql'][SqlServiceOption::SQL_SERVICE_NAME];
         Writer::writer($config);
 
         // -------------------------------------------------------------------------------------------------------------

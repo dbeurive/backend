@@ -27,4 +27,41 @@ class MySql implements InterfaceSqlService
         }
         return '`' . $tokens[0] . '`' . '.' . '`' . $tokens[1] . '`';
     }
+
+    /**
+     * {@inheritdoc}
+     * @see InterfaceSqlService
+     */
+    static public function getFullyQualifiedFieldsAsArray($inTableName, $inFields) {
+        return array_map(function($e) use ($inTableName) { return "${inTableName}.${e}"; }, $inFields);
+    }
+
+    /**
+     * {@inheritdoc}
+     * @see InterfaceSqlService
+     */
+    static public function getFullyQualifiedFieldsAsSql($inTableName, $inFields) {
+        $fullyQualified = self::getFullyQualifiedFieldsAsArray($inTableName, $inFields);
+        return implode(', ', array_map(function($e) { return "{$e} as '${e}'"; }, $fullyQualified));
+    }
+
+    /**
+     * {@inheritdoc}
+     * @see InterfaceSqlService
+     */
+    static public function getFullyQualifiedQuotedFieldsAsArray($inTableName, $inFields) {
+        $quoter = function($inName) { return self::quoteFieldName($inName); };
+        $fullyQualified = self::getFullyQualifiedFieldsAsArray($inTableName, $inFields);
+        return array_map($quoter, $fullyQualified);
+    }
+
+    /**
+     * {@inheritdoc}
+     * @see InterfaceSqlService
+     */
+    static public function getFullyQualifiedQuotedFieldsAsSql($inTableName, $inFields) {
+        $fullyQualified = self::getFullyQualifiedFieldsAsArray($inTableName, $inFields);
+        $quoter = function($inName) { return self::quoteFieldName($inName); };
+        return implode(', ', array_map(function($e) use($quoter) { return "{$quoter($e)} as '${e}'"; }, $fullyQualified));
+    }
 }

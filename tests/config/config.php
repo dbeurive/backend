@@ -68,8 +68,6 @@ return call_user_func(function() {
             DocOption::SCHEMA_PATH           => $TEST_BASE_DIR . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'mysql_schema.php'
         ],
         'mysql' => [
-            // This parameter is used for the extraction of entry points' descriptions.
-            SqlServiceOption::SQL_SERVICE_NAME => '\\dbeurive\\Backend\\Database\\SqlService\\MySql',
             // This parameter is used when the application is running.
             ConnectorOption::CONNECTOR_CONFIG => $mysqlConf,
             // This represents the name of the class that implements the database connector.

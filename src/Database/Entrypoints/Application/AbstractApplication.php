@@ -9,9 +9,8 @@
 
 namespace dbeurive\Backend\Database\Entrypoints\Application;
 use dbeurive\Backend\Database\Connector\AbstractConnector;
-use dbeurive\Backend\Database\DatabaseInterface;
 use dbeurive\Backend\Database\Entrypoints\Provider;
-use dbeurive\Backend\Database\SqlService\InterfaceSqlService as SqlService;
+
 
 /**
  * Class AbstractEntryPoint
@@ -25,19 +24,6 @@ use dbeurive\Backend\Database\SqlService\InterfaceSqlService as SqlService;
  */
 
 abstract class AbstractApplication {
-
-    /**
-     * @see \dbeurive\Backend\Database\DatabaseInterface
-     */
-    const FIELDS_RAW_AS_ARRAY = DatabaseInterface::FIELDS_RAW_AS_ARRAY;
-    /**
-     * @see \dbeurive\Backend\Database\DatabaseInterface
-     */
-    const FIELDS_FULLY_QUALIFIED_AS_ARRAY = DatabaseInterface::FIELDS_FULLY_QUALIFIED_AS_ARRAY;
-    /**
-     * @see \dbeurive\Backend\Database\DatabaseInterface
-     */
-    const FIELDS_FULLY_QUALIFIED_AS_SQL = DatabaseInterface::FIELDS_FULLY_QUALIFIED_AS_SQL;
 
     /**
      * @var \dbeurive\Backend\Database\Entrypoints\Application\Sql\Result|\dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result Result for the last execution.
@@ -57,8 +43,6 @@ abstract class AbstractApplication {
     protected $_connector = null;
     /**
      * @var \dbeurive\Backend\Database\Entrypoints\Provider Entry point provider.
-     *      This attribute has been introduced for the procedures (procedures need to get SQL requests).
-     *      This attribute is used by the procedure to get SQL requests.
      */
     protected $_provider = null;
     /**
@@ -67,11 +51,7 @@ abstract class AbstractApplication {
      *      Otherwise, the property's value is false.
      */
     protected $_hasBeenExecuted = false;
-    /**
-     * @var null|\dbeurive\Backend\Database\SqlService\InterfaceSqlService SQL service provider.
-     */
-    private $__sqlService = null;
-
+    
     /**
      * Create a new API's entry point.
      *
@@ -104,8 +84,6 @@ abstract class AbstractApplication {
         if (! is_null($inOptConnector)) {
             // The application is running.
             $this->_connector = $inOptConnector;
-            $className = $inOptConnector->getSqlServiceProvider();
-            $this->__sqlService = new $className();
         }
         $this->_init($inOptInitConfig);
     }
@@ -127,10 +105,9 @@ abstract class AbstractApplication {
      * Execute the API's entry point.
      * @param array $inExecutionConfig Configuration for the execution.
      * @param AbstractConnector $inConnector Handler to the database connector.
-     * @param SqlService $inSqlService SQL service provider.
      * @return \dbeurive\Backend\Database\Entrypoints\Application\Sql\Result|\dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result
      */
-    abstract protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector, SqlService $inSqlService);
+    abstract protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector);
 
     /**
      * Initialize the API's entry point.
@@ -190,22 +167,19 @@ abstract class AbstractApplication {
     /**
      * Get all fields' names within a given table.
      * @param string $inTableName Name of the table.
-     * @param int $inOptFormat This parameter specifies the output format. Value can be:
-     *        * \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication::FIELDS_RAW_AS_ARRAY: the list of fields' names is returned as an array of strings.
-     *          Each element of the returned array is a string "<field name>".
-     *        * \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication::FIELDS_FULLY_QUALIFIED_AS_ARRAY: the list of fully qualified fields' names is returned as an array of strings.
-     *          Each element of the returned array is a string "<table name>.<field name>".
-     *        * \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication::FIELDS_FULLY_QUALIFIED_AS_SQL: the list of fields' names is returned as a string "<table name>.<field name> as '<table name>.<field name>',...".
-     * @param bool $inOptQuote This parameter indicates whether we should quote the fields' names or not.
-     *        For example, with MySql, you can quote "user.id" into "`user`.`id`".
      * @return array The method returns the list of fields within the table.
      * @throws \Exception
-     * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication::FIELDS_RAW_AS_ARRAY
-     * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication::FIELDS_FULLY_QUALIFIED_AS_ARRAY
-     * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication::FIELDS_FULLY_QUALIFIED_AS_SQL
      */
-    protected function _getTableFieldsNames($inTableName, $inFormat=self::FIELDS_RAW_AS_ARRAY, $inOptQuote=true) {
-        return $this->_provider->getDataInterface()->getTableFieldsNames($inTableName, $inFormat, $inOptQuote);
+    protected function _getTableFieldsNames($inTableName) {
+        return $this->_provider->getDataInterface()->getTableFieldsNames($inTableName);
+    }
+
+    /**
+     * Return an instance of the class that provides SQL services.
+     * @return \dbeurive\Backend\Database\SqlService\InterfaceSqlService
+     */
+    protected function _getSqlServiceProvider() {
+        return $this->_provider->getDataInterface()->getSqlServiceProvider();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -235,7 +209,7 @@ abstract class AbstractApplication {
 
         $this->_hasBeenExecuted = true;
         $this->_result = null;
-        $this->_result = $this->_execute($this->_executionConfig, $this->_connector, $this->__sqlService);
+        $this->_result = $this->_execute($this->_executionConfig, $this->_connector);
         return $this->_result;
     }
 

@@ -22,19 +22,6 @@ use dbeurive\Backend\Database\DatabaseInterface;
 abstract class AbstractEntryPoint {
 
     /**
-     * @see dbeurive\Backend\Database\DatabaseInterface
-     */
-    const FIELDS_RAW_AS_ARRAY = DatabaseInterface::FIELDS_RAW_AS_ARRAY;
-    /**
-     * @see dbeurive\Backend\Database\DatabaseInterface
-     */
-    const FIELDS_FULLY_QUALIFIED_AS_ARRAY = DatabaseInterface::FIELDS_FULLY_QUALIFIED_AS_ARRAY;
-    /**
-     * @see dbeurive\Backend\Database\DatabaseInterface
-     */
-    const FIELDS_FULLY_QUALIFIED_AS_SQL = DatabaseInterface::FIELDS_FULLY_QUALIFIED_AS_SQL;
-
-    /**
      * @var \dbeurive\Backend\Database\Entrypoints\Application\Sql\Result|\dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result Result for the last execution.
      */
     protected $_result = null;
@@ -134,23 +121,11 @@ abstract class AbstractEntryPoint {
 
     /**
      * Get all fields' names within a given table.
-     * @param string $inTableName Name of the table.
-     * @param int $inOptFormat This parameter specifies the output format. Value can be:
-     *        * \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint::FIELDS_RAW_AS_ARRAY: the list of fields' names is returned as an array of strings.
-     *          Each element of the returned array is a string "<field name>".
-     *        * \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint::FIELDS_FULLY_QUALIFIED_AS_ARRAY: the list of fully qualified fields' names is returned as an array of strings.
-     *          Each element of the returned array is a string "<table name>.<field name>".
-     *        * \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint::FIELDS_FULLY_QUALIFIED_AS_SQL: the list of fields' names is returned as a string "<table name>.<field name> as '<table name>.<field name>',...".
-     * @param bool $inOptQuote This parameter indicates whether we should quote the fields' names or not.
-     *        For example, with MySql, you can quote "user.id" into "`user`.`id`".
      * @return array The method returns the list of fields within the table.
      * @throws \Exception
-     * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint::FIELDS_RAW_AS_ARRAY
-     * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint::FIELDS_FULLY_QUALIFIED_AS_ARRAY
-     * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint::FIELDS_FULLY_QUALIFIED_AS_SQL
      */
-    public function getTableFieldsNames($inTableName, $inFormat=self::FIELDS_RAW_AS_ARRAY, $inOptQuote=true) {
-        return $this->_provider->getDataInterface()->getTableFieldsNames($inTableName, $inFormat, $inOptQuote);
+    public function getTableFieldsNames($inTableName) {
+        return $this->_provider->getDataInterface()->getTableFieldsNames($inTableName);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

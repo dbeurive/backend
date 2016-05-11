@@ -48,12 +48,6 @@ class DatabaseInterfaceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->__di->setPhpDatabaseRepresentationPath($referencePath));
     }
 
-    public function testGetTableFieldsNamesOnError() {
-        $this->expectException(\Exception::class);
-        // No link to the database has been assigned.
-        // Therefore, it is impossible to quote fields.
-        $this->__di->getTableFieldsNames('user', DatabaseInterface::FIELDS_RAW_AS_ARRAY, true);
-    }
 
 
     public function testGetTableFieldsNames() {
@@ -66,29 +60,8 @@ class DatabaseInterfaceTest extends \PHPUnit_Framework_TestCase
         $this->__createConnector('mysql');
         $this->__di->setDbConnector($this->__connector);
 
-        $fields = $this->__di->getTableFieldsNames('user', DatabaseInterface::FIELDS_RAW_AS_ARRAY, false);
+        $fields = $this->__di->getTableFieldsNames('user');
         $this->assertCount(0, array_diff($reference, $fields));
-
-        $fields = $this->__di->getTableFieldsNames('user', DatabaseInterface::FIELDS_RAW_AS_ARRAY, true);
-        $this->assertCount(0, array_diff($reference, $fields));
-
-        $fields = $this->__di->getTableFieldsNames('user', DatabaseInterface::FIELDS_FULLY_QUALIFIED_AS_ARRAY, false);
-        $ref = array_map(function($e) { return 'user.' . $e; }, $reference);
-        $this->assertCount(0, array_diff($ref, $fields));
-
-        $fields = $this->__di->getTableFieldsNames('user', DatabaseInterface::FIELDS_FULLY_QUALIFIED_AS_ARRAY, true);
-        $ref = array_map(function($e) { return '`user`.' . "`$e`"; }, $reference);
-        $this->assertCount(0, array_diff($ref, $fields));
-
-        $fields = $this->__di->getTableFieldsNames('user', DatabaseInterface::FIELDS_FULLY_QUALIFIED_AS_SQL, false);
-        $fields = explode(', ', $fields);
-        $ref = array_map(function($e) { return 'user.' . $e . " as 'user." . $e . "'"; }, $reference);
-        $this->assertCount(0, array_diff($ref, $fields));
-
-        $fields = $this->__di->getTableFieldsNames('user', DatabaseInterface::FIELDS_FULLY_QUALIFIED_AS_SQL, true);
-        $fields = explode(', ', $fields);
-        $ref = array_map(function($e) { return '`user`.`' . $e . "` as 'user." . $e . "'"; }, $reference);
-        $this->assertCount(0, array_diff($ref, $fields));
     }
 
     /**

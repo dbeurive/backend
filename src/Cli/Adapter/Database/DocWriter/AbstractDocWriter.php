@@ -21,7 +21,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use dbeurive\Backend\Database\SqlService\Option as SqlServiceOption;
+
 
 /**
  * Class AbstractDocWriter
@@ -39,14 +39,6 @@ use dbeurive\Backend\Database\SqlService\Option as SqlServiceOption;
  */
 
 abstract class AbstractDocWriter extends Command {
-
-    /**
-     * This method returns the fully qualified name of the class that implements the SQL service provider associated to this connector.
-     * @return string The fully qualified name of the class that implements the SQL service provider associated to this connector.
-     *
-     * @see \dbeurive\Backend\Database\SqlService\InterfaceSqlService
-     */
-    abstract protected function _getSqlServiceProvider();
 
     // -----------------------------------------------------------------------------------------------------------------
     // Specific methods.
@@ -112,9 +104,7 @@ abstract class AbstractDocWriter extends Command {
                 EntryPointOption::SQL_BASE_NS      => $input->getOption(EntryPointOption::SQL_BASE_NS),
                 EntryPointOption::PROC_BASE_NS     => $input->getOption(EntryPointOption::PROC_BASE_NS),
                 EntryPointOption::SQL_REPO_PATH    => $input->getOption(EntryPointOption::SQL_REPO_PATH),
-                EntryPointOption::PROC_REPO_PATH   => $input->getOption(EntryPointOption::PROC_REPO_PATH),
-                // Add this parameter that identifies the SQL service provider.
-                SqlServiceOption::SQL_SERVICE_NAME => $this->_getSqlServiceProvider()
+                EntryPointOption::PROC_REPO_PATH   => $input->getOption(EntryPointOption::PROC_REPO_PATH)
             ];
         }
 

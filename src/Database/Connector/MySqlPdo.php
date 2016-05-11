@@ -88,25 +88,4 @@ class MySqlPdo extends AbstractConnector
         }
         return $pdo;
     }
-
-    /**
-     * {@inheritdoc}
-     * @see AbstractConnector
-     */
-    public function quoteValue($inValue) {
-        /** @var \PDO $pdo */
-        $pdo = $this->getDatabaseHandler();
-        if (is_null($pdo)) {
-            throw new \Exception("You did not initialize the database handler!");
-        }
-        return $pdo->quote($inValue);
-    }
-
-    /**
-     * {@inheritdoc}
-     * @see AbstractConnector
-     */
-    public function getSqlServiceProvider() {
-        return '\\dbeurive\\Backend\\Database\\SqlService\\MySql';
-    }
 }

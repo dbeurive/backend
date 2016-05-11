@@ -6,7 +6,7 @@ use dbeurive\Backend\Database\Entrypoints\Application\Sql\Result;
 use dbeurive\Backend\Database\Entrypoints\Application\Sql\AbstractApplication;
 use dbeurive\Backend\Database\Entrypoints\Description;
 use dbeurive\Backend\Database\Connector\AbstractConnector;
-use dbeurive\Backend\Database\SqlService\InterfaceSqlService as SqlService;
+use dbeurive\Backend\Database\SqlService\MySql;
 
 use dbeurive\BackendTest\EntryPoints\Constants\Tags;
 use dbeurive\BackendTest\EntryPoints\Constants\Entities;
@@ -57,7 +57,7 @@ class Authenticate extends AbstractApplication
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
      */
-    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector, SqlService $inSqlService) {
+    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector) {
         /* @var \PDO $pdo */
         $pdo = $inConnector->getDatabaseHandler();
 
@@ -114,8 +114,14 @@ class Authenticate extends AbstractApplication
      * @return string The method returns a string that represents the SQL request.
      */
     private function __getSql() {
-        $sql = preg_replace('/__USERS__/', $this->_getTableFieldsNames('user', self::FIELDS_FULLY_QUALIFIED_AS_SQL, true), self::$__sql);
-        $sql = preg_replace('/__VALUE__/', OutputValues::OUTPUT_VALUE_IS_AUTHENTICATED, $sql);
+        $sql = preg_replace('/__USERS__/',
+            MySql::getFullyQualifiedQuotedFieldsAsSql('user', $this->_getTableFieldsNames('user')),
+            self::$__sql);
+
+        $sql = preg_replace('/__VALUE__/',
+            OutputValues::OUTPUT_VALUE_IS_AUTHENTICATED,
+            $sql);
+
         return $sql;
     }
 

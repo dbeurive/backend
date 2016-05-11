@@ -6,7 +6,7 @@ use dbeurive\Backend\Database\Entrypoints\Application\BaseResult;
 use dbeurive\Backend\Database\Entrypoints\Application\Sql\AbstractApplication;
 use dbeurive\Backend\Database\Entrypoints\Description;
 use dbeurive\Backend\Database\Connector\AbstractConnector;
-use dbeurive\Backend\Database\SqlService\InterfaceSqlService as SqlService;
+use dbeurive\Backend\Database\SqlService\MySql;
 
 use dbeurive\BackendTest\EntryPoints\Constants\Entities;
 use dbeurive\BackendTest\EntryPoints\Constants\Actions;
@@ -42,7 +42,7 @@ class Select extends AbstractApplication {
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
      */
-    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector, SqlService $inSqlService) {
+    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector) {
         /* @var \PDO $pdo */
         $pdo = $inConnector->getDatabaseHandler();
 
@@ -95,7 +95,8 @@ class Select extends AbstractApplication {
      * @return string The method returns a string that represents the SQL request.
      */
     private function __getSql() {
-        $sql = preg_replace('/__USER__/', $this->_getTableFieldsNames('user', self::FIELDS_FULLY_QUALIFIED_AS_SQL), self::$__sql);
+        $user = MySql::getFullyQualifiedQuotedFieldsAsSql('user', $this->_getTableFieldsNames('user'));
+        $sql = preg_replace('/__USER__/', $user, self::$__sql);
         return $sql;
     }
 }

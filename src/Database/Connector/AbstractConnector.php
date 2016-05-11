@@ -5,12 +5,6 @@
  *
  * Connectors encapsulate a low-level database handler, such as PDO ot mysqli.
  * This low-level database handler is passed to the API's entry points, so they can use it directly.
- * Please note that the user can use any low-level connexion handler (PDO, mysqli...).
- *
- * And because all low-level database handlers don't have a standardised API, the connector's API encapsulates these functionalities, so the underlying software layer does not rely on a specific database handler.
- * As an example, to quote a value:
- *   * Using PDO: \PDO::quote()
- *   * Using mysqli: mysqli::escape_string()
  */
 
 namespace dbeurive\Backend\Database\Connector;
@@ -51,14 +45,6 @@ abstract class AbstractConnector
     abstract public function getConfigurationOptions();
 
     /**
-     * Quote a value.
-     * Typically: if `$pdo` is an instance of `\PDO`, this method should return `$pdo->quote($inValue)`.
-     * @param string $inValue Value to quote.
-     * @return string The method returns the quoted value.
-     */
-    abstract public function quoteValue($inValue);
-
-    /**
      * This method opens the connection to the database.
      * @param array $inConfiguration Configuration required to open the connection.
      * @return mixed|bool If the connexion is successfully established, then the method returns handler to the database.
@@ -67,14 +53,6 @@ abstract class AbstractConnector
      * @throws \Exception
      */
     abstract protected function _connect(array $inConfiguration);
-
-    /**
-     * This method returns the fully qualified name of the class that implements the SQL service provider associated to this connector.
-     * @return string The fully qualified name of the class that implements the SQL service provider associated to this connector.
-     * 
-     * @see \dbeurive\Backend\Database\SqlService\InterfaceSqlService
-     */
-    abstract public function getSqlServiceProvider();
 
     /**
      * Create a connector.

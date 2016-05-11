@@ -6,7 +6,7 @@ use dbeurive\Backend\Database\Entrypoints\Application\Sql\Result;
 use dbeurive\Backend\Database\Entrypoints\Application\Sql\AbstractApplication;
 use dbeurive\Backend\Database\Entrypoints\Description;
 use dbeurive\Backend\Database\Connector\AbstractConnector;
-use dbeurive\Backend\Database\SqlService\InterfaceSqlService as SqlService;
+use dbeurive\Backend\Database\SqlService\MySql;
 
 use dbeurive\BackendTest\EntryPoints\Constants\Entities;
 use dbeurive\BackendTest\EntryPoints\Constants\Actions;
@@ -43,12 +43,13 @@ class Get extends AbstractApplication {
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
      */
-    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector, SqlService $inSqlService) {
+    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector) {
         /* @var \PDO $pdo */
         $pdo = $inConnector->getDatabaseHandler();
 
         $sql = self::$__sql;
-        $profile = self::_getTableFieldsNames('profile', self::FIELDS_FULLY_QUALIFIED_AS_SQL);
+
+        $profile = MySql::getFullyQualifiedFieldsAsSql('profile', self::_getTableFieldsNames('profile'));
         $sql= str_replace('__PROFILE__', $profile, $sql);
 
         $result = new Result();
