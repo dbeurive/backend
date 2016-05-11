@@ -6,6 +6,7 @@ use dbeurive\Backend\Database\Entrypoints\Application\BaseResult;
 use dbeurive\Backend\Database\Entrypoints\Application\Sql\AbstractApplication;
 use dbeurive\Backend\Database\Entrypoints\Description;
 use dbeurive\Backend\Database\Connector\AbstractConnector;
+use dbeurive\Backend\Database\SqlService\InterfaceSqlService as SqlService;
 
 use dbeurive\BackendTest\EntryPoints\Constants\Entities;
 use dbeurive\BackendTest\EntryPoints\Constants\Actions;
@@ -43,7 +44,7 @@ class Insert extends AbstractApplication {
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
      */
-    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector) {
+    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector, SqlService $inSqlService) {
         /* @var \PDO $pdo */
         $pdo = $inConnector->getDatabaseHandler();
 

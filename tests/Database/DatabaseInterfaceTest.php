@@ -3,6 +3,7 @@
 namespace dbeurive\BackendTest\Database;
 use dbeurive\Backend\Database\DatabaseInterface;
 use dbeurive\Backend\Database\Doc\Option as DocOption;
+use dbeurive\Backend\Database\Connector\Option as ConnectorOption;
 
 /**
  * @runTestsInSeparateProcesses
@@ -88,6 +89,32 @@ class DatabaseInterfaceTest extends \PHPUnit_Framework_TestCase
         $fields = explode(', ', $fields);
         $ref = array_map(function($e) { return '`user`.`' . $e . "` as 'user." . $e . "'"; }, $reference);
         $this->assertCount(0, array_diff($ref, $fields));
+    }
+
+    /**
+     * Create the link to the database from a given database brand name.
+     * @param string $inDbName Database brand name ("mysql").
+     * @param bool $inOptConnect This flag indicates whether the link should open a connection to the database or not.
+     *        * This the value of this parameter is true, then the link is created, and the connexion to the database is established.
+     *        * Otherwise, the link is created, but the connexion to the database is not established.
+     * @throws \Exception
+     */
+    public function __createConnector($inDbName, $inOptConnect=false)
+    {
+        $this->__init();
+
+        // -------------------------------------------------------------------------------------------------------------
+        // Initialise the connector to the database.
+        // -------------------------------------------------------------------------------------------------------------
+
+        $connectorName = $this->__generalConfiguration[$inDbName][ConnectorOption::CONNECTOR_NAME];
+        $connectorConf = $this->__generalConfiguration[$inDbName][ConnectorOption::CONNECTOR_CONFIG];
+
+        $this->__connector = new $connectorName($connectorConf);
+
+        if ($inOptConnect) {
+            $this->__connector->connect();
+        }
     }
 
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

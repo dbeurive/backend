@@ -4,6 +4,7 @@ use dbeurive\Backend\Database\Entrypoints\Option as EntryPointOption;
 use dbeurive\Backend\Database\Doc\Option as DocOption;
 use dbeurive\Backend\Database\Connector\Option as ConnectorOption;
 use dbeurive\Backend\Database\Connector\MySqlPdo;
+use dbeurive\Backend\Database\SqlService\Option as SqlServiceOption;
 
 
 return call_user_func(function() {
@@ -49,7 +50,7 @@ return call_user_func(function() {
      * procedure-base-namespace:  Base namespace for all the procedures
      * doc-path:                  Path to the SQLite database that will be generated.
      * schema-path:               Path to the generated PHP file used to store the list of tables and fields within the database
-     * db-connector-class-name:   Fully qualified name of the class that implements the connector.
+     * sql-service-class-name:    Fully qualified name of the class that provides the SQL services for the database.
      * db-connector-config:       Configuration for the database connector
      */
     $conf = [
@@ -68,9 +69,12 @@ return call_user_func(function() {
         ],
         'mysql' => [
             // This parameter is used for the extraction of entry points' descriptions.
-            ConnectorOption::CONNECTOR_NAME   => '\\dbeurive\\Backend\\Database\\Connector\\MySqlPdo',
+            SqlServiceOption::SQL_SERVICE_NAME => '\\dbeurive\\Backend\\Database\\SqlService\\MySql',
             // This parameter is used when the application is running.
-            ConnectorOption::CONNECTOR_CONFIG => $mysqlConf
+            ConnectorOption::CONNECTOR_CONFIG => $mysqlConf,
+            // This represents the name of the class that implements the database connector.
+            ConnectorOption::CONNECTOR_NAME => '\\dbeurive\\Backend\\Database\\Connector\\MySqlPdo'
+
         ]
     ];
 

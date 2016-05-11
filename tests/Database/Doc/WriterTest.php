@@ -8,7 +8,7 @@ use dbeurive\BackendTest\EntryPoints\Constants\Entities;
 use dbeurive\BackendTest\EntryPoints\Constants\Tags;
 use dbeurive\BackendTest\EntryPoints\Constants\Actions;
 use dbeurive\Backend\Database\Doc\Option as DocOption;
-use dbeurive\Backend\Database\Connector\Option as ConnectorOption;
+use dbeurive\Backend\Database\SqlService\Option as SqlServiceOption;
 
 // @runTestsInSeparateProcesses
 
@@ -265,7 +265,7 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         // -------------------------------------------------------------------------------------------------------------
 
         $config = $this->__generalConfiguration['application'];
-        $config[ConnectorOption::CONNECTOR_NAME] = $this->__generalConfiguration['mysql'][ConnectorOption::CONNECTOR_NAME];
+        $config[SqlServiceOption::SQL_SERVICE_NAME] = $this->__generalConfiguration['mysql'][SqlServiceOption::SQL_SERVICE_NAME];
         Writer::writer($config);
 
         // -------------------------------------------------------------------------------------------------------------

@@ -6,6 +6,7 @@ use dbeurive\Backend\Database\Entrypoints\Application\BaseResult;
 use dbeurive\Backend\Database\Entrypoints\Application\Sql\AbstractApplication;
 use dbeurive\Backend\Database\Entrypoints\Description;
 use dbeurive\Backend\Database\Connector\AbstractConnector;
+use dbeurive\Backend\Database\SqlService\InterfaceSqlService as SqlService;
 
 use dbeurive\BackendTest\EntryPoints\Constants\Entities;
 use dbeurive\BackendTest\EntryPoints\Constants\Actions;
@@ -42,7 +43,7 @@ class Update extends AbstractApplication {
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
      */
-    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector) {
+    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector, SqlService $inSqlService) {
         /* @var \PDO $pdo */
         $pdo = $inConnector->getDatabaseHandler();
 
@@ -52,7 +53,7 @@ class Update extends AbstractApplication {
             if ('user.id' == $_field) {
                 continue;
             }
-            $update[] = $inConnector->quoteFieldName($_field) . " = " . $inConnector->quoteValue($_value);
+            $update[] = $inSqlService->quoteFieldName($_field) . " = " . $inConnector->quoteValue($_value);
         }
 
         $update = implode(',', $update);

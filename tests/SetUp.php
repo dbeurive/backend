@@ -134,33 +134,4 @@ trait SetUp
     {
         $this->__connectorMySql = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__connectorMySqlConfiguration);
     }
-
-    /**
-     * Create the link to the database from a given database brand name.
-     * @param string $inDbName Database brand name ("mysql").
-     * @param bool $inOptConnect This flag indicates whether the link should open a connection to the database or not.
-     *        * This the value of this parameter is true, then the link is created, and the connexion to the database is established.
-     *        * Otherwise, the link is created, but the connexion to the database is not established.
-     * @throws \Exception
-     */
-    public function __createConnector($inDbName, $inOptConnect=false)
-    {
-        $this->__init();
-
-        // -------------------------------------------------------------------------------------------------------------
-        // Initialise the connector to the database.
-        // -------------------------------------------------------------------------------------------------------------
-
-        $connectorName = $this->__generalConfiguration[$inDbName][ConnectorOption::CONNECTOR_NAME];
-        $connectorConf = $this->__generalConfiguration[$inDbName][ConnectorOption::CONNECTOR_CONFIG];
-
-        $this->__connector = new $connectorName($connectorConf);
-
-        if ($inOptConnect) {
-            $this->__connector->connect();
-
-        }
-    }
-
-
 }

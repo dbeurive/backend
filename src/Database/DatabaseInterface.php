@@ -8,9 +8,9 @@
 namespace dbeurive\Backend\Database;
 use dbeurive\Backend\Database\Entrypoints\Provider as EntryPointProvider;
 use dbeurive\Backend\Database\Connector\AbstractConnector;
-use dbeurive\Backend\Database\Connector\Option as ConnectorOption;
 use dbeurive\Backend\Database\Entrypoints\Option as EntryPointOption;
 use dbeurive\Backend\Database\Doc\Option as DocOption;
+use dbeurive\Backend\Database\SqlService\Option as SqlServiceOption;
 
 
 /**
@@ -60,22 +60,19 @@ class DatabaseInterface {
     /**
      * @var AbstractConnector Handler to the database connector.
      *      Note: this property is used when the application is running.
-     *      $__connectorClassName and $__connector should not be specified simultaneously.
-     * @see $__connectorClassName
      * @see setDbConnector
      */
     private $__connector = null;
     /**
-     * @var string Fully qualified class name of the connector.
-     *      Note: this property is only used when the software build the QLite database that organises information about all procedures and SQL requests.
+     * @var string Fully qualified class name of the SQL service provider.
+     *      Note: this property is used when the software build the SQLite database that organises information about all procedures and SQL requests.
+     *            It is also used when the application is running.
      *      SQL requests may use one static method defined within this class (the method `quoteFieldName()`) within the method `getDescription()`.
-     *      $__connectorClassName and $__connector should not be specified simultaneously.
-     * @see $__connector
-     * @see setDbConnectorClassName
-     * @see \dbeurive\Backend\Database\Connector\InterfaceConnector::quoteFieldName
+     * @see setSqlServiceClassName
+     * @see \dbeurive\Backend\Database\SqlService\InterfaceSqlService::quoteFieldName
      * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint::getDescription
      */
-    private $__connectorClassName = null;
+    private $__sqlServiceClassName = null;
     /**
      * @var EntryPointProvider Entry point provider.
      */
@@ -126,8 +123,8 @@ class DatabaseInterface {
      *          DocOption::SCHEMA_PATH
      *
      *        Optional:
-     *          EntryPointOption::DB_CONNECTOR (when the application is running)
-     *          ConnectorOption::CONNECTOR_NAME (when we build the SQLite database)
+     *          EntryPointOption::DB_CONNECTOR (used only when the application is running)
+     *          SqlServiceOption::SQL_SERVICE_NAME (used only when we build the SQLite database)
      *
      * @return DatabaseInterface The method returns a new data interface.
      *
@@ -137,9 +134,13 @@ class DatabaseInterface {
      * @see EntryPointOption::PROC_BASE_NS
      * @see DocOption::SCHEMA_PATH
      * @see EntryPointOption::DB_CONNECTOR
-     * @see ConnectorOption::CONNECTOR_NAME
+     * @see SqlServiceOption::SQL_SERVICE_NAME
+     *
      * @see setDbConnector
-     * @see setDbConnectorClassName
+     * @see setSqlServiceClassName
+     * @see getTableFieldsNames
+     *
+     * @throws \Exception
      */
     static public function getInstance($inName='default', array $inOptConfig=null) {
 
@@ -155,12 +156,17 @@ class DatabaseInterface {
             $di->setProcedureBaseNameSpace($inOptConfig[EntryPointOption::PROC_BASE_NS]);
             $di->setPhpDatabaseRepresentationPath($inOptConfig[DocOption::SCHEMA_PATH]);
 
-            if (array_key_exists(EntryPointOption::DB_CONNECTOR, $inOptConfig)) {
-                $di->setDbConnector($inOptConfig[EntryPointOption::DB_CONNECTOR]);
+            if (array_key_exists(EntryPointOption::DB_CONNECTOR, $inOptConfig) &&
+                array_key_exists(SqlServiceOption::SQL_SERVICE_NAME, $inOptConfig)) {
+                throw new \Exception("You should not define parameters " . EntryPointOption::DB_CONNECTOR . ' and ' . SqlServiceOption::SQL_SERVICE_NAME . ' simultaneously!');
             }
 
-            if (array_key_exists(ConnectorOption::CONNECTOR_NAME, $inOptConfig)) {
-                $di->setDbConnector($inOptConfig[ConnectorOption::CONNECTOR_NAME]);
+            if (array_key_exists(EntryPointOption::DB_CONNECTOR, $inOptConfig)) {
+                /** @var \dbeurive\Backend\Database\Connector\AbstractConnector $c */
+                $c = $inOptConfig[EntryPointOption::DB_CONNECTOR];
+                $di->setDbConnector($c);
+            } elseif (array_key_exists(SqlServiceOption::SQL_SERVICE_NAME, $inOptConfig)) {
+                $di->setSqlServiceClassName($inOptConfig[SqlServiceOption::SQL_SERVICE_NAME]);
             }
         }
 
@@ -175,17 +181,26 @@ class DatabaseInterface {
     /**
      * Set the database handler.
      * @param AbstractConnector $inConnector Handler to the database connector.
+     * @throws \Exception
      */
     public function setDbConnector(AbstractConnector $inConnector) {
+        if (! is_null($this->__sqlServiceClassName)) {
+            throw new \Exception("You should not set a connector and an SQL service provider simultaneously! Sou set this SQL service provider: " . $this->__sqlServiceClassName);
+        }
         $this->__connector = $inConnector;
+        $this->__sqlServiceClassName = $inConnector->getSqlServiceProvider();
     }
 
     /**
-     * Set the fully qualified name of the class that implements the database connector.
-     * @param string $inClassName Fully qualified name of the class that implements the database connector.
+     * Set the fully qualified name of the class that implements SQL service provider for the brand of the database.
+     * @param string $inClassName fully qualified name of the class that implements SQL service provider for the brand of the database.
+     * @throws \Exception
      */
-    public function setDbConnectorClassName($inClassName) {
-        $this->__connectorClassName = $inClassName;
+    public function setSqlServiceClassName($inClassName) {
+        if (! is_null($this->__connector)) {
+            throw new \Exception("WARNING! You already set the fully qualified name of the class the implements the SQL service provider! Previous setting is: " . $this->__sqlServiceClassName . ". Note that you may have set an instance of the database connector.");
+        }
+        $this->__sqlServiceClassName = $inClassName;
     }
 
     /**
@@ -272,7 +287,7 @@ class DatabaseInterface {
      *        For example, with MySql, you can quote "user.id" into "`user`.`id`".
      * @return array The method returns the list of fields within the table.
      * @throws \Exception
-     * @uses $__connectorClassName
+     * @uses $__sqlServiceClassName
      */
     public function getTableFieldsNames($inTableName, $inOptFormat=self::FIELDS_RAW_AS_ARRAY, $inOptQuote=true) {
 
@@ -281,12 +296,12 @@ class DatabaseInterface {
         if ($inOptQuote) {
 
             if (is_null($this->__connector)) {
-                if (is_null($this->__connectorClassName)) {
+                if (is_null($this->__sqlServiceClassName)) {
                     throw new \Exception("In order to quote fields names according to the database server brand name, you need (1) to specify the fully qualified name of the class used a connector or (2) give an instance of the connector!");
                 }
             }
 
-            $connectorClass = is_null($this->__connector) ? $this->__connectorClassName : $this->__connector->getFullyQualifiedClassName();
+            $connectorClass = is_null($this->__connector) ? $this->__sqlServiceClassName : $this->__connector->getSqlServiceProvider();
 
             $quoter = function ($fieldName) use ($connectorClass) {
                 return call_user_func("${connectorClass}::quoteFieldName", $fieldName);

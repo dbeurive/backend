@@ -11,6 +11,7 @@ namespace dbeurive\Backend\Database\Entrypoints\Application;
 use dbeurive\Backend\Database\Connector\AbstractConnector;
 use dbeurive\Backend\Database\DatabaseInterface;
 use dbeurive\Backend\Database\Entrypoints\Provider;
+use dbeurive\Backend\Database\SqlService\InterfaceSqlService as SqlService;
 
 /**
  * Class AbstractEntryPoint
@@ -66,6 +67,10 @@ abstract class AbstractApplication {
      *      Otherwise, the property's value is false.
      */
     protected $_hasBeenExecuted = false;
+    /**
+     * @var null|\dbeurive\Backend\Database\SqlService\InterfaceSqlService SQL service provider.
+     */
+    private $__sqlService = null;
 
     /**
      * Create a new API's entry point.
@@ -77,7 +82,7 @@ abstract class AbstractApplication {
      * **Documentation process**
      *
      * During the documentation process, no connexion to the database is established.
-     * Therefore, in this context, no "database connector" is created (`$inOptLink = null`).
+     * Therefore, in this context, no "database connector" is created (`$inOptConnector = null`).
      *
      * **Application's execution**
      *
@@ -95,8 +100,12 @@ abstract class AbstractApplication {
      */
     final public function __construct(Provider $inEntryPointProvider, AbstractConnector $inOptConnector=null, array $inOptInitConfig=[]) {
         $this->_provider = $inEntryPointProvider;
+
         if (! is_null($inOptConnector)) {
+            // The application is running.
             $this->_connector = $inOptConnector;
+            $className = $inOptConnector->getSqlServiceProvider();
+            $this->__sqlService = new $className();
         }
         $this->_init($inOptInitConfig);
     }
@@ -118,9 +127,10 @@ abstract class AbstractApplication {
      * Execute the API's entry point.
      * @param array $inExecutionConfig Configuration for the execution.
      * @param AbstractConnector $inConnector Handler to the database connector.
+     * @param SqlService $inSqlService SQL service provider.
      * @return \dbeurive\Backend\Database\Entrypoints\Application\Sql\Result|\dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result
      */
-    abstract protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector);
+    abstract protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector, SqlService $inSqlService);
 
     /**
      * Initialize the API's entry point.
@@ -225,7 +235,7 @@ abstract class AbstractApplication {
 
         $this->_hasBeenExecuted = true;
         $this->_result = null;
-        $this->_result = $this->_execute($this->_executionConfig, $this->_connector);
+        $this->_result = $this->_execute($this->_executionConfig, $this->_connector, $this->__sqlService);
         return $this->_result;
     }
 

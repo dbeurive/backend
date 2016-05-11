@@ -25,6 +25,7 @@ use dbeurive\Backend\Database\Entrypoints\Description\Element\Tag as Tag;
 use dbeurive\Backend\Cli\Lib\CliWriter;
 use dbeurive\Input\SpecificationsSet;
 use dbeurive\Input\Specification;
+use dbeurive\Backend\Database\SqlService\Option as SqlServiceOption;
 
 
 /**
@@ -100,7 +101,7 @@ class Writer {
      *           * \dbeurive\Backend\Database\Entrypoints\Option::PROC_BASE_NS
      *           * \dbeurive\Backend\Database\Entrypoints\Option::SQL_REPO_PATH
      *           * \dbeurive\Backend\Database\Entrypoints\Option::PROC_REPO_PATH
-     *           * \dbeurive\Backend\Database\Connector\Option::CONNECTOR_NAME
+     *           * \dbeurive\Backend\Database\SqlService\Option::SQL_SERVICE_NAME
      *
      * @return bool Upon successful completion the method returns the value true.
      *         Otherwise an exception is thrown.
@@ -113,7 +114,7 @@ class Writer {
      * @see \dbeurive\Backend\Database\Entrypoints\Option::PROC_BASE_NS
      * @see \dbeurive\Backend\Database\Entrypoints\Option::SQL_REPO_PATH
      * @see \dbeurive\Backend\Database\Entrypoints\Option::PROC_REPO_PATH
-     * @see \dbeurive\Backend\Database\Connector\Option::CONNECTOR_NAME
+     * @see \dbeurive\Backend\Database\SqlService\Option::SQL_SERVICE_NAME
      */
     static public function writer(array $inConfiguration)
     {
@@ -123,13 +124,13 @@ class Writer {
         // Extract data from the configuration.
         // -------------------------------------------------------------------------------------------------------------
 
-        $sqlitePath              = $inConfiguration[DocOption::DOC_PATH];
-        $phpDbDescription        = $inConfiguration[DocOption::SCHEMA_PATH];
-        $sqlBaseNamespace        = $inConfiguration[EntryPointOption::SQL_BASE_NS];
-        $procedureBaseNamespace  = $inConfiguration[EntryPointOption::PROC_BASE_NS];
-        $sqlRepositoryPath       = $inConfiguration[EntryPointOption::SQL_REPO_PATH];
-        $procedureRepositoryPath = $inConfiguration[EntryPointOption::PROC_REPO_PATH];
-        $connectorClassName      = $inConfiguration[ConnectorOption::CONNECTOR_NAME];
+        $sqlitePath                  = $inConfiguration[DocOption::DOC_PATH];
+        $phpDbDescription            = $inConfiguration[DocOption::SCHEMA_PATH];
+        $sqlBaseNamespace            = $inConfiguration[EntryPointOption::SQL_BASE_NS];
+        $procedureBaseNamespace      = $inConfiguration[EntryPointOption::PROC_BASE_NS];
+        $sqlRepositoryPath           = $inConfiguration[EntryPointOption::SQL_REPO_PATH];
+        $procedureRepositoryPath     = $inConfiguration[EntryPointOption::PROC_REPO_PATH];
+        $sqlServiceProviderClassName = $inConfiguration[SqlServiceOption::SQL_SERVICE_NAME];
 
         $sqliteSchemaPath = __DIR__ . DIRECTORY_SEPARATOR . 'schema.php';
 
@@ -164,7 +165,7 @@ class Writer {
         $dataInterface->setSqlBaseNameSpace($sqlBaseNamespace);
         $dataInterface->setProcedureBaseNameSpace($procedureBaseNamespace);
         $dataInterface->setPhpDatabaseRepresentationPath($phpDbDescription);
-        $dataInterface->setDbConnectorClassName($connectorClassName);
+        $dataInterface->setSqlServiceClassName($sqlServiceProviderClassName);
 
         CliWriter::echoInfo("Extracting data from PHP codes (SQL requests and procedures).");
 

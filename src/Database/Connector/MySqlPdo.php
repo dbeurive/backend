@@ -102,19 +102,11 @@ class MySqlPdo extends AbstractConnector
         return $pdo->quote($inValue);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    // Statics
-    // -----------------------------------------------------------------------------------------------------------------
-    
     /**
      * {@inheritdoc}
-     * @see InterfaceConnector
+     * @see AbstractConnector
      */
-    static public function quoteFieldName($inFieldName) {
-        $tokens = explode('.', $inFieldName);
-        if (2 != count($tokens)) {
-            throw new \Exception("Invalid field's name ${inFieldName}");
-        }
-        return '`' . $tokens[0] . '`' . '.' . '`' . $tokens[1] . '`';
+    public function getSqlServiceProvider() {
+        return '\\dbeurive\\Backend\\Database\\SqlService\\MySql';
     }
 }

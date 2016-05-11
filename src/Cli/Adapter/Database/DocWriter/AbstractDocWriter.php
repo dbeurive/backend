@@ -21,6 +21,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use dbeurive\Backend\Database\SqlService\Option as SqlServiceOption;
 
 /**
  * Class AbstractDocWriter
@@ -28,9 +29,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  * This class is the base class the base class for all "documentation writers".
  *
  * "Documentation writers" perform the following actions:
- *     1. Extract information from the database.
- *     2. Extract information from all the API's entry points.
- *     3. Organize the information previously extracted.
+ *     1. Extract information from all the API's entry points.
+ *     2. Organize the information previously extracted.
  * Please note that there is a "documentation writer" for each brand (MySql, Oracle...) of database.
  *
  * Please not that this class only handles CLI options.
@@ -41,7 +41,20 @@ use Symfony\Component\Console\Output\OutputInterface;
 abstract class AbstractDocWriter extends Command {
 
     /**
-     * Extract the specific configuration from the command line for the "documentation writer".
+     * This method returns the fully qualified name of the class that implements the SQL service provider associated to this connector.
+     * @return string The fully qualified name of the class that implements the SQL service provider associated to this connector.
+     *
+     * @see \dbeurive\Backend\Database\SqlService\InterfaceSqlService
+     */
+    abstract protected function _getSqlServiceProvider();
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Specific methods.
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Build the "documentation writer".
+     *
      * Please note that all "configuration writers" share some common configuration's parameters:
      *    * \dbeurive\Backend\Database\Doc\Option::DOC_PATH
      *    * \dbeurive\Backend\Database\Doc\Option::SCHEMA_PATH
@@ -51,11 +64,6 @@ abstract class AbstractDocWriter extends Command {
      *    * \dbeurive\Backend\Database\Entrypoints\Option::PROC_REPO_PATH
      *    * \dbeurive\Backend\Cli\Option::CONFIG_LOADER_CLASS_NAME
      *
-     * @param InputInterface $input Input interface as defined be the Symfony console interface.
-     * @return array The method returns an associative array.
-     *         The array's keys are the names of the configuration parameters.
-     *         The array's values are the configuration parameters' values.
-     *
      * @see \dbeurive\Backend\Database\Doc\Option::DOC_PATH
      * @see \dbeurive\Backend\Database\Doc\Option::SCHEMA_PATH
      * @see \dbeurive\Backend\Database\Entrypoints\Option::SQL_BASE_NS
@@ -63,15 +71,6 @@ abstract class AbstractDocWriter extends Command {
      * @see \dbeurive\Backend\Database\Entrypoints\Option::SQL_REPO_PATH
      * @see \dbeurive\Backend\Database\Entrypoints\Option::PROC_REPO_PATH
      * @see \dbeurive\Backend\Cli\Option::CONFIG_LOADER_CLASS_NAME
-     */
-    abstract protected function _getSpecificOptions(InputInterface $input);
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // Specific methods.
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Build the "documentation writer".
      */
     public function __construct() {
         parent::__construct();
@@ -106,20 +105,16 @@ abstract class AbstractDocWriter extends Command {
             $loader = new $configLoaderClass();
             $genericOptions = $loader->load();
         } else {
-
-            // Options from te child class (that handles the specific CLI adapter).
-            // These options define values used to connect to the database server.
-            $specificOptions = $this->_getSpecificOptions($input);
-
             // The following options contains data used to use the API's entry points.
             $genericOptions = [
-                DocOption::SCHEMA_PATH                => $input->getOption(DocOption::SCHEMA_PATH),
-                DocOption::DOC_PATH                   => $input->getOption(DocOption::DOC_PATH),
-                EntryPointOption::SQL_BASE_NS         => $input->getOption(EntryPointOption::SQL_BASE_NS),
-                EntryPointOption::PROC_BASE_NS        => $input->getOption(EntryPointOption::PROC_BASE_NS),
-                EntryPointOption::SQL_REPO_PATH       => $input->getOption(EntryPointOption::SQL_REPO_PATH),
-                EntryPointOption::PROC_REPO_PATH      => $input->getOption(EntryPointOption::PROC_REPO_PATH),
-                Connector\Option::CONNECTOR_NAME      => $specificOptions[Connector\Option::CONNECTOR_NAME]
+                DocOption::SCHEMA_PATH             => $input->getOption(DocOption::SCHEMA_PATH),
+                DocOption::DOC_PATH                => $input->getOption(DocOption::DOC_PATH),
+                EntryPointOption::SQL_BASE_NS      => $input->getOption(EntryPointOption::SQL_BASE_NS),
+                EntryPointOption::PROC_BASE_NS     => $input->getOption(EntryPointOption::PROC_BASE_NS),
+                EntryPointOption::SQL_REPO_PATH    => $input->getOption(EntryPointOption::SQL_REPO_PATH),
+                EntryPointOption::PROC_REPO_PATH   => $input->getOption(EntryPointOption::PROC_REPO_PATH),
+                // Add this parameter that identifies the SQL service provider.
+                SqlServiceOption::SQL_SERVICE_NAME => $this->_getSqlServiceProvider()
             ];
         }
 

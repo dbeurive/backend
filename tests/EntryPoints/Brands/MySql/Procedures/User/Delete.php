@@ -6,6 +6,7 @@ use dbeurive\Backend\Database\Entrypoints\Application\Procedure\AbstractApplicat
 use dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result;
 use dbeurive\Backend\Database\Entrypoints\Description;
 use dbeurive\Backend\Database\Connector\AbstractConnector;
+use dbeurive\Backend\Database\SqlService\InterfaceSqlService as SqlService;
 
 use dbeurive\BackendTest\EntryPoints\Constants\OutputValues;
 use dbeurive\BackendTest\EntryPoints\Constants\Tags;
@@ -35,7 +36,7 @@ class Delete extends AbstractApplication {
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
      */
-    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector) {
+    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector, SqlService $inSqlService) {
         $sql = $this->_getSql(self::SQL_DELETE, [], $this->_getInputFields());
         $resultSql = $sql->execute();
         $result = new Result(Result::STATUS_SUCCESS,

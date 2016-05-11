@@ -88,7 +88,6 @@ abstract class AbstractEntryPoint {
 
     /**
      * Execute an API's entry point (an SQL request or a procedure).
-     * Please note that the data required for the execution of the entry point can be found within the property.
      * @param AbstractConnector $inConnector Handler to the database connector.
      * @return \dbeurive\Backend\Database\Entrypoints\Application\Sql\Result|\dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result
      */

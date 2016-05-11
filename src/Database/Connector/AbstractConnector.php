@@ -7,18 +7,10 @@
  * This low-level database handler is passed to the API's entry points, so they can use it directly.
  * Please note that the user can use any low-level connexion handler (PDO, mysqli...).
  *
- * Connectors provide functionalities that are specific to a given brand of database server, but that is not provided by the low level database handler.
- * Right now, there is only on such functionality: quoting fully qualified fields' names.
- * For example (MySql): user.id => `user`.`id`.
- * Please note that, because these functionalities does not require an open connexion to the database, they are implemented as static methods.
- * These functionalities can be used without configuring the connector first. See the interface "\dbeurive\Backend\Database\Connector\InterfaceConnector".
- *
  * And because all low-level database handlers don't have a standardised API, the connector's API encapsulates these functionalities, so the underlying software layer does not rely on a specific database handler.
  * As an example, to quote a value:
  *   * Using PDO: \PDO::quote()
  *   * Using mysqli: mysqli::escape_string()
- *
- * @see \dbeurive\Backend\Database\Connector\InterfaceConnector
  */
 
 namespace dbeurive\Backend\Database\Connector;
@@ -31,7 +23,7 @@ namespace dbeurive\Backend\Database\Connector;
  * @package dbeurive\Backend\Database\Connector
  */
 
-abstract class AbstractConnector implements InterfaceConnector
+abstract class AbstractConnector
 {
     const OPTION_NAME = 'name';
     const OPTION_DESCRIPTION = 'description';
@@ -75,6 +67,14 @@ abstract class AbstractConnector implements InterfaceConnector
      * @throws \Exception
      */
     abstract protected function _connect(array $inConfiguration);
+
+    /**
+     * This method returns the fully qualified name of the class that implements the SQL service provider associated to this connector.
+     * @return string The fully qualified name of the class that implements the SQL service provider associated to this connector.
+     * 
+     * @see \dbeurive\Backend\Database\SqlService\InterfaceSqlService
+     */
+    abstract public function getSqlServiceProvider();
 
     /**
      * Create a connector.

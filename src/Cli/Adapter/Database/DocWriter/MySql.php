@@ -6,12 +6,7 @@
 
 namespace dbeurive\Backend\Cli\Adapter\Database\DocWriter;
 
-use dbeurive\Input\Specification;
-use dbeurive\Input\SpecificationsSet;
 use dbeurive\Backend\Database\Connector;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-
 
 /**
  * Class MySql
@@ -29,16 +24,14 @@ class MySql extends AbstractDocWriter {
      */
     protected function configure() {
         $this->setName('db:doc-mysql')
-             ->setDescription("Extract data from a MySql database, and from all API's entry points.");
+             ->setDescription("Build the documentation from SQL requests written for MySql.");
     }
 
     /**
      * {@inheritDoc}
      * @see \dbeurive\Backend\Cli\Adapter\Database\DocWriter\AbstractDocWriter
      */
-    protected function _getSpecificOptions(InputInterface $input) {
-        return [
-            Connector\Option::CONNECTOR_NAME => \dbeurive\Backend\Database\Connector\MySqlPdo::getFullyQualifiedClassName()
-        ];
+    protected function _getSqlServiceProvider() {
+        return '\\dbeurive\\Backend\\Database\\SqlService\\MySql';
     }
 }

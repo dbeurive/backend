@@ -6,11 +6,11 @@ use dbeurive\Backend\Database\Entrypoints\Application\Procedure\AbstractApplicat
 use dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result;
 use dbeurive\Backend\Database\Entrypoints\Description;
 use dbeurive\Backend\Database\Connector\AbstractConnector;
+use dbeurive\Backend\Database\SqlService\InterfaceSqlService as SqlService;
 
 use dbeurive\BackendTest\EntryPoints\Constants\Tags;
 use dbeurive\BackendTest\EntryPoints\Constants\Entities;
 use dbeurive\BackendTest\EntryPoints\Constants\Actions;
-
 use dbeurive\BackendTest\EntryPoints\Constants\OutputValues;
 
 
@@ -46,7 +46,7 @@ class Authenticate extends AbstractApplication {
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
      */
-    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector) {
+    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector, SqlService $inSqlService) {
         $sql = $this->_getSql(self::SQL_AUTHENTICATE, [], $this->_getInputFields());
         $resultSql = $sql->execute();
         $result = new Result(Result::STATUS_SUCCESS,
