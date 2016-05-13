@@ -1,8 +1,14 @@
 # Introduction
 
 Although ORM exist, using SQL is a valid strategy.
-And one should not start using an ORM just because it is the recommended choice, or because it is part of the default framework’s distribution.
-In many ways, plain good old SQL is a pragmatic choice.
+
+There is no « one size fits all approach ».
+There are many ways to access data from an application.
+The three mostly used techniques are : stored procedures, direct SQL within the application’s code, and ORM.
+Each of these techniques present advantages and drawbacks, depending on the context (the size of the company, the type of projects...). 
+And one should not start using an ORM just because it is the « universally recommended » choice (by the creator of the ORM), or because it is part of the default framework’s distribution.
+
+In many situations, using SQL is a far better solution than using an ORM. 
 
 This project is an attempt to make using SQL an even more pragmatic approach by providing a simple way to organise and to document SQL.
 
