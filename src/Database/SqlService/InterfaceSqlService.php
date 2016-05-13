@@ -23,34 +23,22 @@ namespace dbeurive\Backend\Database\SqlService;
 interface InterfaceSqlService
 {
     /**
-     * Quote a field's name.
-     * Example: \dbeurive\Backend\Database\SqlService\MySql::quoteFieldName
-     * @param string $inFieldName Name of the field to quote.
-     * @return string The method returns the quoted field.
-     *
-     * @see \dbeurive\Backend\Database\SqlService\MySql::quoteFieldName
-     */
-    static public function quoteFieldName($inFieldName);
-
-    /**
-     * Take an array of fields' names and return a array of fully qualified fields' names.
-     * Example: getFullyQualifiedFieldsAsArray('user', ['id', 'name']) => ['user.id', 'user.name']
-     * @param string $inTableName Name of the table.
-     * @param array $inFields List of fields.
-     * @return array The method returns an array of fully qualified fields' names.
-     */
-    static public function getFullyQualifiedFieldsAsArray($inTableName, $inFields);
-
-    /**
-     * Take an array of fields' names and return an SQL fragment that contains fully qualified fields' names.
-     * Exemple: getFullyQualifiedFieldsAsSql('user', ['id', 'name']) => "user.id as 'user.id', user.name as 'user.name'".
+     * Take list of fields' names and the name of a table, and return an "SQL select" fragment that contains fully qualified fields' names.
+     * Example: getFullyQualifiedFieldsAsSql('user', ['id', 'name']) => "user.id as 'user.id', user.name as 'user.name'".
      * @param string $inTableName Name of the table.
      * @param array $inFields List of fields.
      * @return string The method returns an SQL fragment.
+     * @throws \Exception
      */
     static public function getFullyQualifiedFieldsAsSql($inTableName, $inFields);
 
-    static public function getFullyQualifiedQuotedFieldsAsArray($inTableName, $inFields);
-
+    /**
+     * Take list of fields' names and the name of a table, and return an SQL "select" fragment that contains fully qualified, and quoted, fields' names.
+     * Example: getFullyQualifiedFieldsAsSql('user', ['id', 'name']) => "`user`.`id` as 'user.id', `user`.`name` as 'user.name'".
+     * @param string $inTableName Name of the table.
+     * @param array $inFields List of fields.
+     * @return mixed The method returns an SQL fragment.
+     * @throws \Exception
+     */
     static public function getFullyQualifiedQuotedFieldsAsSql($inTableName, $inFields);
 }

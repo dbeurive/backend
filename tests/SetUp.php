@@ -9,6 +9,7 @@ use dbeurive\Backend\Database\DatabaseInterface;
 
 /**
  * Class SetUp
+ * @package dbeurive\BackendTest
  */
 
 trait SetUp

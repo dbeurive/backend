@@ -3,7 +3,6 @@
 namespace dbeurive\BackendTest\Database\Connector;
 use dbeurive\BackendTest\Utils;
 
-
 class ConnectorTest extends \PHPUnit_Framework_TestCase
 {
     use \dbeurive\BackendTest\SetUp;

@@ -13,7 +13,7 @@
   "require": {
     "symfony/console": "*",
     "dbeurive/input": "*",
-    "dbeurive/util": "*",
+    "dbeurive/util": ">=1.0.16",
     "phpunit/phpunit": "5.3.*"
   },
   "repositories": [
@@ -24,7 +24,8 @@
   ],
   "autoload": {
     "psr-4": {
-      "dbeurive\\Backend\\": "src"
+      "dbeurive\\Backend\\": "src",
+      "dbeurive\\BackendTest\\": "tests"
     }
   },
   "bin": ["src/Cli/Bin/backend"]
