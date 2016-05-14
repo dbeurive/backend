@@ -3,8 +3,20 @@
 /**
  * This file implements the base class for all "connectors".
  *
- * Connectors encapsulate a low-level database handler, such as PDO ot mysqli.
- * This low-level database handler is passed to the API's entry points, so they can use it directly.
+ * Connectors are just very thin wrappers around a low-level database handler, such as PDO or mysqli.
+ * A connector performs the following actions:
+ *   * It exports the configuration's parameters required to initialise the low-level database handler.
+ *     See AbstractConnector::getConfigurationParameters
+ *   * It initialises the low-level database handler.
+ *     See AbstractConnector::connect
+ *
+ * Please note that you can use PDO to access MySql or SQLite databases.
+ * However, the configuration's parameters required to initialise a connexion to a MySql server are not the same than the ones required to open a SQLite database.
+ * Please also note that the APIs for PDO and mysqli differ.
+ * The purpose of the connectors is to export a unified API for all low-level database handlers.
+ *
+ * @see AbstractConnector::getConfigurationParameters
+ * @see AbstractConnector::connect
  */
 
 namespace dbeurive\Backend\Database\Connector;
@@ -17,10 +29,9 @@ namespace dbeurive\Backend\Database\Connector;
  * @package dbeurive\Backend\Database\Connector
  */
 
-abstract class AbstractConnector
+abstract class AbstractConnector implements InterfaceConnector
 {
-    const OPTION_NAME = 'name';
-    const OPTION_DESCRIPTION = 'description';
+
 
     /**
      * @var mixed|null Handler to the database (typically, this is an instance of \PDO).
@@ -32,19 +43,6 @@ abstract class AbstractConnector
     private $__configuration;
 
     /**
-     * This method returns the list of configuration's options required for this "database connector".
-     * @return array|false If the method returns the value false, then it means that there is no need to return the list of options.
-     *         Otherwise, the method returns an array.
-     *         Each element of the returned array is an associative array that presents to entries.
-     *         * \dbeurive\Backend\Database\Connector\AbstractConnector::OPTION_NAME: the name of the option.
-     *         * \dbeurive\Backend\Database\Connector\AbstractConnector::OPTION_DESCRIPTION: the description of the option.
-     *
-     * @see \dbeurive\Backend\Database\Connector\AbstractConnector::OPTION_NAME
-     * @see \dbeurive\Backend\Database\Connector\AbstractConnector::OPTION_DESCRIPTION
-     */
-    abstract public function getConfigurationOptions();
-
-    /**
      * This method opens the connection to the database.
      * @param array $inConfiguration Configuration required to open the connection.
      * @return mixed|bool If the connexion is successfully established, then the method returns handler to the database.
@@ -53,7 +51,7 @@ abstract class AbstractConnector
      * @throws \Exception
      */
     abstract protected function _connect(array $inConfiguration);
-
+    
     /**
      * Create a connector.
      * @param array $inOptConfiguration Configuration's parameters required by the database handler to establish a connexion.

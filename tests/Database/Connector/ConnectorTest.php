@@ -52,7 +52,7 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
         $conf = $connector->getConfiguration();
         $this->assertTrue(is_array($conf));
 
-        foreach ($connector->getConfigurationOptions() as $_option) {
+        foreach ($connector->getConfigurationParameters() as $_option) {
             $this->assertTrue(is_array($_option));
             $options[] = $_option[\dbeurive\Backend\Database\Connector\MySqlPdo::OPTION_NAME];
         }

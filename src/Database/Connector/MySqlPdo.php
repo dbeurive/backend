@@ -6,6 +6,9 @@
 
 namespace dbeurive\Backend\Database\Connector;
 
+use dbeurive\Input\Specification;
+use dbeurive\Input\SpecificationsSet;
+
 /**
  * Class MySqlPdo
  *
@@ -39,16 +42,51 @@ class MySqlPdo extends AbstractConnector
 
     /**
      * {@inheritdoc}
-     * @see AbstractConnector
+     * @see InterfaceConnector
      */
-    public function getConfigurationOptions() {
+    static public function getConfigurationParameters() {
         return [
-            [AbstractConnector::OPTION_NAME => self::DB_HOST,     AbstractConnector::OPTION_DESCRIPTION => "Host that runs the MySql server."],
-            [AbstractConnector::OPTION_NAME => self::DB_USER,     AbstractConnector::OPTION_DESCRIPTION => "User used to authenticate on the server."],
-            [AbstractConnector::OPTION_NAME => self::DB_PASSWORD, AbstractConnector::OPTION_DESCRIPTION => "Password used for the authentication"],
-            [AbstractConnector::OPTION_NAME => self::DB_PORT,     AbstractConnector::OPTION_DESCRIPTION => "TCP port used by the MySql server."],
-            [AbstractConnector::OPTION_NAME => self::DB_NAME,     AbstractConnector::OPTION_DESCRIPTION => "Name of the database."]
+            [AbstractConnector::OPTION_NAME => self::DB_HOST,
+                AbstractConnector::OPTION_DESCRIPTION => "Host that runs the MySql server.",
+                AbstractConnector::OPTION_MANDATORY => false,
+                AbstractConnector::OPTION_DEFAULT => 'localhost'],
+            [AbstractConnector::OPTION_NAME => self::DB_USER,
+                AbstractConnector::OPTION_DESCRIPTION => "User used to authenticate on the server.",
+                AbstractConnector::OPTION_MANDATORY => false,
+                AbstractConnector::OPTION_DEFAULT => 'root'],
+            [AbstractConnector::OPTION_NAME => self::DB_PASSWORD,
+                AbstractConnector::OPTION_DESCRIPTION => "Password used for the authentication",
+                AbstractConnector::OPTION_MANDATORY => false,
+                AbstractConnector::OPTION_DEFAULT => ''],
+            [AbstractConnector::OPTION_NAME => self::DB_PORT,
+                AbstractConnector::OPTION_DESCRIPTION => "TCP port used by the MySql server.",
+                AbstractConnector::OPTION_MANDATORY => false,
+                AbstractConnector::OPTION_DEFAULT => 3306],
+            [AbstractConnector::OPTION_NAME => self::DB_NAME,
+                AbstractConnector::OPTION_DESCRIPTION => "Name of the database.",
+                AbstractConnector::OPTION_MANDATORY => true,
+                AbstractConnector::OPTION_DEFAULT => null],
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     * @see InterfaceConnector
+     */
+    static public function checkConfiguration(array $inConfiguration) {
+        $set = new SpecificationsSet();
+
+        foreach (self::getConfigurationParameters() as $_parameterSpec) {
+            $name = $_parameterSpec[InterfaceConnector::OPTION_NAME];
+            $mandatory = $_parameterSpec[InterfaceConnector::OPTION_MANDATORY];
+            $set->addInputSpecification(new Specification($name, $mandatory, !$mandatory));
+        }
+
+        if ($set->check($inConfiguration)) {
+            return [];
+        }
+
+        return array_values($set->getErrorsOnInputsInIsolationFromTheOthers());
     }
 
     /**

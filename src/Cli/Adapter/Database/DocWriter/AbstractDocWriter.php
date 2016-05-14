@@ -64,7 +64,7 @@ abstract class AbstractDocWriter extends Command {
      * @see \dbeurive\Backend\Database\Entrypoints\Option::PROC_REPO_PATH
      * @see \dbeurive\Backend\Cli\Option::CONFIG_LOADER_CLASS_NAME
      */
-    public function __construct() {
+    final public function __construct() {
         parent::__construct();
         $this->addOption(DocOption::DOC_PATH,                    null, InputOption::VALUE_OPTIONAL, 'Path to the SQLite database used to store the documentation', 'sqldoc')
              ->addOption(DocOption::SCHEMA_PATH,                 null, InputOption::VALUE_REQUIRED, 'Path to the PHP file used to store the list of tables and fields within the database')

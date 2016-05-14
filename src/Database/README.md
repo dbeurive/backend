@@ -114,7 +114,7 @@ $databaseInterface->setPhpDatabaseRepresentationPath($inOptConfig['/Users/denisb
 $databaseInterface->setDbConnector($connector);
 ```
 
-> NOTE: The three examples above are strictly equivalent.
+> NOTE: The three examples above are **strictly equivalent**.
 
 Then, from anywhere in your code, you can retrieve the previously instantiated database interface by its name:
 

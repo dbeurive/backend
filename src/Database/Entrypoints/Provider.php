@@ -130,6 +130,8 @@ class Provider
     public function getSql($inName, array $inInitConfig = [], array $inExecutionConfig = null)
     {
         self::__checkConfiguration();
+        // You may, or may not, registered the entry points for auto loading.
+        // If you did not, then the following line is required.
         require_once $this->__sqlRepositoryBasePath . DIRECTORY_SEPARATOR . $inName . '.php';
         $class = self::__getFullyQualifiedClassName($this->__sqlBaseNameSpace, $inName);
         $class = new \ReflectionClass($class);
@@ -152,6 +154,8 @@ class Provider
     public function getProcedure($inName, array $inInitConfig = [], array $inExecutionConfig = null)
     {
         self::__checkConfiguration();
+        // You may, or may not, registered the entry points for auto loading.
+        // If you did not, then the following line is required.
         require_once $this->__sqlRepositoryBasePath . DIRECTORY_SEPARATOR . $inName . '.php';
         $class = self::__getFullyQualifiedClassName($this->__procedureBaseNameSpace, $inName);
         $class = new \ReflectionClass($class);
@@ -316,6 +320,8 @@ class Provider
                 continue;
             }
             $name = substr($_relativeFilePath, $prefixLenght, -4);
+            // You may, or may not, registered the entry points for auto loading.
+            // If you did not, then the following line is required.
             require_once $_relativeFilePath;
             $class = self::__getFullyQualifiedClassName($inBaseNameSpace, $name);
             $class = new \ReflectionClass($class);

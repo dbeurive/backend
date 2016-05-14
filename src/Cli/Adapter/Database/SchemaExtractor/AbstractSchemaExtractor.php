@@ -23,12 +23,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @package dbeurive\Backend\Cli\Adapter\Database\SchemaExtractor
  */
 
-abstract class AbstractSchemaExtractor extends Command
+abstract class AbstractSchemaExtractor extends Command implements InterfaceSchemaExtractor
 {
     /**
      * Build the "schema extractor".
      */
-    public function __construct()
+    final public function __construct()
     {
         parent::__construct();
         $this->addOption(DocOption::SCHEMA_PATH, null, InputOption::VALUE_REQUIRED, 'Path to the file that will be used to store the schema')
@@ -51,15 +51,7 @@ abstract class AbstractSchemaExtractor extends Command
      * @see \dbeurive\Backend\Database\Doc\Option::SCHEMA_PATH
      * @see \dbeurive\Backend\Cli\Option::CONFIG_LOADER_CLASS_NAME
      */
-    abstract protected function _getSpecificOptions(InputInterface $input);
-
-    /**
-     * Check the configuration for the specific "schema extractor" being executed.
-     * @param array $inConfiguration List of parameters that define the configuration to check.
-     * @return array If the given configuration is valid, then the method returns an empty array.
-     *         Otherwise, the method returns a list of error messages.
-     */
-    abstract protected function _checkConfiguration(array $inConfiguration);
+    abstract protected function _getSpecificCliParametersValues(InputInterface $input);
 
     /**
      * This method is called by the Symfony's console class.
@@ -74,6 +66,8 @@ abstract class AbstractSchemaExtractor extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
 
+        $connectorClass = $this->getConnectorClassName();
+
         // Load the configuration from a file, if required.
         $configLoaderClass = $input->getOption(CliOption::CONFIG_LOADER_CLASS_NAME);
         $options = []; // Not required in PHP... but is sucks otherwise.
@@ -87,18 +81,20 @@ abstract class AbstractSchemaExtractor extends Command
 
             // Options from te child class (that handles the specific CLI adapter).
             // These options define values used to connect to the database server.
-            $specificOptions = $this->_getSpecificOptions($input);
+            $specificParameters = $this->_getSpecificCliParametersValues($input);
 
             // The following options contains data used to use the API's entry points.
-            $genericOptions = [
+            $genericParameters = [
                 DocOption::SCHEMA_PATH => $input->getOption(DocOption::SCHEMA_PATH)
             ];
 
-            $options = array_merge($genericOptions, $specificOptions);
+            $options = array_merge($genericParameters, $specificParameters);
         }
 
         // Check the configurations.
-        $status = $this->_checkConfiguration($options);
+        $status = call_user_func("$connectorClass::checkConfiguration", $options);
+
+        // $status = $this->_checkConfiguration($options);
         if (count($status) > 0) {
             CliWriter::echoError(implode("\n", $status));
             return false;
