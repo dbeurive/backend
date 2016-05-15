@@ -88,7 +88,7 @@ backend db:schema-mysql --config-loader=\\dbeurive\\BackendTest\\config\\MySqlSc
 Or
 
 ```sh
-backend db:doc-mysql --config-loader=\\dbeurive\\BackendTest\\config\\MySqlDocConfLoader
+backend db:doc-writer --config-loader=\\dbeurive\\BackendTest\\config\\MySqlDocConfLoader
 ```
 
 * See [MySqlSchemaConfLoader](https://github.com/dbeurive/backend/blob/master/tests/config/MySqlSchemaConfLoader.php) 
