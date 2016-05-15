@@ -392,7 +392,7 @@ class DatabaseInterface {
      * @throws \Exception
      */
     public function getDatabaseHandler() {
-        return $this->getDbConnector()->getDatabaseConnexionHandler();
+        return $this->getDbConnector()->getDatabaseHandler();
     }
 
 }
