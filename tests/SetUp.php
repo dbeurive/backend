@@ -61,8 +61,8 @@ trait SetUp
         // See: \dbeurive\Backend\Database\DatabaseInterface::getInstance()
         // To initialize the database's interface, we need the following data:
         //
-        //          use dbeurive\Backend\Database\Entrypoints\Option as EntryPointOption;
-        //          use dbeurive\Backend\Database\Doc\Option as DocOption;
+        //          use dbeurive\Backend\Database\Entrypoints\ConfigurationParameter
+        //          use dbeurive\Backend\Database\Doc\ConfigurationParameter
         //
         //          EntryPointOption::SQL_REPO_PATH
         //          EntryPointOption::SQL_BASE_NS

@@ -8,7 +8,6 @@ use dbeurive\BackendTest\EntryPoints\Constants\Entities;
 use dbeurive\BackendTest\EntryPoints\Constants\Tags;
 use dbeurive\BackendTest\EntryPoints\Constants\Actions;
 use dbeurive\Backend\Database\Doc\ConfigurationParameter as DocOption;
-use dbeurive\Backend\Database\SqlService\Option as SqlServiceOption;
 
 // @runTestsInSeparateProcesses
 
