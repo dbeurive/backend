@@ -1,26 +1,28 @@
 # Description
 
-This namespace implements all "connectors".
+This namespace implements all "database connectors".
 
-Connectors are just very thin wrappers around a low-level database handler, such as PDO or mysqli.
-A connector performs the following actions:
+Database connectors are just very thin wrappers around a low-level database handler, such as PDO or mysqli.
+
+Connectors' API is:
+
+  * `getConfigurationParameters()` (static)
+  * `checkConfiguration(array $inConfiguration)` (static)
+  * `__construct(array $inOptConfiguration, $inOtpConnect=false)`
+  * `connect()`
  
-* It exports the configuration's parameters required to initialise the low-level database handler.
-  See AbstractConnector::getConfigurationParameters
-* It initialises the connexion to the database through the low-level database handler.
-  See AbstractConnector::connect
 
-In other words:
+As the name implies, a connector is responsible for establishing the connexion to the database.
 
-* You can use PDO to access MySql or SQLite databases.
-  However, the configuration's parameters required to initialise a connexion to a MySql server are not the same than the ones required to open a SQLite database.
-* The APIs used to open a connexion to the database for PDO and mysqli differ. For example:
-  * PDO: `$dbh = new PDO('mysql:host=localhost;dbname=test', $user, $pass);`.
-  * mysqli: `$link = mysqli_connect('localhost', 'my_user', 'my_password', 'my_db');` 
-  
-The purpose of the connectors is to export a unified API for all low-level database handlers. Basically: `getConfigurationParameters()` and `connect()`.
-With this basic API:
+In order to establish the connexion, the application that uses the connector needs to know the list of required parameters (used by the wrapped low-level database handler).
+This information is given by the connector to the application through the (static) method `getConfigurationParameters()`.
 
-* The application knows what configurations' parameters it should get.
-* The application is able to open a connexion to the database using the right set of parameters.
+Once the application gets the list of required parameters, it should present the user the list of parameters to specify.
+
+Then, once the parameters get specified, then the application should validate them. This is the purpose of the (static) method `checkConfiguration()`.
+
+If the list of parameters is valid, the application can create the connector and establish the connection to the database (using the method `connect()`). 
+
+
+
 

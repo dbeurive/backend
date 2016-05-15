@@ -2,8 +2,8 @@
 
 namespace dbeurive\BackendTest\Database;
 use dbeurive\Backend\Database\DatabaseInterface;
-use dbeurive\Backend\Database\Doc\Option as DocOption;
-use dbeurive\Backend\Database\Connector\Option as ConnectorOption;
+use dbeurive\Backend\Database\Doc\ConfigurationParameter as DocOption;
+use dbeurive\Backend\Database\Connector\ConfigurationParameter as ConnectorOption;
 
 /**
  * @runTestsInSeparateProcesses
@@ -80,7 +80,7 @@ class DatabaseInterfaceTest extends \PHPUnit_Framework_TestCase
         // Initialise the connector to the database.
         // -------------------------------------------------------------------------------------------------------------
 
-        $connectorName = $this->__generalConfiguration[$inDbName][ConnectorOption::CONNECTOR_NAME];
+        $connectorName = $this->__generalConfiguration[$inDbName][ConnectorOption::CONNECTOR_CLASS_NAME];
         $connectorConf = $this->__generalConfiguration[$inDbName][ConnectorOption::CONNECTOR_CONFIG];
 
         $this->__connector = new $connectorName($connectorConf);

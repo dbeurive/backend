@@ -16,7 +16,7 @@ use dbeurive\Backend\Database\Connector\AbstractConnector;
  *
  * @package dbeurive\Backend\Database\SchemaExtractor
  */
-abstract class AbstractSchemaExtractor
+abstract class AbstractSchemaExtractor implements InterfaceExtractor
 {
     /** @var AbstractConnector Connector for the database. */
     private $__connector;

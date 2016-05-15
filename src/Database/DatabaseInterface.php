@@ -8,8 +8,8 @@
 namespace dbeurive\Backend\Database;
 use dbeurive\Backend\Database\Entrypoints\Provider as EntryPointProvider;
 use dbeurive\Backend\Database\Connector\AbstractConnector;
-use dbeurive\Backend\Database\Entrypoints\Option as EntryPointOption;
-use dbeurive\Backend\Database\Doc\Option as DocOption;
+use dbeurive\Backend\Database\Entrypoints\ConfigurationParameter as EntryPointOption;
+use dbeurive\Backend\Database\Doc\ConfigurationParameter as DocOption;
 use dbeurive\Backend\Database\SqlService\Option as SqlServiceOption;
 
 

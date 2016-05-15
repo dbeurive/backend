@@ -6,15 +6,16 @@
 
 namespace dbeurive\Backend\Database\Entrypoints;
 
+
 /**
- * Class Option
+ * Class ConfigurationParameter
  *
  * This class contains the name of the configuration parameters used to describe the API's entry's points.
  *
  * @package dbeurive\Backend\Database\Entrypoints
  */
 
-class Option {
+class ConfigurationParameter {
 
     /**
      * This constant defines the name of the configuration parameter that represents the base name space for all SQL requests.
@@ -36,8 +37,4 @@ class Option {
      * This constant defines the name of the configuration parameter that represents an instance of a database connector.
      */
     const DB_CONNECTOR = 'db-connector';
-    /**
-     * This constant defines the name of the configuration parameter that represents an fully qualified name of the class that implements the connector.
-     */
-    const DB_CONNECTOR_CLASS_NAME = 'db-connector-class-name';
 }

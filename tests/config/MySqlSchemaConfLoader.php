@@ -8,8 +8,8 @@
 
 namespace dbeurive\BackendTest\config;
 
-use \dbeurive\Backend\Database\Connector\Option as ConnectorOption;
-use \dbeurive\Backend\Database\Doc\Option as DocOption;
+use \dbeurive\Backend\Database\Connector\ConfigurationParameter as ConnectorOption;
+use \dbeurive\Backend\Database\Doc\ConfigurationParameter as DocOption;
 
 class MySqlSchemaConfLoader implements \dbeurive\Backend\Cli\InterfaceConfigLoader
 {

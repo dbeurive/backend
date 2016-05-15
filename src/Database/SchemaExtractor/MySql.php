@@ -18,6 +18,15 @@ use dbeurive\Backend\Database\Connector\AbstractConnector;
 class MySql extends AbstractSchemaExtractor
 {
     /**
+     * {@inheritDoc}
+     * @see InterfaceExtractor
+     */
+    static public function getConnectorClassName() {
+        return '\\dbeurive\\Backend\\Database\\Connector\\MySqlPdo';
+    }
+
+    /**
+     * {@inheritDoc}
      * @see AbstractSchemaExtractor
      */
     protected function _getDatabaseSchema(AbstractConnector $inConnector) {

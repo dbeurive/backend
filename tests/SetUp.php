@@ -2,7 +2,7 @@
 
 namespace dbeurive\BackendTest;
 
-use dbeurive\Backend\Database\Connector\Option as ConnectorOption;
+use dbeurive\Backend\Database\Connector\ConfigurationParameter as ConnectorOption;
 use dbeurive\Backend\Database\Connector\MySqlPdo;
 use dbeurive\Backend\Database\DatabaseInterface;
 

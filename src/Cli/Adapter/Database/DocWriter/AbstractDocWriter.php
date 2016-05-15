@@ -11,8 +11,8 @@
 
 namespace dbeurive\Backend\Cli\Adapter\Database\DocWriter;
 
-use dbeurive\Backend\Database\Entrypoints\Option as EntryPointOption;
-use dbeurive\Backend\Database\Doc\Option as DocOption;
+use dbeurive\Backend\Database\Entrypoints\ConfigurationParameter as EntryPointOption;
+use dbeurive\Backend\Database\Doc\ConfigurationParameter as DocOption;
 use dbeurive\Backend\Database\Doc\Writer;
 use dbeurive\Backend\Database\Connector;
 use dbeurive\Backend\Cli\Lib\CliWriter;

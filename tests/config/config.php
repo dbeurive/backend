@@ -1,10 +1,10 @@
 <?php
 
-use dbeurive\Backend\Database\Entrypoints\Option as EntryPointOption;
-use dbeurive\Backend\Database\Doc\Option as DocOption;
-use dbeurive\Backend\Database\Connector\Option as ConnectorOption;
+use dbeurive\Backend\Database\Entrypoints\ConfigurationParameter as EntryPointOption;
+use dbeurive\Backend\Database\Doc\ConfigurationParameter as DocOption;
+use dbeurive\Backend\Database\Connector\ConfigurationParameter as ConnectorParameter;
 use dbeurive\Backend\Database\Connector\MySqlPdo;
-use dbeurive\Backend\Database\SqlService\Option as SqlServiceOption;
+
 
 
 return call_user_func(function() {
@@ -69,9 +69,9 @@ return call_user_func(function() {
         ],
         'mysql' => [
             // This parameter is used when the application is running.
-            ConnectorOption::CONNECTOR_CONFIG => $mysqlConf,
+            ConnectorParameter::CONNECTOR_CONFIG => $mysqlConf,
             // This represents the name of the class that implements the database connector.
-            ConnectorOption::CONNECTOR_NAME => '\\dbeurive\\Backend\\Database\\Connector\\MySqlPdo'
+            ConnectorParameter::CONNECTOR_CLASS_NAME => '\\dbeurive\\Backend\\Database\\Connector\\MySqlPdo'
 
         ]
     ];

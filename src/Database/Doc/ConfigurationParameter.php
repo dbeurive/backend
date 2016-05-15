@@ -7,14 +7,14 @@
 namespace dbeurive\Backend\Database\Doc;
 
 /**
- * Class Option
+ * Class ConfigurationParameter
  *
  * This class contains the name of the configuration parameters used to configure the "documentation writer".
  *
  * @package dbeurive\Backend\Database\Doc
  */
 
-class Option {
+class ConfigurationParameter {
     /**
      * This constant defines the name of the parameter used to specify the path to the file used to store the SQLite generated documentation.
      * This file contains the documentation for the database access layer.
