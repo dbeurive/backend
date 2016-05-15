@@ -92,24 +92,24 @@ class Writer {
      *
      * @param array $inConfiguration Configuration.
      *        This array must contain the following entries;
-     *           * \dbeurive\Backend\Database\Doc\Option::DOC_PATH
-     *           * \dbeurive\Backend\Database\Doc\Option::SCHEMA_PATH
-     *           * \dbeurive\Backend\Database\Entrypoints\Option::SQL_BASE_NS
-     *           * \dbeurive\Backend\Database\Entrypoints\Option::PROC_BASE_NS
-     *           * \dbeurive\Backend\Database\Entrypoints\Option::SQL_REPO_PATH
-     *           * \dbeurive\Backend\Database\Entrypoints\Option::PROC_REPO_PATH
+     *           * \dbeurive\Backend\Database\Doc\ConfigurationParameter::DOC_PATH
+     *           * \dbeurive\Backend\Database\Doc\ConfigurationParameter::SCHEMA_PATH
+     *           * \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::SQL_BASE_NS
+     *           * \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::PROC_BASE_NS
+     *           * \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::SQL_REPO_PATH
+     *           * \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::PROC_REPO_PATH
      *
      * @return bool Upon successful completion the method returns the value true.
      *         Otherwise an exception is thrown.
      *
      * @throws \Exception
      *
-     * @see \dbeurive\Backend\Database\Doc\Option::DOC_PATH
-     * @see \dbeurive\Backend\Database\Doc\Option::SCHEMA_PATH
-     * @see \dbeurive\Backend\Database\Entrypoints\Option::SQL_BASE_NS
-     * @see \dbeurive\Backend\Database\Entrypoints\Option::PROC_BASE_NS
-     * @see \dbeurive\Backend\Database\Entrypoints\Option::SQL_REPO_PATH
-     * @see \dbeurive\Backend\Database\Entrypoints\Option::PROC_REPO_PATH
+     * @see \dbeurive\Backend\Database\Doc\ConfigurationParameter::DOC_PATH
+     * @see \dbeurive\Backend\Database\Doc\ConfigurationParameter::SCHEMA_PATH
+     * @see \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::SQL_BASE_NS
+     * @see \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::PROC_BASE_NS
+     * @see \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::SQL_REPO_PATH
+     * @see \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::PROC_REPO_PATH
      */
     static public function writer(array $inConfiguration)
     {

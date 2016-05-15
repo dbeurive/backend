@@ -24,7 +24,7 @@ CliWriter::init();
 
 $application = new Application();
 $application->setAutoExit(true);
-$application->add(new dbeurive\Backend\Cli\Adapter\Database\DocWriter\MySql());
+$application->add(new dbeurive\Backend\Cli\Bin\DocWriter());
 $application->add(new dbeurive\Backend\Cli\Adapter\Database\SchemaExtractor\MySql());
 
 $application->run();

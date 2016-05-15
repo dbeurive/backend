@@ -11,17 +11,25 @@ This script can be used to perform the following actions:
 
 ## Examples of use
 
-### Extract the schema of the database
+In order to generate the documentation for all your SGL requests and you procedures, execute the following actions:
+
+* First, extract the schema of the database.
+* Then, can scan all your SQL requests and all your procedures in order to generate the documentation.
+
+### Step 1: Extract the schema of the database
+
+The following command will extract the schema of the database and store it into the file `/Users/denisbeurive/php-public/backend/tests/cache/mysql_schema.php`.
 
 ```sh
-backend db:schema-mysql \
-	-v \
-	--db-host=localhost \
-	--db-name=phptools \
-	--db-user=root \
-	--db-port=3306 \
-	--schema-path=/Users/denisbeurive/php-public/backend/tests/config/../cache/mysql_schema.php
-``` 
+    backend \
+        db:schema-mysql \
+        -v \
+        --db-host=localhost \
+        --db-name=phptools \
+        --db-user=root \
+        --db-port=3306 \
+        --schema-path=/Users/denisbeurive/php-public/backend/tests/cache/mysql_schema.php
+```
 
 | Parameter                 | Description                                                    |
 |---------------------------|----------------------------------------------------------------|
@@ -32,17 +40,22 @@ backend db:schema-mysql \
 | db-port                   | TCP port used by the server to listen to incoming requests.    |
 | schema-path               | Path to the PHP file that will be used to store the schema.    |
 
-### Generate the documentation for all API's entry points (SQL requests and procedures).
+### Step 2: Generate the documentation for all API's entry points (SQL requests and procedures).
+
+Once the schema has been extracted, you can scan all your SQL requests and all your procedures in order to generate the documentation.
+
+The following command will create the SQLite database `/Users/denisbeurive/php-public/backend/tests/cache/mysql_doc.sqlite`.
 
 ```sh
-backend db:doc-mysql \
-	-v \
-	--sql-repository-path=/Users/denisbeurive/php-public/backend/tests/config/../EntryPoints/Brands/MySql/Sqls \
-	--procedure-repository-path=/Users/denisbeurive/php-public/backend/tests/config/../EntryPoints/Brands/MySql/Procedures \
-	--sql-base-namespace=\\dbeurive\\BackendTest\\EntryPoints\\Brands\\MySql\\Sqls \
-	--procedure-base-namespace=\\dbeurive\\BackendTest\\EntryPoints\\Brands\\MySql\\Procedures \
-	--doc-path=/Users/denisbeurive/php-public/backend/tests/config/../cache/mysql_doc.sqlite \
-	--schema-path=/Users/denisbeurive/php-public/backend/tests/config/../cache/mysql_schema.php
+    backend \
+        db:doc-mysql \
+        -v \
+        --sql-repository-path=/Users/denisbeurive/php-public/backend/tests/EntryPoints/Brands/MySql/Sqls \
+        --procedure-repository-path=/Users/denisbeurive/php-public/backend/tests/EntryPoints/Brands/MySql/Procedures \
+        --sql-base-namespace=\\dbeurive\\BackendTest\\EntryPoints\\Brands\\MySql\\Sqls \
+        --procedure-base-namespace=\\dbeurive\\BackendTest\\EntryPoints\\Brands\\MySql\\Procedures \
+        --doc-path=/Users/denisbeurive/php-public/backend/tests/cache/mysql_doc.sqlite \
+        --schema-path=/Users/denisbeurive/php-public/backend/tests/cache/mysql_schema.php
 ```
 
 | Option                    | Description                                                                                   |
@@ -77,3 +90,7 @@ Or
 ```sh
 backend db:doc-mysql --config-loader=\\dbeurive\\BackendTest\\config\\MySqlDocConfLoader
 ```
+
+* See [MySqlSchemaConfLoader](https://github.com/dbeurive/backend/blob/master/tests/config/MySqlSchemaConfLoader.php) 
+* See [MySqlDocConfLoader](https://github.com/dbeurive/backend/blob/master/tests/config/MySqlDocConfLoader.php)
+

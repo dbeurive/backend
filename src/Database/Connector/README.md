@@ -23,6 +23,7 @@ Then, once the parameters get specified, then the application should validate th
 
 If the list of parameters is valid, the application can create the connector and establish the connection to the database (using the method `connect()`). 
 
-
+Adding a connector for a new couple (database's brand, low-level database handler) involves adding a new class that extends the base class [`\dbeurive\Backend\Database\Connector\AbstractConnector`](https://github.com/dbeurive/backend/blob/master/src/Database/Connector/AbstractConnector.php)
+and implements the interface [`\dbeurive\Backend\Database\Connector\InterfaceConnector`](https://github.com/dbeurive/backend/blob/master/src/Database/Connector/InterfaceConnector.php).   
 
 

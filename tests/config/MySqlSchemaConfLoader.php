@@ -16,14 +16,14 @@ class MySqlSchemaConfLoader implements \dbeurive\Backend\Cli\InterfaceConfigLoad
     /**
      *  See \dbeurive\Backend\Cli\Adapter\Database\DocWriter\AbstractDocWriter for more information.
      *  The returned array must contains the following keys:
-     *          * \dbeurive\Backend\Database\Doc\Option::SCHEMA_PATH
+     *          * \dbeurive\Backend\Database\Doc\ConfigurationParameter::SCHEMA_PATH
      *          * MySql::DB_HOST
      *          * MySql::DB_NAME
      *          * MySql::DB_USER
      *          * MySql::DB_PASSWORD
      *          * MySql::DB_PORT
      *
-     *  @see \dbeurive\Backend\Database\Doc\Option::SCHEMA_PATH
+     *  @see \dbeurive\Backend\Database\Doc\ConfigurationParameter::SCHEMA_PATH
      *  @see MySql::DB_HOST
      *  @see MySql::DB_NAME
      *  @see MySql::DB_USER

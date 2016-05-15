@@ -1,15 +1,13 @@
 <?php
 
 /**
- * This file implements the base class for all "documentation writers".
+ * This file implements the CLI interface to the documentation writer.
  * "Documentation writers" perform the following actions:
- *     1. Extract information from the database.
- *     2. Extract information from all the API's entry points.
- *     3. Organize the information previously extracted.
- * Please note that there is a "documentation writer" for each brand (MySql, Oracle...) of database.
+ *     1. Extract information from all the API's entry points.
+ *     2. Organize the information previously extracted.
  */
 
-namespace dbeurive\Backend\Cli\Adapter\Database\DocWriter;
+namespace dbeurive\Backend\Cli\Bin;
 
 use dbeurive\Backend\Database\Entrypoints\ConfigurationParameter as EntryPointOption;
 use dbeurive\Backend\Database\Doc\ConfigurationParameter as DocOption;
@@ -24,21 +22,20 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 
 /**
- * Class AbstractDocWriter
+ * Class DocWriter
  *
- * This class is the base class the base class for all "documentation writers".
+ * This class implements the CLI interface to the documentation writer.
  *
  * "Documentation writers" perform the following actions:
  *     1. Extract information from all the API's entry points.
  *     2. Organize the information previously extracted.
- * Please note that there is a "documentation writer" for each brand (MySql, Oracle...) of database.
  *
  * Please not that this class only handles CLI options.
  *
  * @package dbeurive\Backend\Cli\Adapter\Database\DocWriter
  */
 
-abstract class AbstractDocWriter extends Command {
+class DocWriter extends Command {
 
     // -----------------------------------------------------------------------------------------------------------------
     // Specific methods.
@@ -48,20 +45,20 @@ abstract class AbstractDocWriter extends Command {
      * Build the "documentation writer".
      *
      * Please note that all "configuration writers" share some common configuration's parameters:
-     *    * \dbeurive\Backend\Database\Doc\Option::DOC_PATH
-     *    * \dbeurive\Backend\Database\Doc\Option::SCHEMA_PATH
-     *    * \dbeurive\Backend\Database\Entrypoints\Option::SQL_BASE_NS
-     *    * \dbeurive\Backend\Database\Entrypoints\Option::PROC_BASE_NS
-     *    * \dbeurive\Backend\Database\Entrypoints\Option::SQL_REPO_PATH
-     *    * \dbeurive\Backend\Database\Entrypoints\Option::PROC_REPO_PATH
+     *    * \dbeurive\Backend\Database\Doc\ConfigurationParameter::DOC_PATH
+     *    * \dbeurive\Backend\Database\Doc\ConfigurationParameter::SCHEMA_PATH
+     *    * \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::SQL_BASE_NS
+     *    * \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::PROC_BASE_NS
+     *    * \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::SQL_REPO_PATH
+     *    * \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::PROC_REPO_PATH
      *    * \dbeurive\Backend\Cli\Option::CONFIG_LOADER_CLASS_NAME
      *
-     * @see \dbeurive\Backend\Database\Doc\Option::DOC_PATH
-     * @see \dbeurive\Backend\Database\Doc\Option::SCHEMA_PATH
-     * @see \dbeurive\Backend\Database\Entrypoints\Option::SQL_BASE_NS
-     * @see \dbeurive\Backend\Database\Entrypoints\Option::PROC_BASE_NS
-     * @see \dbeurive\Backend\Database\Entrypoints\Option::SQL_REPO_PATH
-     * @see \dbeurive\Backend\Database\Entrypoints\Option::PROC_REPO_PATH
+     * @see \dbeurive\Backend\Database\Doc\ConfigurationParameter::DOC_PATH
+     * @see \dbeurive\Backend\Database\Doc\ConfigurationParameter::SCHEMA_PATH
+     * @see \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::SQL_BASE_NS
+     * @see \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::PROC_BASE_NS
+     * @see \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::SQL_REPO_PATH
+     * @see \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::PROC_REPO_PATH
      * @see \dbeurive\Backend\Cli\Option::CONFIG_LOADER_CLASS_NAME
      */
     final public function __construct() {
@@ -75,6 +72,15 @@ abstract class AbstractDocWriter extends Command {
              ->addOption(CliOption::CONFIG_LOADER_CLASS_NAME,    null, InputOption::VALUE_OPTIONAL, 'Fully qualified name of a class used to load the configuration from a source.');
 
         // Options for the specific database' adapter will be added by the (child) class that handles the specific database' adapter.
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see \Symfony\Component\Console\Command\Command
+     */
+    protected function configure() {
+        $this->setName('db:doc-writer')
+            ->setDescription("Build the documentation for all SQL requests and procedures.");
     }
 
     /**

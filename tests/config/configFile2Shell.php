@@ -23,8 +23,8 @@ class MySqlDoc extends Command {
      * @see \Symfony\Component\Console\Command\Command
      */
     protected function configure() {
-        $this->setName('db:doc-mysql')
-             ->setDescription("Extract the configuration for MySql.");
+        $this->setName('db:doc-writer')
+             ->setDescription("Extract the configuration for all QL requests and all procedures.");
     }
 
     /**
@@ -39,7 +39,7 @@ class MySqlDoc extends Command {
         $loader = new MySqlDocConfLoader();
         $config = $loader->load();
 
-        $options = [$script, "\tdb:doc-mysql", "\t-v"];
+        $options = [$script, "\tdb:doc-writer", "\t-v"];
         foreach ($config as $_name => $_value) {
             if (0 == strlen($_value)) {
                 continue;
