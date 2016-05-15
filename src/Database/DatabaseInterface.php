@@ -217,18 +217,6 @@ class DatabaseInterface {
     }
 
     /**
-     * Return an instance of the class that provides SQL services.
-     * @return \dbeurive\Backend\Database\SqlService\InterfaceSqlService
-     */
-    public function getSqlServiceProvider() {
-        if (is_null($this->__sqlServiceClassName)) {
-            throw new \Exception("You did not define the SQL service provider!");
-        }
-        $c = $this->__sqlServiceClassName;
-        return new $c();
-    }
-
-    /**
      * Return the database' schema.
      * @return array The method returns the schema of the database.
      *         Please see the description for the property $__databaseSchema.
