@@ -365,24 +365,6 @@ class DatabaseInterface {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    // Private functions
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Get all the fields' names within a given table, as a list of fully qualified names "<table name>.<field name>".
-     * @param string $inTableName Name of the table.
-     * @param array $inDatabaseSchema This array represents the database' schema.
-     * @return array The method returns the list of fully qualified fields' names.
-     * @throws \Exception
-     */
-    private static function __getFullyQualifiedTableFieldsNames($inTableName, array $inDatabaseSchema) {
-        if (! array_key_exists($inTableName, $inDatabaseSchema)) {
-            throw new \Exception("The table ${inTableName} is unkonwn.");
-        }
-        return array_map(function($e) use ($inTableName) { return $inTableName . '.' . $e; }, $inDatabaseSchema[$inTableName]);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
     // The following functions have been added because they make the tests' suite easier.
     // -----------------------------------------------------------------------------------------------------------------
 
