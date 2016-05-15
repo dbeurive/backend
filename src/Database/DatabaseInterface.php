@@ -356,6 +356,13 @@ class DatabaseInterface {
      * @param string $inName Name of the procedure.
      * @param array $inInitConfig Configuration for the procedure's construction.
      * @param array $inExecutionConfig Execution configuration for the procedure.
+     *        !!! IMPORTANT !!!
+     *        !!! IMPORTANT !!!
+     *        !!! IMPORTANT !!!
+     *        Please note that a procedure's configuration should not be complex.
+     *        However, in practice it could be (most likely due to a bad design).
+     *        You may need to set up an extremely complex configuration that cannot be expressed via a set of input fields and parameters.
+     *        That's why you can pass an arbitrary array as execution's configuration.
      * @return \dbeurive\Backend\Database\Entrypoints\Application\Procedure\AbstractApplication
      * @throws \Exception
      * @see dbeurive\Backend\Database\Entrypoints\Provider

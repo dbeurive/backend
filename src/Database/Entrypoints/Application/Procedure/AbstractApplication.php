@@ -110,11 +110,14 @@ abstract class AbstractApplication extends \dbeurive\Backend\Database\Entrypoint
 
     /**
      * Set the procedure's configuration.
+     *
      * Please note that a procedure's configuration should not be complex.
      * However, in practice it could be (most likely due to a bad design) : some parameters or fields may be mandatory depending on a context of execution.
      * Therefore, the API does not require to declare fields or parameters as mandatory.
+     *
      * Furthermore, you may need to set up an extremely complex configuration that cannot be expressed via a set of input fields and parameters.
      * To do that, you can use the method setExecutionConfig().
+     * 
      * @param array $inExecutionConfig Configuration to set.
      * @return $this
      */

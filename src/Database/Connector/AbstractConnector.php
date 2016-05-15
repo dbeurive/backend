@@ -31,8 +31,6 @@ namespace dbeurive\Backend\Database\Connector;
 
 abstract class AbstractConnector implements InterfaceConnector
 {
-
-
     /**
      * @var mixed|null Handler to the database (typically, this is an instance of \PDO).
      */
