@@ -76,5 +76,4 @@ class AuthenticateTest extends PHPUnit_Backend_TestCase
         $this->assertResultDataSetCount(1, $request);
         $this->assertNull($request->getResult()->getErrorMessage());
     }
-
 }

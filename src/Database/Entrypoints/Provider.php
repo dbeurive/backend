@@ -121,13 +121,13 @@ class Provider
     /**
      * Return an SQL request identified by its name.
      * @param string $inName Name of the SQL request.
-     * @param array $inInitConfig Configuration for the SQL request's construction.
-     * @param array $inExecutionConfig Execution configuration for the SQL request.
+     * @param mixed|null $inInitConfig Configuration for the SQL request's construction.
+     * @param mixed|null $inExecutionConfig Execution configuration for the SQL request.
      *        Typically, this array contains the values of the fields required by the request's execution.
      * @return \dbeurive\Backend\Database\Entrypoints\Application\Sql\AbstractApplication The method returns the requested SQL request.
      * @throws \Exception
      */
-    public function getSql($inName, array $inInitConfig = [], array $inExecutionConfig = null)
+    public function getSql($inName, $inInitConfig=null, $inExecutionConfig=null)
     {
         self::__checkConfiguration();
         // You may, or may not, registered the entry points for auto loading.
@@ -146,12 +146,12 @@ class Provider
     /**
      * Return a procedure identified by its name.
      * @param string $inName Name of the procedure.
-     * @param array $inInitConfig Configuration for the procedure's construction.
-     * @param array $inExecutionConfig Execution configuration for the procedure.
-     * @return \dbeurive\Backend\Database\Entrypoints\Application\Procedure\AbstractApplication The method returns the requested SQL procedure.
+     * @param mixed|null $inInitConfig Configuration for the procedure's construction.
+     * @param mixed|null $inExecutionConfig Execution configuration for the procedure.
+     * @return \dbeurive\Backend\Database\Entrypoints\Application\Procedure\AbstractApplication The method returns the requested procedure.
      * @throws \Exception
      */
-    public function getProcedure($inName, array $inInitConfig = [], array $inExecutionConfig = null)
+    public function getProcedure($inName, $inInitConfig=null, $inExecutionConfig=null)
     {
         self::__checkConfiguration();
         // You may, or may not, registered the entry points for auto loading.

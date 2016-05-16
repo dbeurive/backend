@@ -29,25 +29,21 @@ class Authenticate extends AbstractApplication {
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
      */
-    public function _init(array $inInitConfig=[]) {
+    public function _init($inInitConfig=null) {
     }
 
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
      */
-    protected function _validateExecutionConfig(array $inExecutionConfig, &$outErrorMessage) {
-        $outErrorMessage = null;
-        if (false === $this->_checkMandatoryInputFields()) {
-            $outErrorMessage = "Some mandatory fields are missing. Mandatory fields are: " . implode(', ', self::$__mandatoryFields) . "\nSee: " . __FILE__;
-        }
+    protected function _validateExecutionConfig($inExecutionConfig, &$outErrorMessage) {
         return true;
     }
 
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
      */
-    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector) {
-        $sql = $this->_getSql(self::SQL_AUTHENTICATE, [], $this->_getInputFields());
+    protected function _execute($inExecutionConfig, AbstractConnector $inConnector) {
+        $sql = $this->_getSql(self::SQL_AUTHENTICATE, [], $inExecutionConfig);
         $resultSql = $sql->execute();
         $result = new Result(Result::STATUS_SUCCESS,
             $resultSql->getDataSets(),

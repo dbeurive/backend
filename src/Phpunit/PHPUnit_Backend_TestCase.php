@@ -38,7 +38,7 @@ class PHPUnit_Backend_TestCase extends \PHPUnit_Framework_TestCase
      * @param Procedure|ProcedureResult $inProcedureOrResult The procedure or its result.
      */
     public function assertResultValueSetIsEmpty($inProcedureOrResult) {
-        $this->assertTrue($inProcedureOrResult->isValuesSetEmpty());
+        $this->assertCount(0, $this->__getValuesFromProcedure($inProcedureOrResult));
     }
 
     /**
@@ -48,7 +48,7 @@ class PHPUnit_Backend_TestCase extends \PHPUnit_Framework_TestCase
      * @param Procedure|ProcedureResult $inProcedureOrResult The procedure or its result.
      */
     public function assertResultValueSetIsNotEmpty($inProcedureOrResult) {
-        $this->assertFalse($inProcedureOrResult->isValuesSetEmpty());
+        $this->assertFalse(count($this->__getValuesFromProcedure($inProcedureOrResult)) == 0);
     }
 
     /**
@@ -59,7 +59,28 @@ class PHPUnit_Backend_TestCase extends \PHPUnit_Framework_TestCase
      * @param ProcedureResult|Procedure $inProcedureOrResult Procedure or its result.
      */
     public function assertResultValuesCount($inCount, $inProcedureOrResult) {
-        $this->assertCount($inCount, $inProcedureOrResult->getValues());
+        $this->assertCount($inCount, $this->__getValuesFromProcedure($inProcedureOrResult));
+    }
+
+    /**
+     * Return the set of values returned by a given procedure, or a given procedure's result.
+     * @param ProcedureResult|Procedure $inProcedureOrResult Procedure or its result.
+     * @return array The method returns the set of values.
+     */
+    private function __getValuesFromProcedure($inProcedureOrResult) {
+        $values = [];
+
+        if ($inProcedureOrResult instanceof Procedure) {
+            /** @var Procedure $inProcedureOrResult */
+            /** @var ProcedureResult $result */
+            $result = $inProcedureOrResult->getResult();
+            $values = $result->getValues();
+        } else {
+            /** @var ProcedureResult $inProcedureOrResult */
+            $values = $inProcedureOrResult->getValues();
+        }
+
+        return $values;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -112,7 +133,7 @@ class PHPUnit_Backend_TestCase extends \PHPUnit_Framework_TestCase
      * @param Procedure|SqlRequest $inProcedureOrRequest Procedure or SQL request.
      */
     public function assertResultDataSetIsNotEmpty($inProcedureOrRequest) {
-        $this->assertFalse($inProcedureOrRequest->isDataSetEmpty());
+        $this->assertFalse($inProcedureOrRequest->getResult()->isDataSetsEmpty());
     }
 
     /**

@@ -30,11 +30,10 @@ abstract class AbstractApplication {
      */
     protected $_result = null;
     /**
-     * @var array Configuration for the API's entry point execution.
-     *      The structure of this variable depends on the type of API's entry point (SQL request or procedure).
-     *      Although it is possible to define a structure for procedures' configuration, it's not the case for SQL requests.
-     *      SQL requests' organisations may be complex (with sub selections).
-     *      Thus, for SQL requests, the configuration's structure is free.
+     * @var mixed Configuration for the API's entry point execution.
+     *      This value represents the configuration for the execution of the entry point.
+     *      Backend's API does not enforce any guidelines regarding the nature of this value.
+     *      The user is free to pass any kind of value.
      */
     protected $_executionConfig = [];
     /**
@@ -72,13 +71,13 @@ abstract class AbstractApplication {
      * @param Provider $inEntryPointProvider Entry point provider that handles this entry point.
      * @param null|AbstractConnector $inOptConnector Handler to the database connector.
      *        Please note that, depending on the context, this parameter is defined or not.
-     * @param array $inOptInitConfig Configuration for the entry point's initialization.
+     * @param mixed|null $inOptInitConfig Configuration for the entry point's initialization.
      *
      * @uses \dbeurive\Backend\Database\Entrypoints\Provider::__getDescriptions
      * @uses \dbeurive\Backend\Database\Entrypoints\Provider::getSql
      * @uses \dbeurive\Backend\Database\Entrypoints\Provider::getProcedure
      */
-    final public function __construct(Provider $inEntryPointProvider, AbstractConnector $inOptConnector=null, array $inOptInitConfig=[]) {
+    final public function __construct(Provider $inEntryPointProvider, AbstractConnector $inOptConnector=null, $inOptInitConfig=null) {
         $this->_provider = $inEntryPointProvider;
 
         if (! is_null($inOptConnector)) {
@@ -94,26 +93,26 @@ abstract class AbstractApplication {
 
     /**
      * Validate the configuration of the entry point prior to its execution.
-     * @param array $inExecutionConfig Configuration to validate.
+     * @param mixed|null $inExecutionConfig Configuration to validate.
      * @param string $outErrorMessage Reference to a string used to store an error message, if an error occurs.
      * @return bool If the execution configuration is valid, then the method returns the value true.
      *         Otherwise, it returns the value false. In this case, the string `$outErrorMessage` should contain an eror message.
      */
-    abstract protected function _validateExecutionConfig(array $inExecutionConfig, &$outErrorMessage);
+    abstract protected function _validateExecutionConfig($inExecutionConfig, &$outErrorMessage);
 
     /**
      * Execute the API's entry point.
-     * @param array $inExecutionConfig Configuration for the execution.
+     * @param null|mixed $inExecutionConfig Configuration for the execution.
      * @param AbstractConnector $inConnector Handler to the database connector.
      * @return \dbeurive\Backend\Database\Entrypoints\Application\Sql\Result|\dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result
      */
-    abstract protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector);
+    abstract protected function _execute($inExecutionConfig, AbstractConnector $inConnector);
 
     /**
      * Initialize the API's entry point.
-     * @param array $inConfig Entry point's configuration.
+     * @param mixed|null $inConfig Configuration for the entry point's configuration.
      */
-    abstract protected function _init(array $inInitConfig=[]);
+    abstract protected function _init($inInitConfig=null);
 
     /**
      * Return the description of the API's entry point.
@@ -174,26 +173,9 @@ abstract class AbstractApplication {
         return $this->_provider->getDataInterface()->getTableFieldsNames($inTableName);
     }
 
-    /**
-     * Return an instance of the class that provides SQL services.
-     * @return \dbeurive\Backend\Database\SqlService\InterfaceSqlService
-     */
-    protected function _getSqlServiceProvider() {
-        return $this->_provider->getDataInterface()->getSqlServiceProvider();
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
     // Public methods.
     // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Reset the execution's configuration.
-     * @return $this
-     */
-    public function resetExecutionConfig() {
-        $this->_executionConfig = [];
-        return $this;
-    }
 
     /**
      * Execute the API's entry point.
@@ -211,6 +193,15 @@ abstract class AbstractApplication {
         $this->_result = null;
         $this->_result = $this->_execute($this->_executionConfig, $this->_connector);
         return $this->_result;
+    }
+
+    /**
+     * Reset the execution's configuration.
+     * @return $this
+     */
+    public function resetExecutionConfig() {
+        $this->_executionConfig = [];
+        return $this;
     }
 
     /**
@@ -265,6 +256,15 @@ abstract class AbstractApplication {
      */
     public function hasBeenExecuted() {
         return $this->_hasBeenExecuted;
+    }
+
+    /**
+     * Set the execution's configuration.
+     * @param array $inExecutionConfig Configuration to set.
+     * @return $this
+     */
+    public function setExecutionConfig(array $inExecutionConfig) {
+        return $this->_setExecutionConfig($inExecutionConfig);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

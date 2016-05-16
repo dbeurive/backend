@@ -24,14 +24,15 @@ class Select extends AbstractApplication {
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
      */
-    public function _init(array $inInitConfig=[]) {
+    public function _init($inInitConfig=null) {
         $this->_setSql($this->__getSql());
     }
 
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
      */
-    protected function _validateExecutionConfig(array $inExecutionConfig, &$outErrorMessage) {
+    protected function _validateExecutionConfig($inExecutionConfig, &$outErrorMessage) {
+        /** @var array $inExecutionConfig */
         if (! UtilArray::array_keys_exists(self::$__pdoParams, $this->_executionConfig)) {
             $outErrorMessage = "Invalid SQL configuration. Mandatory parameters are: " . implode(', ', self::$__pdoParams) . "\nSee: " . __FILE__;
             return false;
@@ -42,7 +43,7 @@ class Select extends AbstractApplication {
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
      */
-    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector) {
+    protected function _execute($inExecutionConfig, AbstractConnector $inConnector) {
         /* @var \PDO $pdo */
         $pdo = $inConnector->getDatabaseHandler();
 

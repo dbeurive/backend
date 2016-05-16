@@ -338,7 +338,7 @@ class DatabaseInterface {
     /**
      * Return an SQL request identified by its name.
      * @param string $inName Name of the SQL request.
-     * @param array $inInitConfig Configuration for the SQL request's construction.
+     * @param mixed|null $inInitConfig Configuration for the SQL request's construction.
      * @param array $inExecutionConfig Execution configuration for the SQL request.
      *        Typically, this array contains the values of the fields required by the request's execution.
      * @return \dbeurive\Backend\Database\Entrypoints\Application\Sql\AbstractApplication
@@ -347,27 +347,21 @@ class DatabaseInterface {
      * @note The method should not be called from the application.
      *       It has been introduced for the unit tests.
      */
-    public function getSql($inName, array $inInitConfig = [], array $inExecutionConfig = null) {
+    public function getSql($inName, $inInitConfig=null, array $inExecutionConfig = null) {
         return $this->__entryPointProvider->getSql($inName, $inInitConfig, $inExecutionConfig);
     }
 
     /**
      * Return a procedure identified by its name.
      * @param string $inName Name of the procedure.
-     * @param array $inInitConfig Configuration for the procedure's construction.
-     * @param array $inExecutionConfig Execution configuration for the procedure.
-     *        !!! IMPORTANT !!!
-     *        !!! IMPORTANT !!!
-     *        !!! IMPORTANT !!!
-     *        Please note that a procedure's configuration should not be complex.
-     *        However, in practice it could be (most likely due to a bad design).
-     *        You may need to set up an extremely complex configuration that cannot be expressed via a set of input fields and parameters.
-     *        That's why you can pass an arbitrary array as execution's configuration.
+     * @param mixed|null $inInitConfig Configuration for the procedure's construction.
+     * @param mixed $inExecutionConfig Execution configuration for the SQL request.
+     *        Typically, this array contains the values of the fields required by the request's execution.
      * @return \dbeurive\Backend\Database\Entrypoints\Application\Procedure\AbstractApplication
      * @throws \Exception
      * @see dbeurive\Backend\Database\Entrypoints\Provider
      */
-    public function getProcedure($inName, array $inInitConfig = [], array $inExecutionConfig = null) {
+    public function getProcedure($inName, $inInitConfig=null, $inExecutionConfig = null) {
         return $this->__entryPointProvider->getProcedure($inName, $inInitConfig, $inExecutionConfig);
     }
 

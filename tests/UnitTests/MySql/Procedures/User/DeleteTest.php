@@ -44,8 +44,9 @@ class DeleteTest extends PHPUnit_Backend_TestCase
 
         $user = TestTools::select("SELECT max(user.id) as 'max' FROM user", []);
         $id = $user[0]['max'] + 1;
-        $procedure->addInputField('user.id', $id)
-            ->execute();
+        $procedure->setExecutionConfig([
+            'user.id' => $id
+        ])->execute();
 
         $this->assertStatusIsOk($procedure);
         $this->assertResultDataSetIsEmpty($procedure);
@@ -61,9 +62,9 @@ class DeleteTest extends PHPUnit_Backend_TestCase
 
         $user = TestTools::select("SELECT max(user.id) as 'max' FROM user", []);
         $id = $user[0]['max'];
-        echo "Delete user which ID is $id\n";
-        $procedure->addInputField('user.id', $id)
-            ->execute();
+        $procedure->setExecutionConfig([
+            'user.id' => $id
+        ])->execute();
 
         $this->assertStatusIsOk($procedure);
         $this->assertResultDataSetIsEmpty($procedure);

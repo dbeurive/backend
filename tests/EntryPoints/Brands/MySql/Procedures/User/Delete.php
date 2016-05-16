@@ -23,21 +23,21 @@ class Delete extends AbstractApplication {
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
      */
-    public function _init(array $inInitConfig=[]) {
+    public function _init($inInitConfig=null) {
     }
 
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
      */
-    protected function _validateExecutionConfig(array $inExecutionConfig, &$outErrorMessage) {
+    protected function _validateExecutionConfig($inExecutionConfig, &$outErrorMessage) {
         return true;
     }
 
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
      */
-    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector) {
-        $sql = $this->_getSql(self::SQL_DELETE, [], $this->_getInputFields());
+    protected function _execute($inExecutionConfig, AbstractConnector $inConnector) {
+        $sql = $this->_getSql(self::SQL_DELETE, [], $inExecutionConfig);
         $resultSql = $sql->execute();
         $result = new Result(Result::STATUS_SUCCESS,
             $resultSql->getDataSets() // Should be empty, since it is a DELETE.

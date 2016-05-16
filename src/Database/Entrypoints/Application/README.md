@@ -18,8 +18,7 @@ $di = DatabaseInterface::getInstance();
 $procedure = $di->getProcedure('User/Authenticate');
 
 /** @var \dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result $result */
-$result = $procedure->addInputField('user.login', 'foo')
-                    ->addInputField('user.password', 'bar')
+$result = $procedure->setExecutionConfig(['user.login' => 'foo', 'user.password' => 'bar'])
                     ->execute();
                     
 if ($result->isSuccess()) {

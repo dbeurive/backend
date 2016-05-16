@@ -82,9 +82,9 @@ abstract class AbstractEntryPoint {
 
     /**
      * Initialize the entry point.
-     * @param array $inConfig Entry point's configuration.
+     * @param mixed $inConfig Entry point's configuration for its initialisation.
      */
-    abstract protected function _init(array $inConfig=[]);
+    abstract protected function _init($inConfig);
 
     /**
      * Return the description of the API's entry point (SQL requests or procedures).

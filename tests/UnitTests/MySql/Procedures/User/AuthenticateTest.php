@@ -43,9 +43,10 @@ class AuthenticateTest extends PHPUnit_Backend_TestCase
         // -----------------------------------------------------------------------------------------------------------------
 
         $user = TestTools::select("SELECT login as 'user.login', password as 'user.password' FROM user LIMIT 1", []);
-        $procedure->addInputField('user.login', $user[0]['user.login'])
-            ->addInputField('user.password', $user[0]['user.password'])
-            ->execute();
+        $procedure->setExecutionConfig([
+            'user.login' => $user[0]['user.login'],
+            'user.password' => $user[0]['user.password']
+        ])->execute();
 
         $this->assertStatusIsOk($procedure);
         $this->assertResultDataSetIsNotEmpty($procedure);
@@ -59,8 +60,10 @@ class AuthenticateTest extends PHPUnit_Backend_TestCase
         // -----------------------------------------------------------------------------------------------------------------
 
         $user = TestTools::select("SELECT login as 'user.login', password as 'user.password' FROM user LIMIT 1", []);
-        $procedure->setInputFields([ ['user.login', $user[0]['user.login']], ['user.password', $user[0]['user.password'] . '__'] ])
-            ->execute();
+        $procedure->setExecutionConfig([
+            'user.login'    => $user[0]['user.login'],
+            'user.password' => $user[0]['user.password'] . '__'
+        ])->execute();
 
         $this->assertStatusIsOk($procedure);
         $this->assertResultDataSetIsEmpty($procedure);

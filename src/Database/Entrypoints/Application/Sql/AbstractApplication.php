@@ -46,13 +46,4 @@ abstract class AbstractApplication extends \dbeurive\Backend\Database\Entrypoint
     protected function _getSql() {
         return $this->__sql;
     }
-
-    /**
-     * Set the execution's configuration.
-     * @param array $inExecutionConfig Configuration to set.
-     * @return $this
-     */
-    public function setExecutionConfig(array $inExecutionConfig) {
-        return $this->_setExecutionConfig($inExecutionConfig);
-    }
 }

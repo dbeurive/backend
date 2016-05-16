@@ -49,10 +49,10 @@ class Authenticate extends AbstractApplication
     public function _init(array $inInitConfig=[]) { /* ... */ }
 
     // Validate the configuration for the execution of the request (return true if OK, false otherwise).
-    protected function _validateExecutionConfig(array $inExecutionConfig, &$outErrorMessage) { /* ... */ }
+    protected function _validateExecutionConfig($inExecutionConfig, &$outErrorMessage) { /* ... */ }
 
     // Execute request.
-    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector) { /* ... */ } 
+    protected function _execute($inExecutionConfig, AbstractConnector $inConnector) { /* ... */ } 
 
     // Document the request.
     public function getDescription() {
@@ -101,10 +101,10 @@ class Authenticate extends AbstractApplication {
     public function _init(array $inInitConfig=[]) { /* ... */ }
 
     // Validate the execution parameters, prior to the procedures' execution (return true if OK, false otherwise).
-    protected function _validateExecutionConfig(array $inExecutionConfig, &$outErrorMessage) { /* ... */ }
+    protected function _validateExecutionConfig($inExecutionConfig, &$outErrorMessage) { /* ... */ }
 
     // Execute the procedure.
-    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector) { /* ... */ }
+    protected function _execute($inExecutionConfig, AbstractConnector $inConnector) { /* ... */ }
 
     // Document the procedure/
     public function getDescription() {
@@ -132,10 +132,12 @@ class Authenticate extends AbstractApplication {
 ```php
 use dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result;
 
-protected function _execute(array $inExecutionConfig, AbstractLink $inLink) {
+protected function _execute($inExecutionConfig, AbstractLink $inLink) {
 
     // Get an instance of the SQL request.
-    $sql = $this->_getSql('User/Authenticate', [], $this->_getInputFields());
+    // We assume that the variable $inExecutionConfig is compatible with the SQL request's requirements.
+    // Otherwise, it would have been necessary to perform a transformation.
+    $sql = $this->_getSql('User/Authenticate', [], $inExecutionConfig);
     
     // Execute the SQL request.
     $resultSql = $sql->execute();
@@ -144,6 +146,9 @@ protected function _execute(array $inExecutionConfig, AbstractLink $inLink) {
     $result = new Result(Result::STATUS_SUCCESS,
         $resultSql->getDataSets();
     );
+    
+    // Before returning the result of the SQL request, you can do whatever you want on the result.  
+    
     return $result;
 }
 ```
@@ -174,8 +179,7 @@ We assume that `$di` is an instance if the database interface.
 
 ```php
 $procedure = $di->getProcedure('User/Authenticate');
-$procedure->addInputField('user.login', 'foo')
-          ->addInputField('user.password', 'bar')
+$procedure->setExecutionConfig(['user.login' => 'foo', 'user.password' => 'bar'])
           ->execute();
 ```
 

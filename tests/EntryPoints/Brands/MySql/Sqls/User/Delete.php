@@ -25,15 +25,16 @@ class Delete extends AbstractApplication {
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
      */
-    public function _init(array $inInitConfig=[]) {
+    public function _init($inInitConfig=null) {
         $this->_setSql(self::$__sql);
     }
 
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
      */
-    protected function _validateExecutionConfig(array $inExecutionConfig, &$outErrorMessage) {
+    protected function _validateExecutionConfig($inExecutionConfig, &$outErrorMessage) {
         // Make sure that we have all the fields used within the clause "WHERE" of the SQL request.
+        /** @var array $inExecutionConfig */
         if (! UtilArray::array_keys_exists(self::$__conditionFields, $this->_executionConfig)) {
             $outErrorMessage = "Invalid SQL configuration. Mandatory fields are: " . implode(', ', self::$__conditionFields) . "\nSee: " . __FILE__;
             return false;
@@ -44,7 +45,7 @@ class Delete extends AbstractApplication {
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
      */
-    protected function _execute(array $inExecutionConfig, AbstractConnector $inConnector) {
+    protected function _execute($inExecutionConfig, AbstractConnector $inConnector) {
         /* @var \PDO $pdo */
         $pdo = $inConnector->getDatabaseHandler();
 
