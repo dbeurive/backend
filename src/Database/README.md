@@ -34,7 +34,7 @@ Configure and execute the API's entry point:
                          ->execute();
             
     $resultProcedure = $procedure->addInputField('user.login', 'foo')
-                                 ->addInputField('user.password', 'bar)
+                                 ->addInputField('user.password', 'bar')
                                  ->execute();
 ```       
 
