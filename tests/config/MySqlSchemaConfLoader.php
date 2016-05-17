@@ -32,7 +32,7 @@ class MySqlSchemaConfLoader implements \dbeurive\Backend\Cli\InterfaceConfigLoad
      */
     public function load() {
         $config = require __DIR__ . DIRECTORY_SEPARATOR . 'config.php';
-        $conf = $config['mysql'][ConnectorOption::CONNECTOR_CONFIG];
+        $conf = $config['mysql'];
         $conf[DocOption::SCHEMA_PATH] = $config['application'][DocOption::SCHEMA_PATH];
 
         return $conf;
