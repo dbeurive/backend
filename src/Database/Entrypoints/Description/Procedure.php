@@ -5,7 +5,7 @@
  */
 
 
-namespace dbeurive\Backend\Database\Entrypoints\Description;
+namespace dbeurive\Backend\Database\EntryPoints\Description;
 
 /**
  * Class Procedure
@@ -15,10 +15,10 @@ namespace dbeurive\Backend\Database\Entrypoints\Description;
  * However, in practice it could be (most likely due to a bad design) : some parameters or fields may be mandatory depending on a context of execution.
  * Therefore, the API does not require the user to declare fields or parameters to be always mandatory.
  *
- * @package dbeurive\Backend\Database\Entrypoints\Description
+ * @package dbeurive\Backend\Database\EntryPoints\Description
  */
 
-class Procedure extends \dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription
+class Procedure extends \dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription
 {
     const KEY_ALWAYS = 'always';
 
@@ -404,12 +404,12 @@ class Procedure extends \dbeurive\Backend\Database\Entrypoints\Description\Abstr
      *
      * @return array The method returns the list of mandatory input fields for this procedure.
      *         Each element of the list is an associative array that presents three keys:
-     *         \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_NAME: the name of the field.
-     *         \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_DESCRIPTION: the description.
-     *         \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_ALWAYS: this value indicated whether the field is always mandatory or not.
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_NAME
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_DESCRIPTION
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_ALWAYS
+     *         \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_NAME: the name of the field.
+     *         \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_DESCRIPTION: the description.
+     *         \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_ALWAYS: this value indicated whether the field is always mandatory or not.
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_NAME
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_DESCRIPTION
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_ALWAYS
      */
     function getMandatoryInputFields_() {
         return $this->__inMandatoryFields;
@@ -420,10 +420,10 @@ class Procedure extends \dbeurive\Backend\Database\Entrypoints\Description\Abstr
      *
      * @return array The method returns the list of optional input fields for this procedure.
      *         Each element of the list is an associative array that presents two keys:
-     *         \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_NAME: the name of the field.
-     *         \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_DESCRIPTION: the description.
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_NAME
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_DESCRIPTION
+     *         \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_NAME: the name of the field.
+     *         \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_DESCRIPTION: the description.
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_NAME
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_DESCRIPTION
      */
     function getOptionalInputFields() {
         return $this->__inOptionalFields;
@@ -434,12 +434,12 @@ class Procedure extends \dbeurive\Backend\Database\Entrypoints\Description\Abstr
      *
      * @return array The method returns the list of mandatory input parameters for this procedure.
      *         Each element of the list is an associative array that presents three keys:
-     *         \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_NAME: the name of the parameter.
-     *         \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_DESCRIPTION: the description.
-     *         \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_ALWAYS: this value indicated whether the parameter is always mandatory or not.
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_NAME
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_DESCRIPTION
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_ALWAYS
+     *         \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_NAME: the name of the parameter.
+     *         \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_DESCRIPTION: the description.
+     *         \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_ALWAYS: this value indicated whether the parameter is always mandatory or not.
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_NAME
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_DESCRIPTION
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_ALWAYS
      */
     function getMandatoryInputParams_() {
         return $this->__inMandatoryParams;
@@ -450,10 +450,10 @@ class Procedure extends \dbeurive\Backend\Database\Entrypoints\Description\Abstr
      *
      * @return array The method returns the list of optional input parameters for this procedure.
      *         Each element of the list is an associative array that presents two keys:
-     *         \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_NAME: the name of the parameter.
-     *         \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_DESCRIPTION: the description.
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_NAME
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_DESCRIPTION
+     *         \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_NAME: the name of the parameter.
+     *         \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_DESCRIPTION: the description.
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_NAME
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_DESCRIPTION
      */
     function getOptionalInputParams_() {
         return $this->__inOptionalParams;
@@ -464,10 +464,10 @@ class Procedure extends \dbeurive\Backend\Database\Entrypoints\Description\Abstr
      *
      * @return array The method returns the list of output fields for this procedure.
      *         Each element of the list is an associative array that presents two keys:
-     *         \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_NAME: the name of the parameter.
-     *         \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_DESCRIPTION: the description.
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_NAME
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_DESCRIPTION
+     *         \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_NAME: the name of the parameter.
+     *         \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_DESCRIPTION: the description.
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_NAME
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_DESCRIPTION
      */
     function getOutputFields_() {
         return $this->__outputFields;
@@ -478,10 +478,10 @@ class Procedure extends \dbeurive\Backend\Database\Entrypoints\Description\Abstr
      *
      * @return array The method returns the list of "output values" for this procedure.
      *         Please not that each element of the returned list is an associative array that presents the following keys:
-     *         \dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription::KEY_NAME: the name of the output value.
-     *         \dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription::KEY_DESCRIPTION: the description for the output value.
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_NAME
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Procedure::KEY_DESCRIPTION
+     *         \dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription::KEY_NAME: the name of the output value.
+     *         \dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription::KEY_DESCRIPTION: the description for the output value.
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_NAME
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Procedure::KEY_DESCRIPTION
      */
     public function getOutputValues_() {
         return $this->__outputValues;
@@ -493,7 +493,7 @@ class Procedure extends \dbeurive\Backend\Database\Entrypoints\Description\Abstr
 
     /**
      * {@inheritdoc}
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription
      */
     protected function _checkFields(array &$inFields, &$outError) {
 
@@ -524,7 +524,7 @@ class Procedure extends \dbeurive\Backend\Database\Entrypoints\Description\Abstr
 
             if ('*' === $fieldName) {
 
-                /* @var \dbeurive\Backend\Database\Entrypoints\Description\Element\Field $_fieldDef */
+                /* @var \dbeurive\Backend\Database\EntryPoints\Description\Element\Field $_fieldDef */
                 foreach (self::$_fieldsByTable[$tableName] as $_fieldDef) {
                     $checked[] = [
                         self::KEY_NAME => $_fieldDef->getName(),
@@ -542,7 +542,7 @@ class Procedure extends \dbeurive\Backend\Database\Entrypoints\Description\Abstr
 
     /**
      * {@inheritdoc}
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription
      */
     protected function _getDbFields() {
         return array_unique(array_merge($this->__inMandatoryFields, $this->__inOptionalFields, $this->__outputFields));
@@ -550,7 +550,7 @@ class Procedure extends \dbeurive\Backend\Database\Entrypoints\Description\Abstr
 
     /**
      * {@inheritdoc}
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription
      */
     protected function _getAllDdFieldsListsReferences() {
         return [&$this->__inMandatoryFields, &$this->__inOptionalFields, &$this->__outputFields];

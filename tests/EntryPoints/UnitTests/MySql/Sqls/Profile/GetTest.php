@@ -1,14 +1,14 @@
 <?php
 
-namespace dbeurive\BackendTests\UnitTests\MySql\Sqls\Profile;
+namespace dbeurive\BackendTest\UnitTests\MySql\Sqls\Profile;
 
 use dbeurive\BackendTest\SetUp;
 use dbeurive\BackendTest\Utils\Pdo as TestTools;
 
 use dbeurive\Backend\Database\DatabaseInterface;
 use dbeurive\Backend\Cli\Lib\CliWriter;
-use dbeurive\Backend\Phpunit\PHPUnit_Backend_TestCase;
-use dbeurive\Backend\Database\Entrypoints\Application\Sql\Result;
+use dbeurive\BackendTest\EntryPoints\UnitTests\PhpUnit\PHPUnit_Backend_TestCase;
+use dbeurive\BackendTest\EntryPoints\Result\SqlResult;
 
 /**
  * @runTestsInSeparateProcesses
@@ -22,10 +22,8 @@ class GetTest extends PHPUnit_Backend_TestCase
         $this->__init();
         $this->__createMySqlPdo();
         $this->__createMySqlDatabase();
-        $this->__createMySqlConnector();
-        $this->__connectorMySql->connect();
         $this->__createDatabaseInterface();
-        $this->__di->setDbConnector($this->__connectorMySql);
+        $this->__di->setDbHandler($this->__mySqlPdo);
     }
 
     public function testIt()
@@ -40,7 +38,7 @@ class GetTest extends PHPUnit_Backend_TestCase
         $dataInterface = DatabaseInterface::getInstance();
         $request = $dataInterface->getSql($REQ_NAME);
 
-        /** @var Result $result */
+        /** @var SqlResult $result */
 
         // -----------------------------------------------------------------------------------------------------------------
         // Test: profile does not exist (no user associated).

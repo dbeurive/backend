@@ -4,17 +4,17 @@
  * This file implements the class that represents the description for an SQL request.
  */
 
-namespace dbeurive\Backend\Database\Entrypoints\Description;
+namespace dbeurive\Backend\Database\EntryPoints\Description;
 
 /**
  * Class Sql
  *
  * This class contains all the information that describes an SQL request.
  *
- * @package dbeurive\Backend\Database\Entrypoints\Description
+ * @package dbeurive\Backend\Database\EntryPoints\Description
  */
 
-class Sql extends \dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription
+class Sql extends \dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription
 {
     const KEY_NAME        = 'name';
     const KEY_DESCRIPTION = 'description';
@@ -82,16 +82,16 @@ class Sql extends \dbeurive\Backend\Database\Entrypoints\Description\AbstractDes
     private $__sql = null;
     /**
      * @var string Type of the request.
-     *      It can be: \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_SELECT,
-     *                 \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_UPDATE,
-     *                 \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_DELETE,
-     *                 \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_INSERT,
-     *                 \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_UPSERT
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_SELECT
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_UPDATE
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_DELETE
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_INSERT
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_UPSERT
+     *      It can be: \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_SELECT,
+     *                 \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_UPDATE,
+     *                 \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_DELETE,
+     *                 \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_INSERT,
+     *                 \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_UPSERT
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_SELECT
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_UPDATE
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_DELETE
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_INSERT
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_UPSERT
      */
     private $__type = null;
 
@@ -199,17 +199,17 @@ class Sql extends \dbeurive\Backend\Database\Entrypoints\Description\AbstractDes
     /**
      * Set the SQL request type.
      * @param string $inType Type of the request. The value can be:
-     *        \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_DELETE
-     *        \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_INSERT
-     *        \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_SELECT
-     *        \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_UPDATE
-     *        \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_UPSERT
+     *        \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_DELETE
+     *        \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_INSERT
+     *        \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_SELECT
+     *        \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_UPDATE
+     *        \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_UPSERT
      * @return $this
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_DELETE
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_INSERT
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_SELECT
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_UPDATE
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_UPSERT
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_DELETE
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_INSERT
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_SELECT
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_UPDATE
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_UPSERT
      */
     public function setType($inType) {
         $allowed =[self::TYPE_DELETE, self::TYPE_INSERT, self::TYPE_SELECT, self::TYPE_UPDATE, self::TYPE_UPSERT];
@@ -340,16 +340,16 @@ class Sql extends \dbeurive\Backend\Database\Entrypoints\Description\AbstractDes
      * Return the type of SQL request.
      * @return string This method returns the type of the SQL request.
      *         The value can be:
-     *         \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_DELETE
-     *         \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_INSERT
-     *         \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_SELECT
-     *         \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_UPDATE
-     *         \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_UPSERT
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_DELETE
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_INSERT
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_SELECT
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_UPDATE
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql::TYPE_UPSERT
+     *         \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_DELETE
+     *         \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_INSERT
+     *         \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_SELECT
+     *         \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_UPDATE
+     *         \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_UPSERT
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_DELETE
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_INSERT
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_SELECT
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_UPDATE
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Sql::TYPE_UPSERT
      */
     public function getType_() {
         return $this->__type;
@@ -426,7 +426,7 @@ class Sql extends \dbeurive\Backend\Database\Entrypoints\Description\AbstractDes
 
     /**
      * {@inheritdoc}
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription
      */
     protected function _checkFields(array &$inFields, &$outError) {
 
@@ -454,7 +454,7 @@ class Sql extends \dbeurive\Backend\Database\Entrypoints\Description\AbstractDes
 
             if ('*' === $fieldName) {
                 foreach (self::$_fieldsByTable[$tableName] as $_fieldDef) {
-                    /* @var \dbeurive\Backend\Database\Entrypoints\Description\Element\Field $_fieldDef */
+                    /* @var \dbeurive\Backend\Database\EntryPoints\Description\Element\Field $_fieldDef */
                     $checked[] = $_fieldDef->getName();
                 }
 
@@ -469,7 +469,7 @@ class Sql extends \dbeurive\Backend\Database\Entrypoints\Description\AbstractDes
 
     /**
      * {@inheritdoc}
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription
      */
     protected function _getDbFields() {
         return array_unique(array_merge($this->__conditionFields, $this->__selectedFields, $this->__updatedFields));
@@ -477,7 +477,7 @@ class Sql extends \dbeurive\Backend\Database\Entrypoints\Description\AbstractDes
 
     /**
      * {@inheritdoc}
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription
      */
     protected function _getAllDdFieldsListsReferences() {
         return [&$this->__selectedFields, &$this->__conditionFields, &$this->__updatedFields];

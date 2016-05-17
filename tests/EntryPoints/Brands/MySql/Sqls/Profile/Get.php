@@ -2,7 +2,7 @@
 
 namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls\Profile;
 
-use dbeurive\Backend\Database\Entrypoints\Application\Sql\Result;
+use dbeurive\BackendTest\EntryPoints\Result\SqlResult;
 use dbeurive\Backend\Database\Entrypoints\Description;
 use dbeurive\Backend\Database\SqlService\MySql;
 use dbeurive\Backend\Database\Entrypoints\AbstractSql;
@@ -35,7 +35,7 @@ class Get extends AbstractSql {
         /* @var \PDO $pdo */
         $pdo = $this->getDbh();
         $sql = $this->__sql();
-        $result = new Result();
+        $result = new SqlResult();
         $fieldsValues = UtilArray::array_keep_keys(self::$__conditionFields, $inExecutionConfig, true);
         $req = $pdo->prepare($sql);
         if (false === $req->execute($fieldsValues)) {

@@ -13,14 +13,14 @@ namespace dbeurive\Backend\Database\Doc;
 
 
 use dbeurive\Backend\Database\DatabaseInterface;
-use dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription;
-use dbeurive\Backend\Database\Entrypoints\Description\Element\Field;
-use dbeurive\Backend\Database\Entrypoints\Description\Element\Table;
-use dbeurive\Backend\Database\Entrypoints\ConfigurationParameter as EntryPointOption;
+use dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription;
+use dbeurive\Backend\Database\EntryPoints\Description\Element\Field;
+use dbeurive\Backend\Database\EntryPoints\Description\Element\Table;
+use dbeurive\Backend\Database\EntryPoints\ConfigurationParameter as EntryPointOption;
 use dbeurive\Backend\Database\Doc\ConfigurationParameter as DocOption;
-use dbeurive\Backend\Database\Entrypoints\Description\Procedure as ProcedureDescription;
-use dbeurive\Backend\Database\Entrypoints\Description\Sql as SqlDescription;
-use dbeurive\Backend\Database\Entrypoints\Description\Element\Tag as Tag;
+use dbeurive\Backend\Database\EntryPoints\Description\Procedure as ProcedureDescription;
+use dbeurive\Backend\Database\EntryPoints\Description\Sql as SqlDescription;
+use dbeurive\Backend\Database\EntryPoints\Description\Element\Tag as Tag;
 use dbeurive\Backend\Cli\Lib\CliWriter;
 use dbeurive\Input\SpecificationsSet;
 use dbeurive\Input\Specification;
@@ -63,14 +63,14 @@ class Writer {
      *                       ...)
      * @return array The method returns the "high-level" representation of the database.
      *         This is an associative array:
-     *         array(   'fields' => <list of instances of \dbeurive\Backend\Database\Entrypoints\Description\Element\Field>,
-     *                  'tables' => <list of instances of \dbeurive\Backend\Database\Entrypoints\Description\Element\Table>
+     *         array(   'fields' => <list of instances of \dbeurive\Backend\Database\EntryPoints\Description\Element\Field>,
+     *                  'tables' => <list of instances of \dbeurive\Backend\Database\EntryPoints\Description\Element\Table>
      *              )
      * @throws \Exception
      */
     private static function __buildDatabaseSchema(array $inRawSchema) {
-        $fields = array(); // Array of \dbeurive\Backend\Database\Entrypoints\Description\Element\Field
-        $tables = array(); // Array of \dbeurive\Backend\Database\Entrypoints\Description\Element\Table
+        $fields = array(); // Array of \dbeurive\Backend\Database\EntryPoints\Description\Element\Field
+        $tables = array(); // Array of \dbeurive\Backend\Database\EntryPoints\Description\Element\Table
 
         foreach ($inRawSchema as $_tableName => $_fields) {
             if (false === Table::getByClassAndName(Table::getFullyQualifiedClassName(), $_tableName)) {
@@ -94,10 +94,10 @@ class Writer {
      *        This array must contain the following entries;
      *           * \dbeurive\Backend\Database\Doc\ConfigurationParameter::DOC_PATH
      *           * \dbeurive\Backend\Database\Doc\ConfigurationParameter::SCHEMA_PATH
-     *           * \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::SQL_BASE_NS
-     *           * \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::PROC_BASE_NS
-     *           * \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::SQL_REPO_PATH
-     *           * \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::PROC_REPO_PATH
+     *           * \dbeurive\Backend\Database\EntryPoints\ConfigurationParameter::SQL_BASE_NS
+     *           * \dbeurive\Backend\Database\EntryPoints\ConfigurationParameter::PROC_BASE_NS
+     *           * \dbeurive\Backend\Database\EntryPoints\ConfigurationParameter::SQL_REPO_PATH
+     *           * \dbeurive\Backend\Database\EntryPoints\ConfigurationParameter::PROC_REPO_PATH
      *
      * @return bool Upon successful completion the method returns the value true.
      *         Otherwise an exception is thrown.
@@ -106,10 +106,10 @@ class Writer {
      *
      * @see \dbeurive\Backend\Database\Doc\ConfigurationParameter::DOC_PATH
      * @see \dbeurive\Backend\Database\Doc\ConfigurationParameter::SCHEMA_PATH
-     * @see \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::SQL_BASE_NS
-     * @see \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::PROC_BASE_NS
-     * @see \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::SQL_REPO_PATH
-     * @see \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::PROC_REPO_PATH
+     * @see \dbeurive\Backend\Database\EntryPoints\ConfigurationParameter::SQL_BASE_NS
+     * @see \dbeurive\Backend\Database\EntryPoints\ConfigurationParameter::PROC_BASE_NS
+     * @see \dbeurive\Backend\Database\EntryPoints\ConfigurationParameter::SQL_REPO_PATH
+     * @see \dbeurive\Backend\Database\EntryPoints\ConfigurationParameter::PROC_REPO_PATH
      */
     static public function writer(array $inConfiguration)
     {
@@ -159,9 +159,9 @@ class Writer {
         $databaseSchema = self::__buildDatabaseSchema($rawDatabaseSchema);
 
         /* @var array $allFields */
-        $allFields = $databaseSchema['fields'];  // List of \dbeurive\Backend\Database\Entrypoints\Description\Element\Field
+        $allFields = $databaseSchema['fields'];  // List of \dbeurive\Backend\Database\EntryPoints\Description\Element\Field
         /* @var array $allTables */
-        $allTables = $databaseSchema['tables'];  // List of \dbeurive\Backend\Database\Entrypoints\Description\Element\Table
+        $allTables = $databaseSchema['tables'];  // List of \dbeurive\Backend\Database\EntryPoints\Description\Element\Table
 
         // -------------------------------------------------------------------------------------------------------------
         // Configure the database service's provider, then execute it.
@@ -185,9 +185,9 @@ class Writer {
         // -------------------------------------------------------------------------------------------------------------
 
         CliWriter::echoInfo("   Check all fields within the SQL requests and the procedures descriptions.");
-        \dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription::setDbFields_($allFields);
+        \dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription::setDbFields_($allFields);
         $error = null;
-        /* @var \dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription $_description */
+        /* @var \dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription $_description */
         foreach (array_merge($sqlDescriptions, $procedureDescriptions) as $_description) {
             if (false === $_description->check($error)) {
                 CliWriter::echoError($error);
@@ -246,7 +246,7 @@ class Writer {
         // -------------------------------------------------------------------------------------------------------------
 
         CliWriter::echoInfo("   Save the list of all tables into the SQLite database.");
-        /* @var \dbeurive\Backend\Database\Entrypoints\Description\Element\Table $_table */
+        /* @var \dbeurive\Backend\Database\EntryPoints\Description\Element\Table $_table */
         foreach ($allTables as $_table) {
             $sql = "INSERT INTO 'table' (name) VALUES (:name)";
             $req = $pdo->prepare($sql);
@@ -262,8 +262,8 @@ class Writer {
         // -------------------------------------------------------------------------------------------------------------
 
         CliWriter::echoInfo("   Save the list of all entities into the SQLite database.");
-        foreach (\dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription::getAllIdentifiedEntities_() as $_entityName) {
-            $entity = new \dbeurive\Backend\Database\Entrypoints\Description\Element\Entity($_entityName);
+        foreach (\dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription::getAllIdentifiedEntities_() as $_entityName) {
+            $entity = new \dbeurive\Backend\Database\EntryPoints\Description\Element\Entity($_entityName);
             $sql = "INSERT INTO 'entity' (name) VALUES (:name)";
             $req = $pdo->prepare($sql);
             if (false === $req->execute(['name' => $entity->getName()])) {
@@ -279,8 +279,8 @@ class Writer {
         // -------------------------------------------------------------------------------------------------------------
 
         CliWriter::echoInfo("   Save the list of all actions into the SQLite database.");
-        foreach (\dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription::getAllIdentifiedActions_() as $_actionName) {
-            $action = new \dbeurive\Backend\Database\Entrypoints\Description\Element\Action($_actionName);
+        foreach (\dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription::getAllIdentifiedActions_() as $_actionName) {
+            $action = new \dbeurive\Backend\Database\EntryPoints\Description\Element\Action($_actionName);
             $sql = "INSERT INTO 'action' (name) VALUES (:name)";
             $req = $pdo->prepare($sql);
             if (false === $req->execute(['name' => $action->getName()])) {
@@ -295,7 +295,7 @@ class Writer {
         // -------------------------------------------------------------------------------------------------------------
 
         CliWriter::echoInfo("   Save the list of all tables' fields into the SQLite database.");
-        /* @var \dbeurive\Backend\Database\Entrypoints\Description\Element\Field $_field */
+        /* @var \dbeurive\Backend\Database\EntryPoints\Description\Element\Field $_field */
         foreach ($allFields as $_index => $_field) {
             $tableId = $_field->getTable()->getId();
             $fieldName = $_field->getName();
@@ -316,7 +316,7 @@ class Writer {
 
         CliWriter::echoInfo("   Save the list of all tags into the SQLite database.");
         $apiEntryPointDescriptions = array_merge($procedureDescriptions, $sqlDescriptions);
-        /* @var \dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription $_description */
+        /* @var \dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription $_description */
         foreach ($apiEntryPointDescriptions as $_description) {
             /* @var string $_tag */
             foreach ($_description->getTags_() as $_tag) {
@@ -342,7 +342,7 @@ class Writer {
         // -------------------------------------------------------------------------------------------------------------
 
         CliWriter::echoInfo("   Save the list of all SQL requests into the SQLite database.");
-        /* @var \dbeurive\Backend\Database\Entrypoints\Description\Sql $_description */
+        /* @var \dbeurive\Backend\Database\EntryPoints\Description\Sql $_description */
         foreach ($sqlDescriptions as $_description) {
             $multiSql = 0;
             $sqlReq = $_description->getSql_();
@@ -373,7 +373,7 @@ class Writer {
         // -------------------------------------------------------------------------------------------------------------
 
         CliWriter::echoInfo("   Save the list of all procedures into the SQLite database.");
-        /* @var \dbeurive\Backend\Database\Entrypoints\Description\Procedure $_description */
+        /* @var \dbeurive\Backend\Database\EntryPoints\Description\Procedure $_description */
         foreach ($procedureDescriptions as $_description) {
             $sql = "INSERT INTO procedure (name, description, resultMultiRow) VALUES (:name, :description, :multi)";
             $req = $pdo->prepare($sql);
@@ -396,7 +396,7 @@ class Writer {
         // -------------------------------------------------------------------------------------------------------------
 
         CliWriter::echoInfo("   Build the relations between SQL requests, tags, output values, fields, parameters and entities.");
-        /* @var \dbeurive\Backend\Database\Entrypoints\Description\Sql $_description */
+        /* @var \dbeurive\Backend\Database\EntryPoints\Description\Sql $_description */
         foreach ($sqlDescriptions as $_description) {
 
             // echo "\t\to " . $_description->getName_() . "\n";
@@ -504,8 +504,8 @@ class Writer {
 
             /* @var array $_value */
             foreach ($_description->getOutputDataValues_() as $_value) {
-                $name = $_value[\dbeurive\Backend\Database\Entrypoints\Description\Sql::KEY_NAME];
-                $apiEntryPointDescriptions = $_value[\dbeurive\Backend\Database\Entrypoints\Description\Sql::KEY_DESCRIPTION];
+                $name = $_value[\dbeurive\Backend\Database\EntryPoints\Description\Sql::KEY_NAME];
+                $apiEntryPointDescriptions = $_value[\dbeurive\Backend\Database\EntryPoints\Description\Sql::KEY_DESCRIPTION];
                 $sql = "INSERT INTO requestOutputDataValue (request_id, name, description) VALUES (:request_id, :name, :description)";
                 $req = $pdo->prepare($sql);
                 if (false === $req->execute(['request_id' => $_description->getId_(), 'name' => $name, 'description' => $apiEntryPointDescriptions])) {
@@ -531,14 +531,14 @@ class Writer {
 
             /* @var array $_actionsList */
             foreach ($_description->getEntitiesActions_() as $_entityName => $_actionsList) {
-                $entity = \dbeurive\Backend\Database\Entrypoints\Description\Element\Entity::getByClassAndName(\dbeurive\Backend\Database\Entrypoints\Description\Element\Entity::getFullyQualifiedClassName(), $_entityName);
+                $entity = \dbeurive\Backend\Database\EntryPoints\Description\Element\Entity::getByClassAndName(\dbeurive\Backend\Database\EntryPoints\Description\Element\Entity::getFullyQualifiedClassName(), $_entityName);
                 if (false === $entity) {
                     CliWriter::echoError("The entity named ${_entityName} is not found");
                     exit(1);
                 }
 
                 foreach ($_actionsList as $_actionName) {
-                    $action = \dbeurive\Backend\Database\Entrypoints\Description\Element\Action::getByClassAndName(\dbeurive\Backend\Database\Entrypoints\Description\Element\Action::getFullyQualifiedClassName(), $_actionName);
+                    $action = \dbeurive\Backend\Database\EntryPoints\Description\Element\Action::getByClassAndName(\dbeurive\Backend\Database\EntryPoints\Description\Element\Action::getFullyQualifiedClassName(), $_actionName);
                     if (false === $action) {
                         CliWriter::echoError("The action named ${_actionName} is not found");
                         exit(1);
@@ -559,7 +559,7 @@ class Writer {
         // -------------------------------------------------------------------------------------------------------------
 
         CliWriter::echoInfo("   Build the relations between procedures and other elements (SQL requests, tags, fields, parameters and entities).");
-        /* @var \dbeurive\Backend\Database\Entrypoints\Description\Procedure $_description */
+        /* @var \dbeurive\Backend\Database\EntryPoints\Description\Procedure $_description */
         foreach ($procedureDescriptions as $_description) {
 
             /* @var string $_tag */
@@ -573,9 +573,9 @@ class Writer {
                 }
             }
 
-            /* @var \dbeurive\Backend\Database\Entrypoints\Description\Sql $request */
+            /* @var \dbeurive\Backend\Database\EntryPoints\Description\Sql $request */
             foreach ($_description->getRequests_() as $_requestName) {
-                $request = \dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription::getByClassAndName_(\dbeurive\Backend\Database\Entrypoints\Description\Sql::getFullyQualifiedClassName_(), $_requestName);
+                $request = \dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription::getByClassAndName_(\dbeurive\Backend\Database\EntryPoints\Description\Sql::getFullyQualifiedClassName_(), $_requestName);
                 if (false === $request) {
                     CliWriter::echoError("The SQL request named {$_requestName} is not found, in procedure.");
                     exit(1);
@@ -714,14 +714,14 @@ class Writer {
 
             /* @var array $_actionsList */
             foreach ($_description->getEntitiesActions_() as $_entityName => $_actionsList) {
-                $entity = \dbeurive\Backend\Database\Entrypoints\Description\Element\Entity::getByClassAndName(\dbeurive\Backend\Database\Entrypoints\Description\Element\Entity::getFullyQualifiedClassName(), $_entityName);
+                $entity = \dbeurive\Backend\Database\EntryPoints\Description\Element\Entity::getByClassAndName(\dbeurive\Backend\Database\EntryPoints\Description\Element\Entity::getFullyQualifiedClassName(), $_entityName);
                 if (false === $entity) {
                     CliWriter::echoError("The entity named ${_entityName} is not found");
                     exit(1);
                 }
 
                 foreach ($_actionsList as $_actionName) {
-                    $action = \dbeurive\Backend\Database\Entrypoints\Description\Element\Action::getByClassAndName(\dbeurive\Backend\Database\Entrypoints\Description\Element\Action::getFullyQualifiedClassName(), $_actionName);
+                    $action = \dbeurive\Backend\Database\EntryPoints\Description\Element\Action::getByClassAndName(\dbeurive\Backend\Database\EntryPoints\Description\Element\Action::getFullyQualifiedClassName(), $_actionName);
                     if (false === $action) {
                         CliWriter::echoError("The action named ${_actionName} is not found");
                         exit(1);

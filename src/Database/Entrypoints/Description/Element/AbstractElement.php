@@ -4,7 +4,7 @@
  * This file implements the base class for all "pieces of information" (called "elements") stored within the generated SQLite database.
  */
 
-namespace dbeurive\Backend\Database\Entrypoints\Description\Element;
+namespace dbeurive\Backend\Database\EntryPoints\Description\Element;
 
 /**
  * Class AbstractElement
@@ -12,7 +12,7 @@ namespace dbeurive\Backend\Database\Entrypoints\Description\Element;
  * This class is the base class for all "pieces of information" (called "elements") stored within the generated SQLite database.
  * All "elements" have a unique ID and a name.
  *
- * @package dbeurive\Backend\Database\Entrypoints\Description\Element
+ * @package dbeurive\Backend\Database\EntryPoints\Description\Element
  */
 
 abstract class AbstractElement {

@@ -6,9 +6,9 @@
  */
 
 namespace dbeurive\Backend\Database;
-use dbeurive\Backend\Database\Entrypoints\Provider as EntryPointProvider;
+use dbeurive\Backend\Database\EntryPoints\Provider as EntryPointProvider;
 use dbeurive\Backend\Database\Connector\AbstractConnector;
-use dbeurive\Backend\Database\Entrypoints\ConfigurationParameter as EntryPointOption;
+use dbeurive\Backend\Database\EntryPoints\ConfigurationParameter as EntryPointOption;
 use dbeurive\Backend\Database\Doc\ConfigurationParameter as DocOption;
 
 
@@ -38,11 +38,10 @@ class DatabaseInterface {
      */
     private $__name = null;
     /**
-     * @var AbstractConnector Handler to the database connector.
-     *      Note: this property is used when the application is running.
-     * @see setDbConnector
+     * @var mixed Database handler (an instance of \PDO, for example).
+     * @see setDbHandler
      */
-    private $__connector = null;
+    private $__dbh = null;
     /**
      * @var EntryPointProvider Entry point provider.
      *      The entry point provider is created, and configured, during the creation of this database interface (see method `getInstance()`).
@@ -103,7 +102,7 @@ class DatabaseInterface {
      * @see EntryPointOption::PROC_BASE_NS
      * @see DocOption::SCHEMA_PATH
      * @see EntryPointOption::DB_CONNECTOR
-     * @see setDbConnector
+     * @see setDbHandler
      */
     static public function getInstance($inName='default', array $inOptConfig=null) {
 
@@ -120,10 +119,10 @@ class DatabaseInterface {
             $di->setProcedureBaseNameSpace($inOptConfig[EntryPointOption::PROC_BASE_NS]);
             $di->setPhpDatabaseRepresentationPath($inOptConfig[DocOption::SCHEMA_PATH]);
 
-            if (array_key_exists(EntryPointOption::DB_CONNECTOR, $inOptConfig)) {
+            if (array_key_exists(EntryPointOption::DB_HANDLER, $inOptConfig)) {
                 /** @var \dbeurive\Backend\Database\Connector\AbstractConnector $c */
-                $c = $inOptConfig[EntryPointOption::DB_CONNECTOR];
-                $di->setDbConnector($c);
+                $c = $inOptConfig[EntryPointOption::DB_HANDLER];
+                $di->setDbHandler($c);
             }
         }
 
@@ -137,10 +136,10 @@ class DatabaseInterface {
 
     /**
      * Set the database handler.
-     * @param AbstractConnector $inConnector Handler to the database connector.
+     * @param mixed $inDbh Handler to the database connector.
      */
-    public function setDbConnector(AbstractConnector $inConnector) {
-        $this->__connector = $inConnector;
+    public function setDbHandler($inDbh) {
+        $this->__dbh = $inDbh;
     }
 
     /**
@@ -181,11 +180,11 @@ class DatabaseInterface {
      * @return AbstractConnector The method returns the handler to the database connector.
      */
     public function getDbConnector() {
-        if (is_null($this->__connector)) {
-            throw new \Exception("You did not set the database connector! Please call setDbConnector() first!");
+        if (is_null($this->__dbh)) {
+            throw new \Exception("You did not set the database connector! Please call setDbHandler() first!");
         }
 
-        return $this->__connector;
+        return $this->__dbh;
     }
 
     /**
@@ -238,7 +237,7 @@ class DatabaseInterface {
     /**
      * Set the base namespace for the SQL requests.
      * @param string $inNameSpace The namespace to set.
-     * @see dbeurive\Backend\Database\Entrypoints\Provider
+     * @see dbeurive\Backend\Database\EntryPoints\Provider
      */
     public function setSqlBaseNameSpace($inNameSpace) {
         $this->__entryPointProvider->setSqlBaseNameSpace($inNameSpace);
@@ -247,7 +246,7 @@ class DatabaseInterface {
     /**
      * Set the base namespace for the database procedures.
      * @param string $inNameSpace The namespace to set.
-     * @see dbeurive\Backend\Database\Entrypoints\Provider
+     * @see dbeurive\Backend\Database\EntryPoints\Provider
      */
     public function setProcedureBaseNameSpace($inNameSpace) {
         $this->__entryPointProvider->setProcedureBaseNameSpace($inNameSpace);
@@ -256,7 +255,7 @@ class DatabaseInterface {
     /**
      * Set the path to the directory used to store the SQL requests' definitions.
      * @param string $inPath Path to the directory used to store the SQL requests' definitions.
-     * @see dbeurive\Backend\Database\Entrypoints\Provider
+     * @see dbeurive\Backend\Database\EntryPoints\Provider
      */
     public function setSqlRepositoryBasePath($inPath) {
         $this->__entryPointProvider->setSqlRepositoryBasePath($inPath);
@@ -265,7 +264,7 @@ class DatabaseInterface {
     /**
      * Set the path to the directory used to store all the procedures' definitions.
      * @param string $inPath Path to the directory used to store the procedures' definitions.
-     * @see dbeurive\Backend\Database\Entrypoints\Provider
+     * @see dbeurive\Backend\Database\EntryPoints\Provider
      */
     public function setProcedureRepositoryBasePath($inPath) {
         $this->__entryPointProvider->setProcedureRepositoryBasePath($inPath);
@@ -278,9 +277,9 @@ class DatabaseInterface {
     /**
      * Returns the list of all documentations for SQL requests.
      * @return array The method returns an array that contains all documentations for SQL requests.
-     *         Elements' type is: \dbeurive\Backend\Database\Entrypoints\Description\Sql
+     *         Elements' type is: \dbeurive\Backend\Database\EntryPoints\Description\Sql
      * @throws \Exception
-     * @see dbeurive\Backend\Database\Entrypoints\Provider
+     * @see dbeurive\Backend\Database\EntryPoints\Provider
      */
     public function getAllSqlDescriptions() {
         return $this->__entryPointProvider->getAllSqlDescriptions();
@@ -289,9 +288,9 @@ class DatabaseInterface {
     /**
      * Returns the list of all documentations for the database procedure.
      * @return array The method returns an array that contains all documentations for database procedures.
-     *         Elements' type is: \dbeurive\Backend\Database\Entrypoints\Description\Procedure
+     *         Elements' type is: \dbeurive\Backend\Database\EntryPoints\Description\Procedure
      * @throws \Exception
-     * @see dbeurive\Backend\Database\Entrypoints\Provider
+     * @see dbeurive\Backend\Database\EntryPoints\Provider
      */
     public function getAllProceduresDescriptions() {
         return $this->__entryPointProvider->getAllProceduresDescriptions();
@@ -300,7 +299,7 @@ class DatabaseInterface {
     /**
      * Return the path to the SQL repository.
      * @return string The method returns the path to the SQL repository.
-     * @see dbeurive\Backend\Database\Entrypoints\Provider
+     * @see dbeurive\Backend\Database\EntryPoints\Provider
      */
     public function getSqlRepositoryBasePath() {
         return $this->__entryPointProvider->getSqlRepositoryBasePath();
@@ -309,7 +308,7 @@ class DatabaseInterface {
     /**
      * Return the path to the procedure repository.
      * @return string The method returns the path to the procedure repository.
-     * @see dbeurive\Backend\Database\Entrypoints\Provider
+     * @see dbeurive\Backend\Database\EntryPoints\Provider
      */
     public function getProcedureRepositoryBasePath() {
         return $this->__entryPointProvider->getProcedureRepositoryBasePath();
@@ -318,16 +317,16 @@ class DatabaseInterface {
     /**
      * Return an SQL request identified by its name.
      * @param string $inName Name of the SQL request.
-     * @return \dbeurive\Backend\Database\Entrypoints\AbstractSql
+     * @return \dbeurive\Backend\Database\EntryPoints\AbstractSql
      * @throws \Exception
-     * @see dbeurive\Backend\Database\Entrypoints\Provider
+     * @see dbeurive\Backend\Database\EntryPoints\Provider
      * @note The method should not be called from the application.
      *       It has been introduced for the unit tests.
      */
     public function getSql($inName) {
-        /** @var \dbeurive\Backend\Database\Entrypoints\AbstractSql $sql */
+        /** @var \dbeurive\Backend\Database\EntryPoints\AbstractSql $sql */
         $sql = $this->__entryPointProvider->getSql($inName);
-        $sql->setDbh($this->__connector->getDatabaseHandler());
+        $sql->setDbh($this->__dbh);
         $sql->setFieldsProvider(function($inName) { return $this->getTableFieldsNames($inName); } );
         return $sql;
     }
@@ -335,12 +334,12 @@ class DatabaseInterface {
     /**
      * Return a procedure identified by its name.
      * @param string $inName Name of the procedure.
-     * @return \dbeurive\Backend\Database\Entrypoints\AbstractSql
+     * @return \dbeurive\Backend\Database\EntryPoints\AbstractSql
      * @throws \Exception
-     * @see dbeurive\Backend\Database\Entrypoints\Provider
+     * @see dbeurive\Backend\Database\EntryPoints\Provider
      */
     public function getProcedure($inName) {
-        /** @var \dbeurive\Backend\Database\Entrypoints\AbstractProcedure $procedure */
+        /** @var \dbeurive\Backend\Database\EntryPoints\AbstractProcedure $procedure */
         $procedure = $this->__entryPointProvider->getProcedure($inName);
         $procedure->setSqlProvider(function($inName) { return $this->getSql($inName); });
         return $procedure;

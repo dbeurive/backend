@@ -3,7 +3,7 @@
 namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Procedures\User;
 
 use dbeurive\Backend\Database\Entrypoints\AbstractProcedure;
-use dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result;
+use dbeurive\BackendTest\EntryPoints\Result\ProcedureResult;
 use dbeurive\Backend\Database\Entrypoints\Description;
 
 
@@ -15,7 +15,7 @@ use dbeurive\BackendTest\EntryPoints\Constants\OutputValues;
 
 /**
  * Class Authenticate
- * @package dbeurive\BackendTests\Database\Entrypoints\Procedure\User
+ * @package dbeurive\BackendTest\Database\Entrypoints\Procedure\User
  */
 
 class Authenticate extends AbstractProcedure {
@@ -30,7 +30,7 @@ class Authenticate extends AbstractProcedure {
     public function execute($inExecutionConfig) {
         $sql = $this->getSql(self::SQL_AUTHENTICATE);
         $resultSql = $sql->execute($inExecutionConfig);
-        $result = new Result(Result::STATUS_SUCCESS,
+        $result = new ProcedureResult(ProcedureResult::STATUS_SUCCESS,
             $resultSql->getDataSets(),
             [self::KEY_AUTHENTICATED => ! $resultSql->isDataSetsEmpty()]
         );

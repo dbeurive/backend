@@ -4,7 +4,7 @@
  * This class implements the result of a procedure.
  */
 
-namespace dbeurive\Backend\Database\Entrypoints\Application\Procedure;
+namespace dbeurive\BackendTest\EntryPoints\Result;
 
 /**
  * Class Result
@@ -21,10 +21,10 @@ namespace dbeurive\Backend\Database\Entrypoints\Application\Procedure;
  *     The term "value" represents a data that has been calculated using the PHP code.
  *     A "value" is not computed by the SGBDR.
  *
- * @package dbeurive\Backend\Database\Entrypoints\Application\Procedure
+ * @package dbeurive\BackendTest\EntryPoints\Result
  */
 
-class Result extends \dbeurive\Backend\Database\Entrypoints\Application\BaseResult {
+class ProcedureResult extends \dbeurive\BackendTest\EntryPoints\Result\BaseResult {
 
     /**
      * @var array List of values calculated by the execution of the API's entry point.

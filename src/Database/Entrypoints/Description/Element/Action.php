@@ -4,21 +4,21 @@
  * This file implements an "action" as defined by the concept of "Entity-Relationship Modeling".
  */
 
-namespace dbeurive\Backend\Database\Entrypoints\Description\Element;
+namespace dbeurive\Backend\Database\EntryPoints\Description\Element;
 
 /**
  * Class Action
  *
  * The class represents an "action" as defined by the concept of "Entity-Relationship Modeling".
  *
- * @package dbeurive\Backend\Database\Entrypoints\Description\Element
+ * @package dbeurive\Backend\Database\EntryPoints\Description\Element
  */
 
 class Action extends AbstractElement {
 
     /**
      * {@inheritdoc}
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Element\AbstractElement
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Element\AbstractElement
      */
     public function __construct($inName, $inId=null) {
         $this->setName($inName);

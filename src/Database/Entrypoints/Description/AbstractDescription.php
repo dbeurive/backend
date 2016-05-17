@@ -5,7 +5,7 @@
  * Please note that a "description" (for an API's entry point) contains "elements" (the tables, the fields, the tags, the entities and the actions).
  */
 
-namespace dbeurive\Backend\Database\Entrypoints\Description;
+namespace dbeurive\Backend\Database\EntryPoints\Description;
 
 /**
  * Class AbstractDescription
@@ -13,7 +13,7 @@ namespace dbeurive\Backend\Database\Entrypoints\Description;
  * This class is the base class for the descriptions of all API's entry points (SQL requests or procedures).
  * Please note that a "description" (for an API's entry point) contains "elements" (the tables, the fields, the tags, the entities and the actions).
  *
- * @package dbeurive\Backend\Database\Entrypoints\Description
+ * @package dbeurive\Backend\Database\EntryPoints\Description
  */
 
 abstract class AbstractDescription {
@@ -58,10 +58,10 @@ abstract class AbstractDescription {
     static private $__repository = [];
     /**
      * @var array This array contains all the tables' fields declared in the database.
-     *      List of \dbeurive\Backend\Database\Entrypoints\Description\Element\Field
+     *      List of \dbeurive\Backend\Database\EntryPoints\Description\Element\Field
      *      Please note that this list of fields should come from the analyses of the database' schema.
      *      Thus, it is the exhaustive list of all fields within the database.
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Element\Field
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Element\Field
      */
     static protected $_allDbFields = null;
     /**
@@ -189,10 +189,10 @@ abstract class AbstractDescription {
      *
      * @return array The method returns the list of output "data values" for this entry point.
      *         Please not that each element of the returned list is an associative array that presents the following keys:
-     *         \dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription::KEY_NAME: the name of the value.
-     *         \dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription::KEY_DESCRIPTION: the description for the value.
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription::KEY_NAME
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription::KEY_DESCRIPTION
+     *         \dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription::KEY_NAME: the name of the value.
+     *         \dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription::KEY_DESCRIPTION: the description for the value.
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription::KEY_NAME
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription::KEY_DESCRIPTION
      */
     public function getOutputDataValues_() {
         return $this->__outputDataValues;
@@ -246,12 +246,12 @@ abstract class AbstractDescription {
     /**
      * This method set the list of all listed database's fields for an API's entry point.
      * @param array $inFields List of all listed database's fields.
-     *        This is a list of \dbeurive\Backend\Database\Entrypoints\Description\Element\Field
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Element\Field
+     *        This is a list of \dbeurive\Backend\Database\EntryPoints\Description\Element\Field
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Element\Field
      */
     static public function setDbFields_(array $inFields) {
         self::$_allDbFields = $inFields;
-        /* @var \dbeurive\Backend\Database\Entrypoints\Description\Element\Field $_field */
+        /* @var \dbeurive\Backend\Database\EntryPoints\Description\Element\Field $_field */
         foreach ($inFields as $_field) {
             $tableName = $_field->getTable()->getName();
             if (! array_key_exists($tableName, self::$_fieldsByTable)) {
@@ -311,10 +311,10 @@ abstract class AbstractDescription {
      * Return the fully qualified name of the class that represents the description for the API's entry point.
      * Please not that this method should return the value of __CLASS__.
      * @return string The fully qualified name of the description's class. It could be:
-     *           * "\dbeurive\Backend\Database\Entrypoints\Description\Procedure"
-     *           * "\dbeurive\Backend\Database\Entrypoints\Description\Sql"
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Procedure
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql
+     *           * "\dbeurive\Backend\Database\EntryPoints\Description\Procedure"
+     *           * "\dbeurive\Backend\Database\EntryPoints\Description\Sql"
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Procedure
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Sql
      */
     public static function getFullyQualifiedClassName_() {
         $reflector = new \ReflectionClass(get_called_class());
@@ -324,13 +324,13 @@ abstract class AbstractDescription {
     /**
      * Search for a description in the descriptions' repository.
      * @param string $inClass Description's class. It could be:
-     *           * "\dbeurive\Backend\Database\Entrypoints\Description\Procedure"
-     *           * "\dbeurive\Backend\Database\Entrypoints\Description\Sql"
+     *           * "\dbeurive\Backend\Database\EntryPoints\Description\Procedure"
+     *           * "\dbeurive\Backend\Database\EntryPoints\Description\Sql"
      * @param string $inName Description's name.
-     * @return bool|\dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription If the description is found, then the method returns it.
+     * @return bool|\dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription If the description is found, then the method returns it.
      *         Otherwise the method returns the value false.
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Procedure
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Procedure
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Sql
      */
     static public function getByClassAndName_($inClass, $inName) {
         $inClass = ltrim($inClass, '\\');
@@ -362,8 +362,8 @@ abstract class AbstractDescription {
      * This method returns all the tables' fields associated with the description.
      * @return array List of all the tables' fields associated with the description.
      *         The returned array is an array of strings "<table name>.<field name>".
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Procedure
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Procedure
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Sql
      */
     abstract protected function _getDbFields();
 
@@ -378,8 +378,8 @@ abstract class AbstractDescription {
      *                  $condition = array();
      *                  ...
      *                  return array(&$updated, &$selected, &$condition);
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Procedure
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Procedure
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Sql
      */
     abstract protected function _getAllDdFieldsListsReferences();
 
@@ -391,8 +391,8 @@ abstract class AbstractDescription {
      *        Please note that the structure of the list of fields depends on the API's description being checked.
      * @return bool If the fields are valid, then the method returns the value true.
      *         Otherwise it returns the value false. In this case, the string `$outError` should contain an error message.
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Procedure
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Procedure
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Sql
      */
     abstract protected function _checkFields(array &$inFields, &$outError);
 }

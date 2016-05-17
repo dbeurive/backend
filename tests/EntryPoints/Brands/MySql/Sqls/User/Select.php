@@ -2,7 +2,7 @@
 
 namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls\User;
 
-use dbeurive\Backend\Database\Entrypoints\Application\BaseResult;
+use dbeurive\BackendTest\EntryPoints\Result\BaseResult;
 use dbeurive\Backend\Database\Entrypoints\Description;
 use dbeurive\Backend\Database\SqlService\MySql;
 use dbeurive\Backend\Database\Entrypoints\AbstractSql;

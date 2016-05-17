@@ -1,14 +1,14 @@
 <?php
 
-namespace dbeurive\BackendTests\UnitTests\MySql\Procedures\User;
+namespace dbeurive\BackendTest\UnitTests\MySql\Procedures\User;
 
 use dbeurive\BackendTest\SetUp;
 use dbeurive\BackendTest\Utils\Pdo as TestTools;
 
 use dbeurive\Backend\Database\DatabaseInterface;
-use dbeurive\Backend\Phpunit\PHPUnit_Backend_TestCase;
+use dbeurive\BackendTest\EntryPoints\UnitTests\PhpUnit\PHPUnit_Backend_TestCase;
 use dbeurive\Backend\Cli\Lib\CliWriter;
-use dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result;
+use dbeurive\BackendTest\EntryPoints\Result\ProcedureResult;
 
 /**
  * @runTestsInSeparateProcesses
@@ -22,10 +22,8 @@ class DeleteTest extends PHPUnit_Backend_TestCase
         $this->__init();
         $this->__createMySqlPdo();
         $this->__createMySqlDatabase();
-        $this->__createMySqlConnector();
-        $this->__connectorMySql->connect();
         $this->__createDatabaseInterface();
-        $this->__di->setDbConnector($this->__connectorMySql);
+        $this->__di->setDbHandler($this->__mySqlPdo);
     }
 
     public function testIt() {
@@ -39,7 +37,7 @@ class DeleteTest extends PHPUnit_Backend_TestCase
         $dataInterface = DatabaseInterface::getInstance();
         $procedure = $dataInterface->getProcedure($PROCEDURE_NAME);
 
-        /** @var Result $result */
+        /** @var ProcedureResult $result */
 
         // -----------------------------------------------------------------------------------------------------------------
         // Test: user does not exist.

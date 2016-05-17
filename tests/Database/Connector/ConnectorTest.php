@@ -19,13 +19,13 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
 
     public function testFailure() {
 
-        $connector = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__connectorMySqlConfiguration);
+        $connector = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__mySqlConnectorConfiguration);
         $this->expectException(\Exception::class);
         $connector->getDatabaseHandler(); // The connexion is not established.
     }
 
     public function testGetConfiguration() {
-        $connector = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__connectorMySqlConfiguration);
+        $connector = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__mySqlConnectorConfiguration);
         $conf = $connector->getConfiguration();
         $this->assertTrue(is_array($conf));
     }
@@ -36,7 +36,7 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
 
     public function testMysqlConnect() {
 
-        $connector = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__connectorMySqlConfiguration);
+        $connector = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__mySqlConnectorConfiguration);
         $connector->connect();
         /** @var \PDO $pdo */
         $pdo = $connector->getDatabaseHandler(); // The connexion is not established.
@@ -48,7 +48,7 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
 
     public function testMySqlGetConfiguration() {
 
-        $connector = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__connectorMySqlConfiguration);
+        $connector = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__mySqlConnectorConfiguration);
         $conf = $connector->getConfiguration();
         $this->assertTrue(is_array($conf));
 

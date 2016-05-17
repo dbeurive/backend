@@ -16,12 +16,6 @@
     "dbeurive/util": ">=1.0.16",
     "phpunit/phpunit": "5.3.*"
   },
-  "repositories": [
-    {
-      "type": "artifact",
-      "url": "__ARTIFACTS_REPO__"
-    }
-  ],
   "autoload": {
     "psr-4": {
       "dbeurive\\Backend\\": "src",

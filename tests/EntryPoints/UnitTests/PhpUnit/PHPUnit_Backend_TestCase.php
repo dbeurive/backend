@@ -4,17 +4,19 @@
  * This file implements a set of new assertions for PHPUnit.
  */
 
-namespace dbeurive\Backend\Phpunit;
 
-use dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result as ProcedureResult;
-use dbeurive\Backend\Database\Entrypoints\Application\Sql\Result as RequestResult;
+
+namespace dbeurive\BackendTest\EntryPoints\UnitTests\PhpUnit;
+
+use dbeurive\BackendTest\EntryPoints\Result\ProcedureResult as ProcedureResult;
+use dbeurive\BackendTest\EntryPoints\Result\SqlResult as RequestResult;
 
 /**
  * Class PHPUnit_Backend_TestCase
  *
  * This class implements a set of new assertions for PHPUnit.
  *
- * @package dbeurive\Backend\Phpunit
+ * @package dbeurive\BackendTest\EntryPoints\UnitTests\PhpUnit
  */
 
 class PHPUnit_Backend_TestCase extends \PHPUnit_Framework_TestCase

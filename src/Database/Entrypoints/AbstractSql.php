@@ -1,6 +1,6 @@
 <?php
 
-namespace dbeurive\Backend\Database\Entrypoints;
+namespace dbeurive\Backend\Database\EntryPoints;
 
 abstract class AbstractSql extends AbstractEntryPoint
 {

@@ -9,7 +9,7 @@
 
 namespace dbeurive\Backend\Cli\Bin;
 
-use dbeurive\Backend\Database\Entrypoints\ConfigurationParameter as EntryPointOption;
+use dbeurive\Backend\Database\EntryPoints\ConfigurationParameter as EntryPointOption;
 use dbeurive\Backend\Database\Doc\ConfigurationParameter as DocOption;
 use dbeurive\Backend\Database\Doc\Writer;
 use dbeurive\Backend\Database\Connector;
@@ -47,18 +47,18 @@ class DocWriter extends Command {
      * Please note that all "configuration writers" share some common configuration's parameters:
      *    * \dbeurive\Backend\Database\Doc\ConfigurationParameter::DOC_PATH
      *    * \dbeurive\Backend\Database\Doc\ConfigurationParameter::SCHEMA_PATH
-     *    * \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::SQL_BASE_NS
-     *    * \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::PROC_BASE_NS
-     *    * \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::SQL_REPO_PATH
-     *    * \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::PROC_REPO_PATH
+     *    * \dbeurive\Backend\Database\EntryPoints\ConfigurationParameter::SQL_BASE_NS
+     *    * \dbeurive\Backend\Database\EntryPoints\ConfigurationParameter::PROC_BASE_NS
+     *    * \dbeurive\Backend\Database\EntryPoints\ConfigurationParameter::SQL_REPO_PATH
+     *    * \dbeurive\Backend\Database\EntryPoints\ConfigurationParameter::PROC_REPO_PATH
      *    * \dbeurive\Backend\Cli\Option::CONFIG_LOADER_CLASS_NAME
      *
      * @see \dbeurive\Backend\Database\Doc\ConfigurationParameter::DOC_PATH
      * @see \dbeurive\Backend\Database\Doc\ConfigurationParameter::SCHEMA_PATH
-     * @see \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::SQL_BASE_NS
-     * @see \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::PROC_BASE_NS
-     * @see \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::SQL_REPO_PATH
-     * @see \dbeurive\Backend\Database\Entrypoints\ConfigurationParameter::PROC_REPO_PATH
+     * @see \dbeurive\Backend\Database\EntryPoints\ConfigurationParameter::SQL_BASE_NS
+     * @see \dbeurive\Backend\Database\EntryPoints\ConfigurationParameter::PROC_BASE_NS
+     * @see \dbeurive\Backend\Database\EntryPoints\ConfigurationParameter::SQL_REPO_PATH
+     * @see \dbeurive\Backend\Database\EntryPoints\ConfigurationParameter::PROC_REPO_PATH
      * @see \dbeurive\Backend\Cli\Option::CONFIG_LOADER_CLASS_NAME
      */
     final public function __construct() {

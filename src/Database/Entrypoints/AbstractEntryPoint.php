@@ -1,6 +1,6 @@
 <?php
 
-namespace dbeurive\Backend\Database\Entrypoints;
+namespace dbeurive\Backend\Database\EntryPoints;
 
 abstract class AbstractEntryPoint
 {
@@ -38,7 +38,7 @@ abstract class AbstractEntryPoint
 
     /**
      * Return the description of the entry point.
-     * @return \dbeurive\Backend\Database\Entrypoints\Description\Sql|\dbeurive\Backend\Database\Entrypoints\Description\Procedure The entry point's description.
+     * @return \dbeurive\Backend\Database\EntryPoints\Description\Sql|\dbeurive\Backend\Database\EntryPoints\Description\Procedure The entry point's description.
      */
     abstract public function getDescription();
 

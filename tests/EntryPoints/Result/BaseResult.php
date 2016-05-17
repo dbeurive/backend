@@ -4,10 +4,10 @@
  * This file implements the base class for all API's entry points results.
  */
 
-namespace dbeurive\Backend\Database\Entrypoints\Application;
+namespace dbeurive\BackendTest\EntryPoints\Result;
 
 /**
- * Class Result
+ * Class BaseResult
  *
  * This class is the base class for all API's entry points' results.
  *
@@ -58,14 +58,14 @@ class BaseResult {
     /**
      * Construct a result.
      * @param int $inOptStatus Status if the result. This value can be:
-     *        * \dbeurive\Backend\Database\Entrypoints\Application\BaseResult::STATUS_NOT_EXECUTED
-     *        * \dbeurive\Backend\Database\Entrypoints\Application\BaseResult::STATUS_SUCCESS
-     *        * \dbeurive\Backend\Database\Entrypoints\Application\BaseResult::STATUS_ERROR
+     *        * \dbeurive\BackendTest\EntryPoints\Result\BaseResult::STATUS_NOT_EXECUTED
+     *        * \dbeurive\BackendTest\EntryPoints\Result\BaseResult::STATUS_SUCCESS
+     *        * \dbeurive\BackendTest\EntryPoints\Result\BaseResult::STATUS_ERROR
      * @param array $inOptDataSets List of data sets selected by the execution of the API's entry point.
      * 
-     * @see \dbeurive\Backend\Database\Entrypoints\Application\BaseResult::STATUS_NOT_EXECUTED
-     * @see \dbeurive\Backend\Database\Entrypoints\Application\BaseResult::STATUS_SUCCESS
-     * @see \dbeurive\Backend\Database\Entrypoints\Application\BaseResult::STATUS_ERROR
+     * @see \dbeurive\BackendTest\EntryPoints\Result\BaseResult::STATUS_NOT_EXECUTED
+     * @see \dbeurive\BackendTest\EntryPoints\Result\BaseResult::STATUS_SUCCESS
+     * @see \dbeurive\BackendTest\EntryPoints\Result\BaseResult::STATUS_ERROR
      */
     public function __construct($inOptStatus=self::STATUS_NOT_EXECUTED, $inOptDataSets=[]) {
         $this->__status = $inOptStatus;

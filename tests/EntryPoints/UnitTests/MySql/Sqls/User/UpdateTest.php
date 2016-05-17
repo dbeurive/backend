@@ -1,20 +1,20 @@
 <?php
 
-namespace dbeurive\BackendTests\UnitTests\MySql\Sqls\User;
+namespace dbeurive\BackendTest\UnitTests\MySql\Sqls\User;
 
 use dbeurive\BackendTest\SetUp;
 use dbeurive\BackendTest\Utils\Pdo as TestTools;
 
-use dbeurive\Backend\Phpunit\PHPUnit_Backend_TestCase;
+use dbeurive\BackendTest\EntryPoints\UnitTests\PhpUnit\PHPUnit_Backend_TestCase;
 use dbeurive\Backend\Database\DatabaseInterface;
 use dbeurive\Backend\Cli\Lib\CliWriter;
-use dbeurive\Backend\Database\Entrypoints\Application\Sql\Result;
+use dbeurive\BackendTest\EntryPoints\Result\SqlResult;
 
 
 /**
  * @runTestsInSeparateProcesses
  */
-class UpsertTest extends PHPUnit_Backend_TestCase
+class UpdateTest extends PHPUnit_Backend_TestCase
 {
     use SetUp;
 
@@ -23,41 +23,35 @@ class UpsertTest extends PHPUnit_Backend_TestCase
         $this->__init();
         $this->__createMySqlPdo();
         $this->__createMySqlDatabase();
-        $this->__createMySqlConnector();
-        $this->__connectorMySql->connect();
         $this->__createDatabaseInterface();
-        $this->__di->setDbConnector($this->__connectorMySql);
+        $this->__di->setDbHandler($this->__mySqlPdo);
     }
 
     public function testIt()
     {
-        $REQ_NAME = 'User/Upsert';
+        $REQ_NAME = 'User/Update';
         CliWriter::echoInfo("Loading " . __FILE__);
 
         // Get the SQL request.
         $dataInterface = DatabaseInterface::getInstance();
         $request = $dataInterface->getSql($REQ_NAME);
 
-        /** @var Result $result */
+        /** @var SqlResult $result */
 
         // -----------------------------------------------------------------------------------------------------------------
         // Update a password.
         // -----------------------------------------------------------------------------------------------------------------
 
-        $user = TestTools::select("SELECT * FROM user ORDER BY id LIMIT 1", []);
-        $id = $user[0]['id'];
-        $login = $user[0]['login'];
-        $password = $user[0]['password'];
-        $description = $user[0]['description'];
-
-        $result = $request->execute(['user.login' => $login, 'user.password' => "New $password!", 'user.description' => $description]);
+        $user = TestTools::select("SELECT max(user.id) as 'max' FROM user", []);
+        $id = $user[0]['max'];
+        $result = $request->execute(['user.id' => $id, 'user.password' => "New Password!"]);
 
         $this->assertStatusIsOk($result);
         $this->assertResultDataSetIsEmpty($result);
         $this->assertNull($result->getErrorMessage());
 
         $res = TestTools::select("SELECT user.password as 'user.password' FROM user WHERE id=$id", []);
-        $newPassword = $res[0]['user.password'];
-        $this->assertEquals("New $password!", $newPassword);
+        $password = $res[0]['user.password'];
+        $this->assertEquals('New Password!', $password);
     }
 }

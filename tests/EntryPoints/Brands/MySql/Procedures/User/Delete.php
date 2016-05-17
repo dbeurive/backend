@@ -3,7 +3,7 @@
 namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Procedures\User;
 
 use dbeurive\Backend\Database\Entrypoints\AbstractProcedure;
-use dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result;
+use dbeurive\BackendTest\EntryPoints\Result\ProcedureResult;
 use dbeurive\Backend\Database\Entrypoints\Description;
 
 use dbeurive\BackendTest\EntryPoints\Constants\OutputValues;
@@ -24,7 +24,7 @@ class Delete extends AbstractProcedure {
     public function execute($inExecutionConfig) {
         $sql = $this->getSql(self::SQL_DELETE);
         $resultSql = $sql->execute($inExecutionConfig);
-        $result = new Result(Result::STATUS_SUCCESS,
+        $result = new ProcedureResult(ProcedureResult::STATUS_SUCCESS,
             $resultSql->getDataSets() // Should be empty, since it is a DELETE.
         );
         return $result;

@@ -48,46 +48,16 @@ class DatabaseInterfaceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->__di->setPhpDatabaseRepresentationPath($referencePath));
     }
 
-
-
     public function testGetTableFieldsNames() {
 
         // Load the schema of the database.
         $reference = require $this->__generalConfiguration['application'][DocOption::SCHEMA_PATH];
         $reference = $reference['user'];
 
-        // Create a link to the database, but do not establish the connexion.
-        $this->__createConnector('mysql');
-        $this->__di->setDbConnector($this->__connector);
+        $this->__di->setDbHandler($this->__mySqlPdo);
 
         $fields = $this->__di->getTableFieldsNames('user');
         $this->assertCount(0, array_diff($reference, $fields));
-    }
-
-    /**
-     * Create the link to the database from a given database brand name.
-     * @param string $inDbName Database brand name ("mysql").
-     * @param bool $inOptConnect This flag indicates whether the link should open a connection to the database or not.
-     *        * This the value of this parameter is true, then the link is created, and the connexion to the database is established.
-     *        * Otherwise, the link is created, but the connexion to the database is not established.
-     * @throws \Exception
-     */
-    public function __createConnector($inDbName, $inOptConnect=false)
-    {
-        $this->__init();
-
-        // -------------------------------------------------------------------------------------------------------------
-        // Initialise the connector to the database.
-        // -------------------------------------------------------------------------------------------------------------
-
-        $connectorName = $this->__generalConfiguration[$inDbName][ConnectorOption::CONNECTOR_CLASS_NAME];
-        $connectorConf = $this->__generalConfiguration[$inDbName][ConnectorOption::CONNECTOR_CONFIG];
-
-        $this->__connector = new $connectorName($connectorConf);
-
-        if ($inOptConnect) {
-            $this->__connector->connect();
-        }
     }
 
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

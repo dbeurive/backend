@@ -4,7 +4,7 @@
  * This file implements the API's entry points' provider.
  */
 
-namespace dbeurive\Backend\Database\Entrypoints;
+namespace dbeurive\Backend\Database\EntryPoints;
 use dbeurive\Backend\Database\DatabaseInterface;
 
 /**
@@ -13,7 +13,7 @@ use dbeurive\Backend\Database\DatabaseInterface;
  * This class implements the API's entry points provider.
  * It centralizes access to all the API's entry points.
  *
- * @package dbeurive\Backend\Database\Entrypoints
+ * @package dbeurive\Backend\Database\EntryPoints
  */
 
 class Provider
@@ -152,9 +152,9 @@ class Provider
     /**
      * Returns the list of all documentations for SQL requests.
      * @return array The method returns an array that contains all documentations for SQL requests.
-     *         Elements' type is: \dbeurive\Backend\Database\Entrypoints\Description\Sql
+     *         Elements' type is: \dbeurive\Backend\Database\EntryPoints\Description\Sql
      * @throws \Exception
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Sql
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Sql
      */
     public function getAllSqlDescriptions()
     {
@@ -165,9 +165,9 @@ class Provider
     /**
      * Returns the list of all documentations for the database procedure.
      * @return array The method returns an array that contains all documentations for database procedures.
-     *         Elements' type is: \dbeurive\Backend\Database\Entrypoints\Description\Procedure
+     *         Elements' type is: \dbeurive\Backend\Database\EntryPoints\Description\Procedure
      * @throws \Exception
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Procedure
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Procedure
      */
     public function getAllProceduresDescriptions()
     {
@@ -275,8 +275,8 @@ class Provider
      * @param string $inDirectoryPath Absolute path to the directory that contains descriptions.
      * @param string $inBaseNameSpace Base namespace for the elements.
      * @return array The method returns an array of descriptions.
-     *         The returned array is a list of \dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription.
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription
+     *         The returned array is a list of \dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription.
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription
      */
     private function __getDescriptions($inDirectoryPath, $inBaseNameSpace)
     {
@@ -297,7 +297,7 @@ class Provider
             /* @var AbstractSql $element */
             $element = $class->newInstanceArgs();
             $element->setFieldsProvider( function($inName) { return $this->getDataInterface()->getTableFieldsNames($inName); } );
-            /** @var \dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription $description */
+            /** @var \dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription $description */
             $description = $element->getDescription();
             $description->setName_($name);
             $descriptions[] = $description;

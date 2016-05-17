@@ -1,6 +1,6 @@
 <?php
 
-namespace dbeurive\Backend\Database\Entrypoints;
+namespace dbeurive\Backend\Database\EntryPoints;
 
 
 abstract class AbstractProcedure extends AbstractEntryPoint
@@ -26,7 +26,7 @@ abstract class AbstractProcedure extends AbstractEntryPoint
     /**
      * Return a SQL request identified by its name.
      * @param string $inName Name of the SGL request.
-     * @return \dbeurive\Backend\Database\Entrypoints\AbstractSql The SQL request.
+     * @return \dbeurive\Backend\Database\EntryPoints\AbstractSql The SQL request.
      */
     protected function getSql($inName) {
         return call_user_func($this->__sqlProvider, $inName);

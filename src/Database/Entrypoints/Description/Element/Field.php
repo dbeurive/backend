@@ -4,20 +4,20 @@
  * This file implements the base class that represents an "element" used to store information about a database's table's field.
  */
 
-namespace dbeurive\Backend\Database\Entrypoints\Description\Element;
+namespace dbeurive\Backend\Database\EntryPoints\Description\Element;
 
 /**
  * Class Field
  *
  * This class is the base class that represents an "element" used to store information about a database's table's field.
  *
- * @package dbeurive\Backend\Database\Entrypoints\Description\Element
+ * @package dbeurive\Backend\Database\EntryPoints\Description\Element
  */
 
 class Field extends AbstractElement {
 
     /**
-     * @var \dbeurive\Backend\Database\Entrypoints\Description\Element\Table Table that contains the field.
+     * @var \dbeurive\Backend\Database\EntryPoints\Description\Element\Table Table that contains the field.
      */
     private $__table = null;
     /**
@@ -49,7 +49,7 @@ class Field extends AbstractElement {
 
     /**
      * Return the table that contains this field.
-     * @return \dbeurive\Backend\Database\Entrypoints\Description\Element\Table The method returns the table that contains the field.
+     * @return \dbeurive\Backend\Database\EntryPoints\Description\Element\Table The method returns the table that contains the field.
      */
     public function getTable() {
         return $this->__table;
@@ -57,7 +57,7 @@ class Field extends AbstractElement {
 
     /**
      * Return all the fields within a given table identified by its name.
-     * @param string|\dbeurive\Backend\Database\Entrypoints\Description\Element\Table $inTable Name of the table, or object that represents the table.
+     * @param string|\dbeurive\Backend\Database\EntryPoints\Description\Element\Table $inTable Name of the table, or object that represents the table.
      * @return array The method returns the list of fields within the table identified by the given name.
      */
     public static function getNamesByTable($inTable) {
@@ -77,7 +77,7 @@ class Field extends AbstractElement {
 
     /**
      * {@inheritdoc}
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Element\AbstractElement
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Element\AbstractElement
      */
     public function __construct($inName, $inId=null) {
         $this->setName($inName);

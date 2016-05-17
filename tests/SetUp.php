@@ -2,9 +2,9 @@
 
 namespace dbeurive\BackendTest;
 
-use dbeurive\Backend\Database\Connector\ConfigurationParameter as ConnectorOption;
 use dbeurive\Backend\Database\Connector\MySqlPdo;
 use dbeurive\Backend\Database\DatabaseInterface;
+use dbeurive\Backend\Database\Connector\ConfigurationParameter as ConnectorParameter;
 
 
 /**
@@ -14,25 +14,29 @@ use dbeurive\Backend\Database\DatabaseInterface;
 
 trait SetUp
 {
+    // -----------------------------------------------------------------------------------------------------------------
+    // Application
+    // -----------------------------------------------------------------------------------------------------------------
+
     /** @var DatabaseInterface */
     private $__di;
     /** @var array */
     private $__generalConfiguration;
+    /** @var array Configuration for the application */
+    private $__applicationConfiguration;
 
     // -----------------------------------------------------------------------------------------------------------------
     // MySql
     // -----------------------------------------------------------------------------------------------------------------
 
     /** @var \PDO */
-    private $__pdoMySql = null;
-    /** @var array */
-    private $__connectorMySqlConfiguration;
-    /** @var \dbeurive\Backend\Database\Connector\MySqlPdo */
-    private $__connectorMySql;
-
-
-    /** @var \dbeurive\Backend\Database\Connector\AbstractConnector */
-    private $__connector;
+    private $__mySqlPdo = null;
+    /** @var array Configuration for the MySql database handler */
+    private $__mySqlConfiguration;
+    /** @var array Configuration for the MySql connector */
+    private $__mySqlConnectorConfiguration;
+    /** @var \dbeurive\Backend\Database\Connector\MySqlPdo MySql connector */
+    private $__mySqlConnector;
 
     // -----------------------------------------------------------------------------------------------------------------
     // General initialization
@@ -43,7 +47,18 @@ trait SetUp
      */
     public function __init() {
         $this->__generalConfiguration = require __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.php';
-        $this->__connectorMySqlConfiguration = $this->__generalConfiguration['mysql'][ConnectorOption::CONNECTOR_CONFIG];
+        $this->__mySqlConfiguration = $this->__generalConfiguration['mysql'];
+        $this->__applicationConfiguration = $this->__generalConfiguration['application'];
+        $this->__mySqlConnectorConfiguration = $this->__generalConfiguration['mysql-connector'][ConnectorParameter::CONNECTOR_CONFIG];
+    }
+
+    /**
+     * Create the MSql connector.
+     * Please call __init(), __createMySqlPdo() and __createMySqlDatabase() first.
+     */
+    private function __createMySqlConnector()
+    {
+        $this->__mySqlConnector = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__mySqlConnectorConfiguration);
     }
 
     /**
@@ -74,7 +89,7 @@ trait SetUp
         //  is created.
         // -------------------------------------------------------------------------------------------------------------
 
-        $this->__di = \dbeurive\Backend\Database\DatabaseInterface::getInstance('default', $this->__generalConfiguration['application']);
+        $this->__di = \dbeurive\Backend\Database\DatabaseInterface::getInstance('default', $this->__applicationConfiguration);
     }
 
 
@@ -88,12 +103,12 @@ trait SetUp
      * @return \PDO
      */
     private function __createMySqlPdo() {
-        if (is_null($this->__pdoMySql)) {
+        if (is_null($this->__mySqlPdo)) {
             $this->__init();
-            $dsn = "mysql:host=" . $this->__connectorMySqlConfiguration[MySqlPdo::DB_HOST] . ";port=" . $this->__connectorMySqlConfiguration[MySqlPdo::DB_PORT];
-            $this->__pdoMySql = new \PDO($dsn, $this->__connectorMySqlConfiguration[MySqlPdo::DB_USER], $this->__connectorMySqlConfiguration[MySqlPdo::DB_PASSWORD], []);
+            $dsn = "mysql:host=" . $this->__mySqlConfiguration[MySqlPdo::DB_HOST] . ";port=" . $this->__mySqlConfiguration[MySqlPdo::DB_PORT];
+            $this->__mySqlPdo = new \PDO($dsn, $this->__mySqlConfiguration[MySqlPdo::DB_USER], $this->__mySqlConfiguration[MySqlPdo::DB_PASSWORD], []);
         }
-        return $this->__pdoMySql;
+        return $this->__mySqlPdo;
     }
 
     /**
@@ -113,7 +128,7 @@ trait SetUp
         // -------------------------------------------------------------------------------------------------------------
 
         foreach ($schema as $_request) {
-            $req = $this->__pdoMySql->prepare($_request);
+            $req = $this->__mySqlPdo->prepare($_request);
             if (false === $req->execute([])) {
                 throw new \Exception("Can not create the database.");
             }
@@ -124,15 +139,6 @@ trait SetUp
         // -------------------------------------------------------------------------------------------------------------
 
         $dataPath = $this->__generalConfiguration['test']['dir.fixtures'] . DIRECTORY_SEPARATOR . 'MySql' . DIRECTORY_SEPARATOR . 'data.php';
-        \dbeurive\Util\UtilCode::require_with_args($dataPath, ['pdo' => $this->__pdoMySql]);
-    }
-
-    /**
-     * Create the MSql connector.
-     * Please call __init(), __createMySqlPdo() and __createMySqlDatabase() first.
-     */
-    private function __createMySqlConnector()
-    {
-        $this->__connectorMySql = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__connectorMySqlConfiguration);
+        \dbeurive\Util\UtilCode::require_with_args($dataPath, ['pdo' => $this->__mySqlPdo]);
     }
 }

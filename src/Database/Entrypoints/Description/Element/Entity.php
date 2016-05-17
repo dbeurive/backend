@@ -5,21 +5,21 @@
  */
 
 
-namespace dbeurive\Backend\Database\Entrypoints\Description\Element;
+namespace dbeurive\Backend\Database\EntryPoints\Description\Element;
 
 /**
  * Class Entity
  *
  * This class represents an "entity" as defined by the concept of "Entity-Relationship Modeling".
  *
- * @package dbeurive\Backend\Database\Entrypoints\Description\Element
+ * @package dbeurive\Backend\Database\EntryPoints\Description\Element
  */
 
 class Entity extends AbstractElement {
 
     /**
      * {@inheritdoc}
-     * @see \dbeurive\Backend\Database\Entrypoints\Description\Element\AbstractElement
+     * @see \dbeurive\Backend\Database\EntryPoints\Description\Element\AbstractElement
      */
     public function __construct($inName, $inId=null) {
         $this->setName($inName);

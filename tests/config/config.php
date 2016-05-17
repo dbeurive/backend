@@ -67,12 +67,12 @@ return call_user_func(function() {
             DocOption::DOC_PATH              => $TEST_BASE_DIR . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'mysql_doc.sqlite',
             DocOption::SCHEMA_PATH           => $TEST_BASE_DIR . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'mysql_schema.php'
         ],
-        'mysql' => [
+        'mysql' => $mysqlConf,
+        'mysql-connector' => [
             // This parameter is used when the application is running.
             ConnectorParameter::CONNECTOR_CONFIG => $mysqlConf,
             // This represents the name of the class that implements the database connector.
             ConnectorParameter::CONNECTOR_CLASS_NAME => '\\dbeurive\\Backend\\Database\\Connector\\MySqlPdo'
-
         ]
     ];
 

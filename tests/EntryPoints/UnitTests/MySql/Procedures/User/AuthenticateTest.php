@@ -1,14 +1,17 @@
 <?php
 
-namespace dbeurive\BackendTests\UnitTests\MySql\Procedures\User;
+namespace dbeurive\BackendTest\UnitTests\MySql\Procedures\User;
+
+
 
 use dbeurive\BackendTest\SetUp;
 use dbeurive\BackendTest\Utils\Pdo as TestTools;
+use dbeurive\BackendTest\EntryPoints\Result\ProcedureResult;
+use dbeurive\BackendTest\EntryPoints\UnitTests\PhpUnit\PHPUnit_Backend_TestCase;
 
 use dbeurive\Backend\Database\DatabaseInterface;
-use dbeurive\Backend\Phpunit\PHPUnit_Backend_TestCase;
 use dbeurive\Backend\Cli\Lib\CliWriter;
-use dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result;
+
 
 
 /**
@@ -23,10 +26,8 @@ class AuthenticateTest extends PHPUnit_Backend_TestCase
         $this->__init();
         $this->__createMySqlPdo();
         $this->__createMySqlDatabase();
-        $this->__createMySqlConnector();
-        $this->__connectorMySql->connect();
         $this->__createDatabaseInterface();
-        $this->__di->setDbConnector($this->__connectorMySql);
+        $this->__di->setDbHandler($this->__mySqlPdo);
     }
 
     public function testIt() {
@@ -40,7 +41,7 @@ class AuthenticateTest extends PHPUnit_Backend_TestCase
         /** @var \dbeurive\BackendTest\EntryPoints\Brands\MySql\Procedures\User\Authenticate $procedure */
         $procedure = $dataInterface->getProcedure($PROCEDURE_NAME);
 
-        /** @var Result $result */
+        /** @var ProcedureResult $result */
 
         // -----------------------------------------------------------------------------------------------------------------
         // Test: Login exists, and password is valid.

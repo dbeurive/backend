@@ -4,7 +4,7 @@
  * This file defines the configuration parameters that describes the topology of the API's entry points.
  */
 
-namespace dbeurive\Backend\Database\Entrypoints;
+namespace dbeurive\Backend\Database\EntryPoints;
 
 
 /**
@@ -12,7 +12,7 @@ namespace dbeurive\Backend\Database\Entrypoints;
  *
  * This class contains the name of the configuration parameters used to describe the API's entry's points.
  *
- * @package dbeurive\Backend\Database\Entrypoints
+ * @package dbeurive\Backend\Database\EntryPoints
  */
 
 class ConfigurationParameter {
@@ -34,7 +34,7 @@ class ConfigurationParameter {
      */
     const PROC_REPO_PATH = 'procedure-repository-path';
     /**
-     * This constant defines the name of the configuration parameter that represents an instance of a database connector.
+     * This constant defines the name of the configuration parameter that represents an instance of a database handler (an instance of \PDO, for example).
      */
-    const DB_CONNECTOR = 'db-connector';
+    const DB_HANDLER = 'db-handler';
 }

@@ -2,7 +2,7 @@
 
 namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls\User;
 
-use dbeurive\Backend\Database\Entrypoints\Application\Sql\Result;
+use dbeurive\BackendTest\EntryPoints\Result\SqlResult;
 use dbeurive\Backend\Database\Entrypoints\Description;
 use dbeurive\Backend\Database\SqlService\MySql;
 use dbeurive\Backend\Database\Entrypoints\AbstractSql;
@@ -18,7 +18,7 @@ use dbeurive\Util\UtilString;
 
 /**
  * Class Authenticate
- * @package dbeurive\BackendTests\Database\Entrypoints\Sql\User
+ * @package dbeurive\BackendTest\Database\Entrypoints\Sql\User
  */
 
 class Authenticate extends AbstractSql
@@ -49,7 +49,7 @@ class Authenticate extends AbstractSql
         /* @var \PDO $pdo */
         $pdo = $this->getDbh();
 
-        $result = new Result();
+        $result = new SqlResult();
         $fieldsValues = UtilArray::array_keep_keys(self::$__conditionFields, $inExecutionConfig, true);
         $req = $pdo->prepare($this->__sql());
         if (false === $req->execute($fieldsValues)) {

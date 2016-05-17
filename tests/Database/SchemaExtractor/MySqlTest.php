@@ -13,12 +13,13 @@ class MySqlTest extends \PHPUnit_Framework_TestCase
         $this->__init();
         $this->__createMySqlPdo();
         $this->__createMySqlDatabase();
-        $this->__createMySqlConnector(); // By default, the connection to the database is not established.
-        $this->__connectorMySql->connect();
-        $this->__extractor = new \dbeurive\Backend\Database\SchemaExtractor\MySql($this->__connectorMySql);
+        $this->__createMySqlConnector();
+        $this->__extractor = new \dbeurive\Backend\Database\SchemaExtractor\MySql($this->__mySqlConnector);
+        $this->__mySqlConnector->connect();
     }
     
     public function testGetDatabaseSchema() {
+
         $schema = $this->__extractor->getDatabaseSchema();
         $this->assertTrue(is_array($schema));
 
