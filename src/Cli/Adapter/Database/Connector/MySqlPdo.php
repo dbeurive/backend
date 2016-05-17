@@ -4,7 +4,7 @@
  * This file implements the "connector" for MySql, using PDO as database handler.
  */
 
-namespace dbeurive\Backend\Database\Connector;
+namespace dbeurive\Backend\Cli\Adapter\Database\Connector;
 
 use dbeurive\Input\Specification;
 use dbeurive\Input\SpecificationsSet;
@@ -14,7 +14,7 @@ use dbeurive\Input\SpecificationsSet;
  *
  * This class implements the "connector" for MySql, using PDO as database handler.
  *
- * @package dbeurive\Backend\Database\Connector
+ * @package dbeurive\Backend\Cli\Adapter\Database\Connector
  */
 
 class MySqlPdo extends AbstractConnector

@@ -19,14 +19,14 @@
  * @see AbstractConnector::connect
  */
 
-namespace dbeurive\Backend\Database\Connector;
+namespace dbeurive\Backend\Cli\Adapter\Database\Connector;
 
 /**
  * Class AbstractConnector
  *
  * This class is the base class for all connectors.
  *
- * @package dbeurive\Backend\Database\Connector
+ * @package dbeurive\Backend\Cli\Adapter\Database\Connector
  */
 
 abstract class AbstractConnector implements InterfaceConnector

@@ -1,6 +1,6 @@
 <?php
 
-namespace dbeurive\Backend\Database\Connector;
+namespace dbeurive\Backend\Cli\Adapter\Database\Connector;
 
 
 interface InterfaceConnector
@@ -15,15 +15,15 @@ interface InterfaceConnector
      * @return array|false If the method returns the value false, then it means that there is no need to return the list of options.
      *         Otherwise, the method returns an array.
      *         Each element of the returned array is an associative array that presents to entries.
-     *         * \dbeurive\Backend\Database\Connector\InterfaceConnector::OPTION_NAME: the name of the parameter.
-     *         * \dbeurive\Backend\Database\Connector\InterfaceConnector::OPTION_DESCRIPTION: the description of the parameter.
-     *         * \dbeurive\Backend\Database\Connector\InterfaceConnector::OPTION_MANDATORY: this entry specifies whether the parameter is mandatory or not.
-     *         * \dbeurive\Backend\Database\Connector\InterfaceConnector::OPTION_DEFAULT: this entry specifies the default value for the parameter.
+     *         * \dbeurive\Backend\Cli\Adapter\Database\Connector\InterfaceConnector::OPTION_NAME: the name of the parameter.
+     *         * \dbeurive\Backend\Cli\Adapter\Database\Connector\InterfaceConnector::OPTION_DESCRIPTION: the description of the parameter.
+     *         * \dbeurive\Backend\Cli\Adapter\Database\Connector\InterfaceConnector::OPTION_MANDATORY: this entry specifies whether the parameter is mandatory or not.
+     *         * \dbeurive\Backend\Cli\Adapter\Database\Connector\InterfaceConnector::OPTION_DEFAULT: this entry specifies the default value for the parameter.
      *
-     * @see \dbeurive\Backend\Database\Connector\InterfaceConnector::OPTION_NAME
-     * @see \dbeurive\Backend\Database\Connector\InterfaceConnector::OPTION_DESCRIPTION
-     * @see \dbeurive\Backend\Database\Connector\InterfaceConnector::OPTION_MANDATORY
-     * @see \dbeurive\Backend\Database\Connector\InterfaceConnector::OPTION_DEFAULT
+     * @see \dbeurive\Backend\Cli\Adapter\Database\Connector\InterfaceConnector::OPTION_NAME
+     * @see \dbeurive\Backend\Cli\Adapter\Database\Connector\InterfaceConnector::OPTION_DESCRIPTION
+     * @see \dbeurive\Backend\Cli\Adapter\Database\Connector\InterfaceConnector::OPTION_MANDATORY
+     * @see \dbeurive\Backend\Cli\Adapter\Database\Connector\InterfaceConnector::OPTION_DEFAULT
      */
     static public function getConfigurationParameters();
 

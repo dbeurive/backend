@@ -3,7 +3,7 @@
 namespace dbeurive\BackendTest\Database;
 use dbeurive\Backend\Database\DatabaseInterface;
 use dbeurive\Backend\Database\Doc\ConfigurationParameter as DocOption;
-use dbeurive\Backend\Database\Connector\ConfigurationParameter as ConnectorOption;
+use dbeurive\Backend\Cli\Adapter\Database\Connector\ConfigurationParameter as ConnectorOption;
 
 /**
  * @runTestsInSeparateProcesses
@@ -26,7 +26,7 @@ class DatabaseInterfaceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDbLinkOnError() {
         $this->expectException(\Exception::class);
-        $this->__di->getDbConnector(); // The link has not been set.
+        $this->__di->getDbHandler(); // The link has not been set.
     }
 
     public function testGetEntryPointProvider() {

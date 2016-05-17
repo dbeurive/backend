@@ -7,7 +7,7 @@
  */
 
 namespace dbeurive\Backend\Database\SchemaExtractor;
-use dbeurive\Backend\Database\Connector\AbstractConnector;
+use dbeurive\Backend\Cli\Adapter\Database\Connector\AbstractConnector;
 
 /**
  * Class AbstractSchemaExtractor

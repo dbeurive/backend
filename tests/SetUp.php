@@ -2,9 +2,9 @@
 
 namespace dbeurive\BackendTest;
 
-use dbeurive\Backend\Database\Connector\MySqlPdo;
+use dbeurive\Backend\Cli\Adapter\Database\Connector\MySqlPdo;
 use dbeurive\Backend\Database\DatabaseInterface;
-use dbeurive\Backend\Database\Connector\ConfigurationParameter as ConnectorParameter;
+use dbeurive\Backend\Cli\Adapter\Database\Connector\ConfigurationParameter as ConnectorParameter;
 
 
 /**
@@ -35,7 +35,7 @@ trait SetUp
     private $__mySqlConfiguration;
     /** @var array Configuration for the MySql connector */
     private $__mySqlConnectorConfiguration;
-    /** @var \dbeurive\Backend\Database\Connector\MySqlPdo MySql connector */
+    /** @var \dbeurive\Backend\Cli\Adapter\Database\Connector\MySqlPdo MySql connector */
     private $__mySqlConnector;
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -58,7 +58,7 @@ trait SetUp
      */
     private function __createMySqlConnector()
     {
-        $this->__mySqlConnector = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__mySqlConnectorConfiguration);
+        $this->__mySqlConnector = new \dbeurive\Backend\Cli\Adapter\Database\Connector\MySqlPdo($this->__mySqlConnectorConfiguration);
     }
 
     /**

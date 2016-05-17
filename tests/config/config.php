@@ -2,8 +2,8 @@
 
 use dbeurive\Backend\Database\Entrypoints\ConfigurationParameter as EntryPointOption;
 use dbeurive\Backend\Database\Doc\ConfigurationParameter as DocOption;
-use dbeurive\Backend\Database\Connector\ConfigurationParameter as ConnectorParameter;
-use dbeurive\Backend\Database\Connector\MySqlPdo;
+use dbeurive\Backend\Cli\Adapter\Database\Connector\ConfigurationParameter as ConnectorParameter;
+use dbeurive\Backend\Cli\Adapter\Database\Connector\MySqlPdo;
 
 
 

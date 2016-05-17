@@ -7,14 +7,14 @@
 namespace dbeurive\Backend\Cli\Adapter\Database\SchemaExtractor;
 
 use dbeurive\Backend\Database\Doc\ConfigurationParameter as DocOption;
-use dbeurive\Backend\Database\Connector;
+use dbeurive\Backend\Cli\Adapter\Database\Connector;
 use dbeurive\Backend\Cli\Lib\CliWriter;
 use dbeurive\Backend\Cli\Option as CliOption;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use dbeurive\Backend\Database\Connector\InterfaceConnector;
+use dbeurive\Backend\Cli\Adapter\Database\Connector\InterfaceConnector;
 
 /**
  * Class AbstractSchemaExtractor
@@ -49,6 +49,7 @@ abstract class AbstractSchemaExtractor extends Command implements InterfaceSchem
              ->addOption(CliOption::CONFIG_LOADER_CLASS_NAME, null, InputOption::VALUE_OPTIONAL, 'Fully qualified name of a class used to load the configuration from a source.');
 
         // $cliHandlerClassName: Name of a sub class of \dbeurive\Backend\Cli\Adapter\Database\SchemaExtractor\AbstractSchemaExtractor
+        // Example: \dbeurive\Backend\Cli\Adapter\Database\SchemaExtractor\MySql
         $cliHandlerClassName         = get_class($this);
         $this->__extractorClassName  = call_user_func("${cliHandlerClassName}::getExtractorClassName");
         $this->__connectorClassName  = call_user_func("{$this->__extractorClassName}::getConnectorClassName");
@@ -116,7 +117,7 @@ abstract class AbstractSchemaExtractor extends Command implements InterfaceSchem
         }
 
         // Create a connector.
-        /** @var \dbeurive\Backend\Database\Connector\AbstractConnector $connector */
+        /** @var \dbeurive\Backend\Cli\Adapter\Database\Connector\AbstractConnector $connector */
         $connector = new $this->__connectorClassName($parameters);
         $connector->connect();
 

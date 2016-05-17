@@ -19,13 +19,13 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
 
     public function testFailure() {
 
-        $connector = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__mySqlConnectorConfiguration);
+        $connector = new \dbeurive\Backend\Cli\Adapter\Database\Connector\MySqlPdo($this->__mySqlConnectorConfiguration);
         $this->expectException(\Exception::class);
         $connector->getDatabaseHandler(); // The connexion is not established.
     }
 
     public function testGetConfiguration() {
-        $connector = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__mySqlConnectorConfiguration);
+        $connector = new \dbeurive\Backend\Cli\Adapter\Database\Connector\MySqlPdo($this->__mySqlConnectorConfiguration);
         $conf = $connector->getConfiguration();
         $this->assertTrue(is_array($conf));
     }
@@ -36,7 +36,7 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
 
     public function testMysqlConnect() {
 
-        $connector = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__mySqlConnectorConfiguration);
+        $connector = new \dbeurive\Backend\Cli\Adapter\Database\Connector\MySqlPdo($this->__mySqlConnectorConfiguration);
         $connector->connect();
         /** @var \PDO $pdo */
         $pdo = $connector->getDatabaseHandler(); // The connexion is not established.
@@ -48,20 +48,20 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
 
     public function testMySqlGetConfiguration() {
 
-        $connector = new \dbeurive\Backend\Database\Connector\MySqlPdo($this->__mySqlConnectorConfiguration);
+        $connector = new \dbeurive\Backend\Cli\Adapter\Database\Connector\MySqlPdo($this->__mySqlConnectorConfiguration);
         $conf = $connector->getConfiguration();
         $this->assertTrue(is_array($conf));
 
         foreach ($connector->getConfigurationParameters() as $_option) {
             $this->assertTrue(is_array($_option));
-            $options[] = $_option[\dbeurive\Backend\Database\Connector\MySqlPdo::OPTION_NAME];
+            $options[] = $_option[\dbeurive\Backend\Cli\Adapter\Database\Connector\MySqlPdo::OPTION_NAME];
         }
 
-        $expected = [   \dbeurive\Backend\Database\Connector\MySqlPdo::DB_HOST,
-                        \dbeurive\Backend\Database\Connector\MySqlPdo::DB_NAME,
-                        \dbeurive\Backend\Database\Connector\MySqlPdo::DB_PASSWORD,
-                        \dbeurive\Backend\Database\Connector\MySqlPdo::DB_PORT,
-                        \dbeurive\Backend\Database\Connector\MySqlPdo::DB_USER];
+        $expected = [   \dbeurive\Backend\Cli\Adapter\Database\Connector\MySqlPdo::DB_HOST,
+                        \dbeurive\Backend\Cli\Adapter\Database\Connector\MySqlPdo::DB_NAME,
+                        \dbeurive\Backend\Cli\Adapter\Database\Connector\MySqlPdo::DB_PASSWORD,
+                        \dbeurive\Backend\Cli\Adapter\Database\Connector\MySqlPdo::DB_PORT,
+                        \dbeurive\Backend\Cli\Adapter\Database\Connector\MySqlPdo::DB_USER];
         sort($expected);
         sort($options);
 

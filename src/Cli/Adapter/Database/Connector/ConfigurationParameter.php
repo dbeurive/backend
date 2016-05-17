@@ -4,14 +4,14 @@
  * This file contains the configurations' parameters related to the database connector.
  */
 
-namespace dbeurive\Backend\Database\Connector;
+namespace dbeurive\Backend\Cli\Adapter\Database\Connector;
 
 /**
  * Class ConfigurationParameter
  *
  * This class defines the configurations' parameters related to the database connector.
  *
- * @package dbeurive\Backend\Database\Connector
+ * @package dbeurive\Backend\Cli\Adapter\Database\Connector
  */
 
 class ConfigurationParameter

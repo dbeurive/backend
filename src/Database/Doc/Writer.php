@@ -56,7 +56,7 @@ class Writer {
 
     /**
      * Given the raw representation of the database, this method returns the corresponding "high-level" representation.
-     * @param array $inRawSchema Schema of the database, as returned by the method `\dbeurive\Backend\Database\Connector\AbstractConnector::getDatabaseSchema()`.
+     * @param array $inRawSchema Schema of the database, as returned by the method `\dbeurive\Backend\Cli\Adapter\Database\Connector\AbstractConnector::getDatabaseSchema()`.
      *              This is an associative array:
      *              array(   <table name> => array(<field name>, <field name>...),
      *                       <table name> => array(<field name>, <field name>...),

@@ -7,7 +7,6 @@
 
 namespace dbeurive\Backend\Database;
 use dbeurive\Backend\Database\EntryPoints\Provider as EntryPointProvider;
-use dbeurive\Backend\Database\Connector\AbstractConnector;
 use dbeurive\Backend\Database\EntryPoints\ConfigurationParameter as EntryPointOption;
 use dbeurive\Backend\Database\Doc\ConfigurationParameter as DocOption;
 
@@ -120,7 +119,7 @@ class DatabaseInterface {
             $di->setPhpDatabaseRepresentationPath($inOptConfig[DocOption::SCHEMA_PATH]);
 
             if (array_key_exists(EntryPointOption::DB_HANDLER, $inOptConfig)) {
-                /** @var \dbeurive\Backend\Database\Connector\AbstractConnector $c */
+                /** @var mixed $c */
                 $c = $inOptConfig[EntryPointOption::DB_HANDLER];
                 $di->setDbHandler($c);
             }
@@ -176,12 +175,12 @@ class DatabaseInterface {
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * Return the handler to the database connector.
-     * @return AbstractConnector The method returns the handler to the database connector.
+     * Return the handler to the database (for example, an instance of \PDO).
+     * @return mixed The method returns the handler to the database.
      */
-    public function getDbConnector() {
+    public function getDbHandler() {
         if (is_null($this->__dbh)) {
-            throw new \Exception("You did not set the database connector! Please call setDbHandler() first!");
+            throw new \Exception("You did not set the database handler! Please call setDbHandler() first!");
         }
 
         return $this->__dbh;
@@ -355,7 +354,7 @@ class DatabaseInterface {
      * @throws \Exception
      */
     public function getDatabaseHandler() {
-        return $this->getDbConnector()->getDatabaseHandler();
+        return $this->getDbHandler()->getDatabaseHandler();
     }
 
 }

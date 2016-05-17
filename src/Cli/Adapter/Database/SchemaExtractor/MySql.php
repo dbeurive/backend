@@ -6,7 +6,7 @@
 
 namespace dbeurive\Backend\Cli\Adapter\Database\SchemaExtractor;
 
-use dbeurive\Backend\Database\Connector;
+use dbeurive\Backend\Cli\Adapter\Database\Connector;
 
 /**
  * Class MySql

@@ -12,7 +12,7 @@ namespace dbeurive\Backend\Cli\Bin;
 use dbeurive\Backend\Database\EntryPoints\ConfigurationParameter as EntryPointOption;
 use dbeurive\Backend\Database\Doc\ConfigurationParameter as DocOption;
 use dbeurive\Backend\Database\Doc\Writer;
-use dbeurive\Backend\Database\Connector;
+use dbeurive\Backend\Cli\Adapter\Database\Connector;
 use dbeurive\Backend\Cli\Lib\CliWriter;
 use dbeurive\Backend\Cli\Option as CliOption;
 use Symfony\Component\Console\Command\Command;
