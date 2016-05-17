@@ -1,5 +1,9 @@
 # Introduction
 
+
+WARNING : This package is _REALLY_ unstable right now. Do NOT use it. 
+
+
 Although ORM exist, using SQL is a valid strategy.
 
 There is no « one size fits all approach ».
