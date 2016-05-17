@@ -43,13 +43,17 @@ namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls\User;
 Then create the class:
 
 ```php
-
 use dbeurive\Backend\Database\EntryPoints\AbstractSql;
 
 class Authenticate extends AbstractSql
 {
     // Execute request.
-    public function execute($inExecutionConfig) { /* ... */ }
+    public function execute($inExecutionConfig) {
+        /* @var \PDO $pdo */
+        $pdo = $this->getDbh();
+        
+        // ...
+    }
 
     // Document the request.
     public function getDescription() {
@@ -90,18 +94,14 @@ namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Procedures\User
 Then create the class:
 
 ```php
-class Authenticate extends AbstractApplication {
+use dbeurive\Backend\Database\EntryPoints\AbstractProcedure;
 
-    const SQL_AUTHENTICATE  = 'User/Authenticate';
+class Authenticate extends AbstractProcedure {
 
-    // Initialize the procedure.
-    public function _init(array $inInitConfig=[]) { /* ... */ }
-
-    // Validate the execution parameters, prior to the procedures' execution (return true if OK, false otherwise).
-    protected function _validateExecutionConfig($inExecutionConfig, &$outErrorMessage) { /* ... */ }
+    const SQL_AUTHENTICATE = 'User/Authenticate';
 
     // Execute the procedure.
-    protected function _execute($inExecutionConfig, AbstractConnector $inConnector) { /* ... */ }
+    public function execute($inExecutionConfig) { /* ... */ }
 
     // Document the procedure/
     public function getDescription() {
@@ -114,10 +114,10 @@ class Authenticate extends AbstractApplication {
 }
 ```
 
-* [API common to SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/AbstractEntryPoint.php)
-* [API for a procedure](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/Application/Procedure/AbstractApplication.php)
-* [Elements of documentation common to SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/Description/AbstractDescription.php)
-* [Elements of documentation specific to procedures](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/Description/Procedure.php)
+* [API common to SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/AbstractEntryPoint.php)
+* [API for a procedure](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/AbstractProcedure.php)
+* [Elements of documentation common to SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/Description/AbstractDescription.php)
+* [Elements of documentation specific to procedures](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/AbstractProcedure.php)
 * [Examples of procedures](https://github.com/dbeurive/backend/tree/master/tests/EntryPoints/Brands/MySql/Procedures/User)
 
 
@@ -127,28 +127,23 @@ class Authenticate extends AbstractApplication {
 ## Calling an SQL request from a procedure
 
 ```php
-use dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result;
 
-protected function _execute($inExecutionConfig, AbstractLink $inLink) {
-
-    // Get an instance of the SQL request.
-    // We assume that the variable $inExecutionConfig is compatible with the SQL request's requirements.
-    // Otherwise, it would have been necessary to perform a transformation.
-    $sql = $this->_getSql('User/Authenticate', [], $inExecutionConfig);
+    public function execute($inExecutionConfig) {
+        $sql = $this->getSql(self::SQL_AUTHENTICATE);
+        $resultSql = $sql->execute($inExecutionConfig);
+        $result = new ProcedureResult(ProcedureResult::STATUS_SUCCESS,
+            $resultSql->getDataSets(),
+            [self::KEY_AUTHENTICATED => ! $resultSql->isDataSetsEmpty()]
+        );
+        return $result;
+    }
     
-    // Execute the SQL request.
-    $resultSql = $sql->execute();
-    
-    // Return the result to the application.
-    $result = new Result(Result::STATUS_SUCCESS,
-        $resultSql->getDataSets();
-    );
-    
-    // Before returning the result of the SQL request, you can do whatever you want on the result.  
-    
-    return $result;
-}
 ```
+
+> Please note that:
+> * You are free to pass any kind of data as execution configuration (`$inExecutionConfig`).
+> * You are free to return any kind of object. In this example we return an instance of `\dbeurive\BackendTest\EntryPoints\Result\ProcedureResult`.
+>   However, you can define your own class for holding a result.
 
 See [examples](https://github.com/dbeurive/backend/tree/master/tests/EntryPoints/Brands/MySql/Procedures/User)
 
@@ -160,12 +155,13 @@ See [examples](https://github.com/dbeurive/backend/tree/master/tests/EntryPoints
 We assume that `$di` is an instance if the database interface.
 
 ```php
-$request = $di->getSql('User/Authenticate');
-$result = $request->setExecutionConfig(['user.login' => 'foo', 'user.password' => 'bar'])
-                  ->execute();
+$request = $dataInterface->getSql('User/Authenticate');
+$result  = $request->execute(['user.login' => 'toto', 'user.password' => 'titi']);
 ```
 
-See [examples](https://github.com/dbeurive/backend/tree/master/tests/UnitTests/MySql/Sqls/User).
+> 
+
+See [examples](https://github.com/dbeurive/backend/blob/master/tests/EntryPoints/UnitTests/MySql/Sqls/User/AuthenticateTest.php).
 
 
 
@@ -180,7 +176,9 @@ $procedure->setExecutionConfig(['user.login' => 'foo', 'user.password' => 'bar']
           ->execute();
 ```
 
-See [examples](https://github.com/dbeurive/backend/tree/master/tests/UnitTests/MySql/Procedures/User).
+> Please note that you are free to pass any kind of data for `$procedure->setExecutionConfig(...)`.
+
+See [examples](https://github.com/dbeurive/backend/blob/master/tests/EntryPoints/UnitTests/MySql/Procedures/User/AuthenticateTest.php).
 
 
 
