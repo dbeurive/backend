@@ -1,12 +1,13 @@
 <?php
 
-namespace dbeurive\Backend\Database\SchemaExtractor;
+namespace dbeurive\BackendTest\Cli\Adapter\Database\SchemaExtractor;
+use dbeurive\Util\UtilUnitTest;
 
 class MySqlTest extends \PHPUnit_Framework_TestCase
 {
     use \dbeurive\BackendTest\SetUp;
 
-    /** @var \dbeurive\Backend\Database\SchemaExtractor\MySql */
+    /** @var \dbeurive\Backend\Cli\Adapter\Database\SchemaExtractor\MySql */
     private $__extractor = null;
 
     public function setUp() {
@@ -14,13 +15,13 @@ class MySqlTest extends \PHPUnit_Framework_TestCase
         $this->__createMySqlPdo();
         $this->__createMySqlDatabase();
         $this->__createMySqlConnector();
-        $this->__extractor = new \dbeurive\Backend\Database\SchemaExtractor\MySql($this->__mySqlConnector);
+        $this->__extractor = new \dbeurive\Backend\Cli\Adapter\Database\SchemaExtractor\MySql($this->__mySqlConnector);
         $this->__mySqlConnector->connect();
     }
-    
+
     public function testGetDatabaseSchema() {
 
-        $schema = $this->__extractor->getDatabaseSchema();
+        $schema = UtilUnitTest::call_private_or_protected_method(get_class($this->__extractor), '_getDatabaseSchema', $this->__extractor, $this->__mySqlConnector);
         $this->assertTrue(is_array($schema));
 
         /**
@@ -38,5 +39,4 @@ class MySqlTest extends \PHPUnit_Framework_TestCase
         $referencePath = $this->__generalConfiguration['test']['dir.references'] . DIRECTORY_SEPARATOR . 'mysql_db_schema.json';
         $this->assertJsonStringEqualsJsonFile($referencePath, json_encode($sortedSchema));
     }
-
 }

@@ -15,6 +15,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use dbeurive\Backend\Cli\Adapter\Database\Connector\InterfaceConnector;
+use dbeurive\Backend\Cli\Adapter\Database\Connector\AbstractConnector;
 
 /**
  * Class AbstractSchemaExtractor
@@ -31,13 +32,21 @@ abstract class AbstractSchemaExtractor extends Command implements InterfaceSchem
      */
     private $__connectorClassName;
     /**
-     * @var string Name of a sub class of \dbeurive\Backend\Cli\Adapter\Database\SchemaExtractor\InterfaceSchemaExtractor
-     */
-    private $__extractorClassName;
-    /**
      * @var array List of configuration's parameters for the database connector.
      */
     private $__connectorParameters;
+
+    /**
+     * Return the schema of the database.
+     * @param AbstractConnector $inConnector Connector for the database.
+     * @return array|false If the operation is successful, then the method returns an array that represents the schema of the database:
+     *                     array(   <table name> => array(<field name>, <field name>...),
+     *                              <table name> => array(<field name>, <field name>...),
+     *                              ...)
+     *                     Otherwise, the method throws an exception.
+     * @throws \Exception
+     */
+    abstract protected function _getDatabaseSchema(AbstractConnector $inConnector);
 
     /**
      * Build the "schema extractor".
@@ -51,8 +60,7 @@ abstract class AbstractSchemaExtractor extends Command implements InterfaceSchem
         // $cliHandlerClassName: Name of a sub class of \dbeurive\Backend\Cli\Adapter\Database\SchemaExtractor\AbstractSchemaExtractor
         // Example: \dbeurive\Backend\Cli\Adapter\Database\SchemaExtractor\MySql
         $cliHandlerClassName         = get_class($this);
-        $this->__extractorClassName  = call_user_func("${cliHandlerClassName}::getExtractorClassName");
-        $this->__connectorClassName  = call_user_func("{$this->__extractorClassName}::getConnectorClassName");
+        $this->__connectorClassName  = call_user_func("${cliHandlerClassName}::getConnectorClassName");
         $this->__connectorParameters = call_user_func("{$this->__connectorClassName}::getConfigurationParameters");
 
         // Set the list of configuration's parameters for the connector used by the extractor.
@@ -121,12 +129,8 @@ abstract class AbstractSchemaExtractor extends Command implements InterfaceSchem
         $connector = new $this->__connectorClassName($parameters);
         $connector->connect();
 
-        // Create the schema extractor.
-        /** @var \dbeurive\Backend\Database\SchemaExtractor\AbstractSchemaExtractor $extractor */
-        $extractor = new $this->__extractorClassName($connector);
-
         // Execute the schema extractor.
-        $schema = $extractor->getDatabaseSchema();
+        $schema = $this->_getDatabaseSchema($connector);
 
         // Now, write the schema.
         \dbeurive\Util\UtilData::to_callable_php_file($schema, $parameters[DocOption::SCHEMA_PATH]);

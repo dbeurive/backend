@@ -1,9 +1,9 @@
 <?php
 
-namespace dbeurive\BackendTest\Database\Connector;
+namespace dbeurive\BackendTest\Cli\Adapter\Database\SchemaExtractor\Connector;
 use dbeurive\BackendTest\Utils;
 
-class ConnectorTest extends \PHPUnit_Framework_TestCase
+class MySqlPdoTest extends \PHPUnit_Framework_TestCase
 {
     use \dbeurive\BackendTest\SetUp;
 

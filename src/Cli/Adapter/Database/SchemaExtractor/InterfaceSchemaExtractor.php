@@ -17,8 +17,8 @@ namespace dbeurive\Backend\Cli\Adapter\Database\SchemaExtractor;
 interface InterfaceSchemaExtractor
 {
     /**
-     * Return the fully qualified name of the class the implements the extractor.
+     * Return the fully qualified name of the class the implements the connector used by this extractor.
      * @return mixed
      */
-    static public function getExtractorClassName();
+    static public function getConnectorClassName();
 }
