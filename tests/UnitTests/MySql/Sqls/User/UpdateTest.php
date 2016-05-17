@@ -8,6 +8,8 @@ use dbeurive\BackendTest\Utils\Pdo as TestTools;
 use dbeurive\Backend\Phpunit\PHPUnit_Backend_TestCase;
 use dbeurive\Backend\Database\DatabaseInterface;
 use dbeurive\Backend\Cli\Lib\CliWriter;
+use dbeurive\Backend\Database\Entrypoints\Application\Sql\Result;
+
 
 /**
  * @runTestsInSeparateProcesses
@@ -36,19 +38,19 @@ class UpdateTest extends PHPUnit_Backend_TestCase
         $dataInterface = DatabaseInterface::getInstance();
         $request = $dataInterface->getSql($REQ_NAME);
 
+        /** @var Result $result */
+
         // -----------------------------------------------------------------------------------------------------------------
         // Update a password.
         // -----------------------------------------------------------------------------------------------------------------
 
         $user = TestTools::select("SELECT max(user.id) as 'max' FROM user", []);
         $id = $user[0]['max'];
-        $request->setExecutionConfig(['user.id' => $id, 'user.password' => "New Password!"])
-            ->execute();
+        $result = $request->execute(['user.id' => $id, 'user.password' => "New Password!"]);
 
-        $this->assertHasBeenExecuted($request);
-        $this->assertStatusIsOk($request);
-        $this->assertResultDataSetIsEmpty($request);
-        $this->assertNull($request->getResult()->getErrorMessage());
+        $this->assertStatusIsOk($result);
+        $this->assertResultDataSetIsEmpty($result);
+        $this->assertNull($result->getErrorMessage());
 
         $res = TestTools::select("SELECT user.password as 'user.password' FROM user WHERE id=$id", []);
         $password = $res[0]['user.password'];

@@ -5,7 +5,6 @@
  */
 
 namespace dbeurive\Backend\Database\Entrypoints;
-use dbeurive\Backend\Database\Connector\AbstractConnector;
 use dbeurive\Backend\Database\DatabaseInterface;
 
 /**
@@ -39,10 +38,6 @@ class Provider
      * @var string Name of the data interface.
      */
     private $__dataInterfaceName = null;
-    /**
-     * @var AbstractConnector Handler to the database connector.
-     */
-    private $__connector = null;
 
     /**
      * Create a provider.
@@ -121,13 +116,10 @@ class Provider
     /**
      * Return an SQL request identified by its name.
      * @param string $inName Name of the SQL request.
-     * @param mixed|null $inInitConfig Configuration for the SQL request's construction.
-     * @param mixed|null $inExecutionConfig Execution configuration for the SQL request.
-     *        Typically, this array contains the values of the fields required by the request's execution.
-     * @return \dbeurive\Backend\Database\Entrypoints\Application\Sql\AbstractApplication The method returns the requested SQL request.
+     * @return mixed The method returns an instance of the SQL request.
      * @throws \Exception
      */
-    public function getSql($inName, $inInitConfig=null, $inExecutionConfig=null)
+    public function getSql($inName)
     {
         self::__checkConfiguration();
         // You may, or may not, registered the entry points for auto loading.
@@ -135,23 +127,17 @@ class Provider
         require_once $this->__sqlRepositoryBasePath . DIRECTORY_SEPARATOR . $inName . '.php';
         $class = self::__getFullyQualifiedClassName($this->__sqlBaseNameSpace, $inName);
         $class = new \ReflectionClass($class);
-        /* @var \dbeurive\Backend\Database\Entrypoints\Application\Sql\AbstractApplication $sql */
-        $sql = $class->newInstanceArgs([$this, $this->__getConnector(), $inInitConfig]);
-        if (!is_null($inExecutionConfig)) {
-            $sql->setExecutionConfig($inExecutionConfig);
-        }
+        $sql = $class->newInstanceArgs();
         return $sql;
     }
 
     /**
      * Return a procedure identified by its name.
      * @param string $inName Name of the procedure.
-     * @param mixed|null $inInitConfig Configuration for the procedure's construction.
-     * @param mixed|null $inExecutionConfig Execution configuration for the procedure.
-     * @return \dbeurive\Backend\Database\Entrypoints\Application\Procedure\AbstractApplication The method returns the requested procedure.
+     * @return mixed The method returns an instance of the procedure.
      * @throws \Exception
      */
-    public function getProcedure($inName, $inInitConfig=null, $inExecutionConfig=null)
+    public function getProcedure($inName)
     {
         self::__checkConfiguration();
         // You may, or may not, registered the entry points for auto loading.
@@ -159,11 +145,7 @@ class Provider
         require_once $this->__sqlRepositoryBasePath . DIRECTORY_SEPARATOR . $inName . '.php';
         $class = self::__getFullyQualifiedClassName($this->__procedureBaseNameSpace, $inName);
         $class = new \ReflectionClass($class);
-        /* @var \dbeurive\Backend\Database\Entrypoints\Application\Procedure\AbstractApplication $procedure */
-        $procedure = $class->newInstanceArgs([$this, $this->__getConnector(), $inInitConfig]);
-        if (!is_null($inExecutionConfig)) {
-            $procedure->setExecutionConfig($inExecutionConfig);
-        }
+        $procedure =  $class->newInstanceArgs();
         return $procedure;
     }
 
@@ -284,17 +266,6 @@ class Provider
         }
     }
 
-    /**
-     * Return the handler to the database connector.
-     * @return AbstractConnector The method returns the handler to the database connector.
-     */
-    private function __getConnector() {
-        if (is_null($this->__connector)) {
-            $this->__connector = $this->getDataInterface()->getDbConnector();
-        }
-        return $this->__connector;
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
     // Static methods.
     // -----------------------------------------------------------------------------------------------------------------
@@ -316,18 +287,17 @@ class Provider
 
         $descriptions = array();
         foreach ($php as $_relativeFilePath => $_fileInfo) {
-            if (1 === preg_match('/^test\-/', basename($_relativeFilePath))) {
-                continue;
-            }
+
             $name = substr($_relativeFilePath, $prefixLenght, -4);
             // You may, or may not, registered the entry points for auto loading.
             // If you did not, then the following line is required.
             require_once $_relativeFilePath;
             $class = self::__getFullyQualifiedClassName($inBaseNameSpace, $name);
             $class = new \ReflectionClass($class);
-
-            /* @var \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication $element */
-            $element = $class->newInstanceArgs([$this]);
+            /* @var AbstractSql $element */
+            $element = $class->newInstanceArgs();
+            $element->setFieldsProvider( function($inName) { return $this->getDataInterface()->getTableFieldsNames($inName); } );
+            /** @var \dbeurive\Backend\Database\Entrypoints\Description\AbstractDescription $description */
             $description = $element->getDescription();
             $description->setName_($name);
             $descriptions[] = $description;

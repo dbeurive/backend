@@ -8,6 +8,7 @@ use dbeurive\BackendTest\Utils\Pdo as TestTools;
 use dbeurive\Backend\Database\DatabaseInterface;
 use dbeurive\Backend\Cli\Lib\CliWriter;
 use dbeurive\Backend\Phpunit\PHPUnit_Backend_TestCase;
+use dbeurive\Backend\Database\Entrypoints\Application\Sql\Result;
 
 /**
  * @runTestsInSeparateProcesses
@@ -39,19 +40,19 @@ class GetTest extends PHPUnit_Backend_TestCase
         $dataInterface = DatabaseInterface::getInstance();
         $request = $dataInterface->getSql($REQ_NAME);
 
+        /** @var Result $result */
+
         // -----------------------------------------------------------------------------------------------------------------
         // Test: profile does not exist (no user associated).
         // -----------------------------------------------------------------------------------------------------------------
 
         $res = TestTools::select("SELECT max(user.id) as 'max' FROM user", []);
         $id = $res[0]['max'] + 1;
-        $request->setExecutionConfig(['profile.fk_user_id' => $id])
-            ->execute();
+        $result = $request->execute(['profile.fk_user_id' => $id]);
 
-        $this->assertHasBeenExecuted($request);
-        $this->assertStatusIsOk($request);
-        $this->assertResultDataSetIsEmpty($request);
-        $this->assertNull($request->getResult()->getErrorMessage());
+        $this->assertStatusIsOk($result);
+        $this->assertResultDataSetIsEmpty($result);
+        $this->assertNull($result->getErrorMessage());
 
         // -----------------------------------------------------------------------------------------------------------------
         // Test: profile exists.
@@ -59,13 +60,11 @@ class GetTest extends PHPUnit_Backend_TestCase
 
         $res = TestTools::select("SELECT max(profile.fk_user_id) as 'max' FROM profile", []);
         $id = $res[0]['max'];
-        $request->setExecutionConfig(['profile.fk_user_id' => $id])
-            ->execute();
+        $result = $request->execute(['profile.fk_user_id' => $id]);
 
-        $this->assertHasBeenExecuted($request);
-        $this->assertStatusIsOk($request);
-        $this->assertResultDataSetIsNotEmpty($request);
-        $this->assertNull($request->getResult()->getErrorMessage());
-        $this->assertResultDataSetCount(1, $request);
+        $this->assertStatusIsOk($result);
+        $this->assertResultDataSetIsNotEmpty($result);
+        $this->assertNull($result->getErrorMessage());
+        $this->assertResultDataSetCount(1, $result);
     }
 }

@@ -8,6 +8,7 @@ use dbeurive\BackendTest\Utils\Pdo as TestTools;
 use dbeurive\Backend\Phpunit\PHPUnit_Backend_TestCase;
 use dbeurive\Backend\Database\DatabaseInterface;
 use dbeurive\Backend\Cli\Lib\CliWriter;
+use dbeurive\Backend\Database\Entrypoints\Application\Sql\Result;
 
 
 /**
@@ -37,6 +38,8 @@ class UpsertTest extends PHPUnit_Backend_TestCase
         $dataInterface = DatabaseInterface::getInstance();
         $request = $dataInterface->getSql($REQ_NAME);
 
+        /** @var Result $result */
+
         // -----------------------------------------------------------------------------------------------------------------
         // Update a password.
         // -----------------------------------------------------------------------------------------------------------------
@@ -47,13 +50,11 @@ class UpsertTest extends PHPUnit_Backend_TestCase
         $password = $user[0]['password'];
         $description = $user[0]['description'];
 
-        $request->setExecutionConfig(['user.login' => $login, 'user.password' => "New $password!", 'user.description' => $description])
-            ->execute();
+        $result = $request->execute(['user.login' => $login, 'user.password' => "New $password!", 'user.description' => $description]);
 
-        $this->assertHasBeenExecuted($request);
-        $this->assertStatusIsOk($request);
-        $this->assertResultDataSetIsEmpty($request);
-        $this->assertNull($request->getResult()->getErrorMessage());
+        $this->assertStatusIsOk($result);
+        $this->assertResultDataSetIsEmpty($result);
+        $this->assertNull($result->getErrorMessage());
 
         $res = TestTools::select("SELECT user.password as 'user.password' FROM user WHERE id=$id", []);
         $newPassword = $res[0]['user.password'];

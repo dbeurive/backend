@@ -3,10 +3,9 @@
 namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls\User;
 
 use dbeurive\Backend\Database\Entrypoints\Application\BaseResult;
-use dbeurive\Backend\Database\Entrypoints\Application\Sql\AbstractApplication;
 use dbeurive\Backend\Database\Entrypoints\Description;
-use dbeurive\Backend\Database\Connector\AbstractConnector;
 use dbeurive\Backend\Database\SqlService\MySql;
+use dbeurive\Backend\Database\Entrypoints\AbstractSql;
 
 use dbeurive\BackendTest\EntryPoints\Constants\Entities;
 use dbeurive\BackendTest\EntryPoints\Constants\Actions;
@@ -14,46 +13,37 @@ use dbeurive\BackendTest\EntryPoints\Constants\Actions;
 use dbeurive\Util\UtilArray;
 use dbeurive\Util\UtilString;
 
-class Select extends AbstractApplication {
+class Select extends AbstractSql {
 
     const KEY_LIMIT_FROM  = 'limit_from';
     const KEY_LIMIT_COUNT = 'limit_count';
     private static $__pdoParams = [self::KEY_LIMIT_FROM, self::KEY_LIMIT_COUNT];
-    private static $__sql = "SELECT __USER__ FROM user LIMIT ?,?";
+    private $__sql = "SELECT __USER__ FROM user LIMIT ?,?";
+
+    /**
+     * Create the SQL request from the request's template.
+     * @return string The method returns a string that represents the SQL request.
+     */
+    private function __getSql() {
+        $user = MySql::getFullyQualifiedQuotedFieldsAsSql('user', $this->getTableFieldsNames('user'));
+        $sql = preg_replace('/__USER__/', $user, $this->__sql);
+        return $sql;
+    }
 
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
      */
-    public function _init($inInitConfig=null) {
-        $this->_setSql($this->__getSql());
-    }
-
-    /**
-     * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
-     */
-    protected function _validateExecutionConfig($inExecutionConfig, &$outErrorMessage) {
-        /** @var array $inExecutionConfig */
-        if (! UtilArray::array_keys_exists(self::$__pdoParams, $this->_executionConfig)) {
-            $outErrorMessage = "Invalid SQL configuration. Mandatory parameters are: " . implode(', ', self::$__pdoParams) . "\nSee: " . __FILE__;
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
-     */
-    protected function _execute($inExecutionConfig, AbstractConnector $inConnector) {
+    public function execute($inExecutionConfig) {
         /* @var \PDO $pdo */
-        $pdo = $inConnector->getDatabaseHandler();
+        $pdo = $this->getDbh();
 
         // Execute the request.
         $result = new BaseResult();
         $fieldsValues = UtilArray::array_keep_keys(self::$__pdoParams, $inExecutionConfig, true);
-        $req = $pdo->prepare(self::$__sql);
+        $req = $pdo->prepare($this->__getSql());
         if (false === $req->execute($fieldsValues)) {
             $message = "SQL request failed:\n" .
-                UtilString::text_linearize($this->_getSql(), true, true) . "\n" .
+                UtilString::text_linearize($this->__getSql(), true, true) . "\n" .
                 "Condition fields: " .
                 implode(', ', self::$__pdoParams) . "\n" .
                 "Bound to values: " .
@@ -65,10 +55,6 @@ class Select extends AbstractApplication {
         $result->setStatusSuccess();
         return $result;
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // Mandatory static methods.
-    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
@@ -87,17 +73,4 @@ class Select extends AbstractApplication {
         return $doc;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    // Private methods.
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Create the SQL request from the request's template.
-     * @return string The method returns a string that represents the SQL request.
-     */
-    private function __getSql() {
-        $user = MySql::getFullyQualifiedQuotedFieldsAsSql('user', $this->_getTableFieldsNames('user'));
-        $sql = preg_replace('/__USER__/', $user, self::$__sql);
-        return $sql;
-    }
 }

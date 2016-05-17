@@ -3,9 +3,8 @@
 namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls\User;
 
 use dbeurive\Backend\Database\Entrypoints\Application\BaseResult;
-use dbeurive\Backend\Database\Entrypoints\Application\Sql\AbstractApplication;
 use dbeurive\Backend\Database\Entrypoints\Description;
-use dbeurive\Backend\Database\Connector\AbstractConnector;
+use dbeurive\Backend\Database\Entrypoints\AbstractSql;
 
 use dbeurive\BackendTest\EntryPoints\Constants\Entities;
 use dbeurive\BackendTest\EntryPoints\Constants\Actions;
@@ -14,47 +13,27 @@ use dbeurive\Util\UtilArray;
 use dbeurive\Util\UtilString;
 
 
-class Delete extends AbstractApplication {
+class Delete extends AbstractSql {
 
     private static $__conditionFields = ['user.id'];
-    private static $__sql = "DELETE
-                             FROM   user
-                             WHERE  `user`.`id`=?";
+    private $__sql = "DELETE
+                      FROM   user
+                      WHERE  `user`.`id`=?";
 
-
-    /**
-     * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
-     */
-    public function _init($inInitConfig=null) {
-        $this->_setSql(self::$__sql);
-    }
 
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
      */
-    protected function _validateExecutionConfig($inExecutionConfig, &$outErrorMessage) {
-        // Make sure that we have all the fields used within the clause "WHERE" of the SQL request.
-        /** @var array $inExecutionConfig */
-        if (! UtilArray::array_keys_exists(self::$__conditionFields, $this->_executionConfig)) {
-            $outErrorMessage = "Invalid SQL configuration. Mandatory fields are: " . implode(', ', self::$__conditionFields) . "\nSee: " . __FILE__;
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
-     */
-    protected function _execute($inExecutionConfig, AbstractConnector $inConnector) {
+    public function execute($inExecutionConfig) {
         /* @var \PDO $pdo */
-        $pdo = $inConnector->getDatabaseHandler();
+        $pdo = $this->getDbh();
 
         $result = new BaseResult();
         $fieldsValues = UtilArray::array_keep_keys(self::$__conditionFields, $inExecutionConfig, true);
-        $req = $pdo->prepare($this->_getSql());
+        $req = $pdo->prepare($this->__sql);
         if (false === $req->execute($fieldsValues)) {
             $message = "SQL request failed:\n" .
-                UtilString::text_linearize($this->_getSql(), true, true) . "\n" .
+                UtilString::text_linearize($this->__sql, true, true) . "\n" .
                 "Condition fields: " .
                 implode(', ', self::$__conditionFields) . "\n" .
                 "Bound to values: " .
@@ -80,7 +59,7 @@ class Delete extends AbstractApplication {
         $doc->setDescription('This request delete a user.')
             ->addEntityActionsRelationship(Entities::USER, Actions::DELETE)
             ->setType($doc::TYPE_DELETE)
-            ->setSql(self::$__sql)
+            ->setSql($this->__sql)
             ->addTable('user')
             ->setConditionFields(self::$__conditionFields);
 

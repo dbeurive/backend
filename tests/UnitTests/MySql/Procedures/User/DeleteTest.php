@@ -8,6 +8,7 @@ use dbeurive\BackendTest\Utils\Pdo as TestTools;
 use dbeurive\Backend\Database\DatabaseInterface;
 use dbeurive\Backend\Phpunit\PHPUnit_Backend_TestCase;
 use dbeurive\Backend\Cli\Lib\CliWriter;
+use dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result;
 
 /**
  * @runTestsInSeparateProcesses
@@ -38,22 +39,24 @@ class DeleteTest extends PHPUnit_Backend_TestCase
         $dataInterface = DatabaseInterface::getInstance();
         $procedure = $dataInterface->getProcedure($PROCEDURE_NAME);
 
+        /** @var Result $result */
+
         // -----------------------------------------------------------------------------------------------------------------
         // Test: user does not exist.
         // -----------------------------------------------------------------------------------------------------------------
 
         $user = TestTools::select("SELECT max(user.id) as 'max' FROM user", []);
         $id = $user[0]['max'] + 1;
-        $procedure->setExecutionConfig([
+        $result = $procedure->execute([
             'user.id' => $id
-        ])->execute();
+        ]);
 
-        $this->assertStatusIsOk($procedure);
-        $this->assertResultDataSetIsEmpty($procedure);
-        $this->assertResultValueSetIsEmpty($procedure);
-        $this->assertResultValuesCount(0, $procedure);
-        $this->assertResultDataSetCount(0, $procedure);
-        $this->assertNull($procedure->getResult()->getErrorMessage());
+        $this->assertStatusIsOk($result);
+        $this->assertResultDataSetIsEmpty($result);
+        $this->assertResultValueSetIsEmpty($result);
+        $this->assertResultValuesCount(0, $result);
+        $this->assertResultDataSetCount(0, $result);
+        $this->assertNull($result->getErrorMessage());
 
         // -----------------------------------------------------------------------------------------------------------------
         // Test: user exists _AND_ has no profile !!!!!!!!
@@ -62,15 +65,15 @@ class DeleteTest extends PHPUnit_Backend_TestCase
 
         $user = TestTools::select("SELECT max(user.id) as 'max' FROM user", []);
         $id = $user[0]['max'];
-        $procedure->setExecutionConfig([
+        $result = $procedure->execute([
             'user.id' => $id
-        ])->execute();
+        ]);
 
-        $this->assertStatusIsOk($procedure);
-        $this->assertResultDataSetIsEmpty($procedure);
-        $this->assertResultValueSetIsEmpty($procedure);
-        $this->assertResultValuesCount(0, $procedure);
-        $this->assertResultDataSetCount(0, $procedure);
-        $this->assertNull($procedure->getResult()->getErrorMessage());
+        $this->assertStatusIsOk($result);
+        $this->assertResultDataSetIsEmpty($result);
+        $this->assertResultValueSetIsEmpty($result);
+        $this->assertResultValuesCount(0, $result);
+        $this->assertResultDataSetCount(0, $result);
+        $this->assertNull($result->getErrorMessage());
     }
 }

@@ -3,56 +3,38 @@
 namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls\Profile;
 
 use dbeurive\Backend\Database\Entrypoints\Application\Sql\Result;
-use dbeurive\Backend\Database\Entrypoints\Application\Sql\AbstractApplication;
 use dbeurive\Backend\Database\Entrypoints\Description;
-use dbeurive\Backend\Database\Connector\AbstractConnector;
 use dbeurive\Backend\Database\SqlService\MySql;
-
+use dbeurive\Backend\Database\Entrypoints\AbstractSql;
 use dbeurive\BackendTest\EntryPoints\Constants\Entities;
 use dbeurive\BackendTest\EntryPoints\Constants\Actions;
-
 use dbeurive\Util\UtilArray;
 use dbeurive\Util\UtilString;
 
-class Get extends AbstractApplication {
+class Get extends AbstractSql {
 
     private static $__conditionFields = ['profile.fk_user_id'];
-    private static $__sql = "SELECT     __PROFILE__
-                             FROM       profile
-                             WHERE      `profile`.`fk_user_id`=?
-                             ORDER BY   `profile`.`id`";
+    private $__sql = "SELECT     __PROFILE__
+                      FROM       profile
+                      WHERE      `profile`.`fk_user_id`=?
+                      ORDER BY   `profile`.`id`";
+
+    /**
+     * Create the SQL request from the request's template.
+     * @return string The method returns a string that represents the SQL request.
+     */
+    private function __sql() {
+        $profile = MySql::getFullyQualifiedFieldsAsSql('profile', $this->getTableFieldsNames('profile'));
+        return str_replace('__PROFILE__', $profile, $this->__sql);
+    }
 
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
      */
-    public function _init($inInitConfig=null) {
-    }
-
-    /**
-     * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
-     */
-    protected function _validateExecutionConfig($inExecutionConfig, &$outErrorMessage) {
-        // Make sure that we have all the fields used within the clause "WHERE" of the SQL request.
-        /** @var array $inExecutionConfig */
-        if (! UtilArray::array_keys_exists(self::$__conditionFields, $this->_executionConfig)) {
-            $outErrorMessage = "Invalid SQL configuration. Mandatory fields are: " . implode(', ', self::$__conditionFields) . "\nSee: " . __FILE__;
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
-     */
-    protected function _execute($inExecutionConfig, AbstractConnector $inConnector) {
+    public function execute($inExecutionConfig) {
         /* @var \PDO $pdo */
-        $pdo = $inConnector->getDatabaseHandler();
-
-        $sql = self::$__sql;
-
-        $profile = MySql::getFullyQualifiedFieldsAsSql('profile', self::_getTableFieldsNames('profile'));
-        $sql= str_replace('__PROFILE__', $profile, $sql);
-
+        $pdo = $this->getDbh();
+        $sql = $this->__sql();
         $result = new Result();
         $fieldsValues = UtilArray::array_keep_keys(self::$__conditionFields, $inExecutionConfig, true);
         $req = $pdo->prepare($sql);
@@ -71,11 +53,6 @@ class Get extends AbstractApplication {
         return $result;
     }
 
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // Mandatory static methods.
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
      */
@@ -85,7 +62,7 @@ class Get extends AbstractApplication {
         $doc->setDescription('This request delete a user.')
             ->addEntityActionsRelationship(Entities::USER_PROFILE, Actions::SELECT)
             ->setType($doc::TYPE_SELECT)
-            ->setSql(self::$__sql)
+            ->setSql($this->__sql())
             ->addTable('profile')
             ->setConditionFields(self::$__conditionFields)
             ->addPresentationField('profile.id')

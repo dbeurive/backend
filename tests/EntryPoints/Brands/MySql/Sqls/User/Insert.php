@@ -3,9 +3,8 @@
 namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls\User;
 
 use dbeurive\Backend\Database\Entrypoints\Application\BaseResult;
-use dbeurive\Backend\Database\Entrypoints\Application\Sql\AbstractApplication;
 use dbeurive\Backend\Database\Entrypoints\Description;
-use dbeurive\Backend\Database\Connector\AbstractConnector;
+use dbeurive\Backend\Database\Entrypoints\AbstractSql;
 
 use dbeurive\BackendTest\EntryPoints\Constants\Entities;
 use dbeurive\BackendTest\EntryPoints\Constants\Actions;
@@ -13,48 +12,29 @@ use dbeurive\BackendTest\EntryPoints\Constants\Actions;
 use dbeurive\Util\UtilArray;
 use dbeurive\Util\UtilString;
 
-class Insert extends AbstractApplication {
+class Insert extends AbstractSql {
 
     private static $__insertedFields = ['user.login', 'user.password', 'user.description'];
-    private static $__sql = "INSERT INTO user
-                             SET `user`.`login` = ?,
-                                 `user`.`password` = ?,
-                                 `user`.`description` = ?";
+    private $__sql = "INSERT INTO user
+                      SET `user`.`login` = ?,
+                          `user`.`password` = ?,
+                          `user`.`description` = ?";
+
 
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
      */
-    public function _init($inInitConfig=null) {
-        $this->_setSql(self::$__sql);
-    }
-
-    /**
-     * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
-     */
-    protected function _validateExecutionConfig($inExecutionConfig, &$outErrorMessage) {
-        // Make sure that we have all the fields used within the clause "WHERE" of the SQL request.
-        /** @var array $inExecutionConfig */
-        if (! UtilArray::array_keys_exists(self::$__insertedFields, $this->_executionConfig)) {
-            $outErrorMessage = "Invalid SQL configuration. Mandatory fields are: " . implode(', ', self::$__insertedFields) . "\nSee: " . __FILE__;
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
-     */
-    protected function _execute($inExecutionConfig, AbstractConnector $inConnector) {
+    public function execute($inExecutionConfig) {
         /* @var \PDO $pdo */
-        $pdo = $inConnector->getDatabaseHandler();
+        $pdo = $this->getDbh();
 
         // Execute the request.
         $result = new BaseResult();
         $fieldsValues = UtilArray::array_keep_keys(self::$__insertedFields, $inExecutionConfig, true);
-        $req = $pdo->prepare(self::$__sql);
+        $req = $pdo->prepare($this->__sql);
         if (false === $req->execute($fieldsValues)) {
             $message = "SQL request failed:\n" .
-                UtilString::text_linearize($this->_getSql(), true, true) . "\n" .
+                UtilString::text_linearize($this->__sql, true, true) . "\n" .
                 "Condition fields: " .
                 implode(', ', self::$__insertedFields) . "\n" .
                 "Bound to values: " .
@@ -67,10 +47,6 @@ class Insert extends AbstractApplication {
         return $result;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    // Mandatory static methods.
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
      */
@@ -79,7 +55,7 @@ class Insert extends AbstractApplication {
         $doc->setDescription('This request creates a user.')
             ->addEntityActionsRelationship(Entities::USER, Actions::CREATE)
             ->setType($doc::TYPE_INSERT)
-            ->setSql(self::$__sql)
+            ->setSql($this->__sql)
             ->addTable('user')
             ->setInsertedFields(['user.login', 'user.password', 'user.description']);
 

@@ -8,6 +8,7 @@ use dbeurive\BackendTest\Utils\Pdo as TestTools;
 use dbeurive\Backend\Database\DatabaseInterface;
 use dbeurive\Backend\Cli\Lib\CliWriter;
 use dbeurive\Backend\Phpunit\PHPUnit_Backend_TestCase;
+use dbeurive\Backend\Database\Entrypoints\Application\Sql\Result;
 
 /**
  * @runTestsInSeparateProcesses
@@ -31,49 +32,44 @@ class AuthenticateTest extends PHPUnit_Backend_TestCase
 
         $REQ_NAME = 'User/Authenticate';
         CliWriter::echoInfo("Loading " . __FILE__);
-        
 
         // Get the SQL request.
         $dataInterface = DatabaseInterface::getInstance();
         $request = $dataInterface->getSql($REQ_NAME);
 
+        /** @var Result $result */
+
         // -----------------------------------------------------------------------------------------------------------------
         // Test: Login does not exist.
         // -----------------------------------------------------------------------------------------------------------------
 
-        $request->setExecutionConfig(['user.login' => 'toto', 'user.password' => 'titi'])
-            ->execute();
+        $result = $request->execute(['user.login' => 'toto', 'user.password' => 'titi']);
 
-        $this->assertHasBeenExecuted($request);
-        $this->assertStatusIsOk($request);
-        $this->assertResultDataSetIsEmpty($request);
-        $this->assertNull($request->getResult()->getErrorMessage());
+        $this->assertStatusIsOk($result);
+        $this->assertResultDataSetIsEmpty($result);
+        $this->assertNull($result->getErrorMessage());
 
         // -----------------------------------------------------------------------------------------------------------------
         // Test: Login exists, but password is not valid.
         // -----------------------------------------------------------------------------------------------------------------
 
         $user = TestTools::select("SELECT login as 'user.login', password as 'user.password' FROM user LIMIT 1", []);
-        $request->setExecutionConfig(['user.login' => $user[0]['user.login'], 'user.password' => "{$user[0]['user.password']}___"])
-            ->execute();
+        $result = $request->execute(['user.login' => $user[0]['user.login'], 'user.password' => "{$user[0]['user.password']}___"]);
 
-        $this->assertHasBeenExecuted($request);
-        $this->assertStatusIsOk($request);
-        $this->assertResultDataSetIsEmpty($request);
-        $this->assertNull($request->getResult()->getErrorMessage());
+        $this->assertStatusIsOk($result);
+        $this->assertResultDataSetIsEmpty($result);
+        $this->assertNull($result->getErrorMessage());
 
         // -----------------------------------------------------------------------------------------------------------------
         // Test: Login exists, and password is valid.
         // -----------------------------------------------------------------------------------------------------------------
 
         $user = TestTools::select("SELECT login as 'user.login', password as 'user.password' FROM user LIMIT 1", []);
-        $request->setExecutionConfig(['user.login' => $user[0]['user.login'], 'user.password' => $user[0]['user.password']])
-            ->execute();
+        $result = $request->execute(['user.login' => $user[0]['user.login'], 'user.password' => $user[0]['user.password']]);
 
-        $this->assertHasBeenExecuted($request);
-        $this->assertStatusIsOk($request);
-        $this->assertResultDataSetIsNotEmpty($request);
-        $this->assertResultDataSetCount(1, $request);
-        $this->assertNull($request->getResult()->getErrorMessage());
+        $this->assertStatusIsOk($result);
+        $this->assertResultDataSetIsNotEmpty($result);
+        $this->assertResultDataSetCount(1, $result);
+        $this->assertNull($result->getErrorMessage());
     }
 }

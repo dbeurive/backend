@@ -10,7 +10,6 @@ use dbeurive\Backend\Database\Entrypoints\Provider as EntryPointProvider;
 use dbeurive\Backend\Database\Connector\AbstractConnector;
 use dbeurive\Backend\Database\Entrypoints\ConfigurationParameter as EntryPointOption;
 use dbeurive\Backend\Database\Doc\ConfigurationParameter as DocOption;
-use dbeurive\Backend\Database\SqlService\Option as SqlServiceOption;
 
 
 /**
@@ -28,25 +27,6 @@ use dbeurive\Backend\Database\SqlService\Option as SqlServiceOption;
  */
 
 class DatabaseInterface {
-
-    /**
-     * This constant defines an optional flag that specifies that we want to get a list of fields as an array of "relative names".
-     * Note: "Relative names" means "relative to a given table".
-     * Example for the table "user": ['id', 'login', 'password']
-     */
-    const FIELDS_RAW_AS_ARRAY = 1;
-    /**
-     * This constant defines an optional flag that specifies that we want to get a list of fields as an array of "fully qualified names".
-     * Note: "Fully qualified names" include the table's name.
-     * Example for the table "user": ['user.id', 'user.login', 'user.password']
-     */
-    const FIELDS_FULLY_QUALIFIED_AS_ARRAY = 2;
-    /**
-     * This constant defines an optional flag that specifies that we want to get a list of fields as a ready to use SQL chunk.
-     * Example for the table "user": `user`.`id` AS 'user.id', `user`.`login` AS 'user.login', `user`.`password` AS 'user.password'.
-     */
-    const FIELDS_FULLY_QUALIFIED_AS_SQL = 3;
-
 
     /**
      * @var array List of created data interfaces.
@@ -338,31 +318,32 @@ class DatabaseInterface {
     /**
      * Return an SQL request identified by its name.
      * @param string $inName Name of the SQL request.
-     * @param mixed|null $inInitConfig Configuration for the SQL request's construction.
-     * @param array $inExecutionConfig Execution configuration for the SQL request.
-     *        Typically, this array contains the values of the fields required by the request's execution.
-     * @return \dbeurive\Backend\Database\Entrypoints\Application\Sql\AbstractApplication
+     * @return \dbeurive\Backend\Database\Entrypoints\AbstractSql
      * @throws \Exception
      * @see dbeurive\Backend\Database\Entrypoints\Provider
      * @note The method should not be called from the application.
      *       It has been introduced for the unit tests.
      */
-    public function getSql($inName, $inInitConfig=null, array $inExecutionConfig = null) {
-        return $this->__entryPointProvider->getSql($inName, $inInitConfig, $inExecutionConfig);
+    public function getSql($inName) {
+        /** @var \dbeurive\Backend\Database\Entrypoints\AbstractSql $sql */
+        $sql = $this->__entryPointProvider->getSql($inName);
+        $sql->setDbh($this->__connector->getDatabaseHandler());
+        $sql->setFieldsProvider(function($inName) { return $this->getTableFieldsNames($inName); } );
+        return $sql;
     }
 
     /**
      * Return a procedure identified by its name.
      * @param string $inName Name of the procedure.
-     * @param mixed|null $inInitConfig Configuration for the procedure's construction.
-     * @param mixed $inExecutionConfig Execution configuration for the SQL request.
-     *        Typically, this array contains the values of the fields required by the request's execution.
-     * @return \dbeurive\Backend\Database\Entrypoints\Application\Procedure\AbstractApplication
+     * @return \dbeurive\Backend\Database\Entrypoints\AbstractSql
      * @throws \Exception
      * @see dbeurive\Backend\Database\Entrypoints\Provider
      */
-    public function getProcedure($inName, $inInitConfig=null, $inExecutionConfig = null) {
-        return $this->__entryPointProvider->getProcedure($inName, $inInitConfig, $inExecutionConfig);
+    public function getProcedure($inName) {
+        /** @var \dbeurive\Backend\Database\Entrypoints\AbstractProcedure $procedure */
+        $procedure = $this->__entryPointProvider->getProcedure($inName);
+        $procedure->setSqlProvider(function($inName) { return $this->getSql($inName); });
+        return $procedure;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

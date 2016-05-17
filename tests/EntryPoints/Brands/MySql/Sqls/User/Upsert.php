@@ -3,9 +3,8 @@
 namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls\User;
 
 use dbeurive\Backend\Database\Entrypoints\Application\BaseResult;
-use dbeurive\Backend\Database\Entrypoints\Application\Sql\AbstractApplication;
 use dbeurive\Backend\Database\Entrypoints\Description;
-use dbeurive\Backend\Database\Connector\AbstractConnector;
+use dbeurive\Backend\Database\Entrypoints\AbstractSql;
 
 use dbeurive\BackendTest\EntryPoints\Constants\Entities;
 use dbeurive\BackendTest\EntryPoints\Constants\Actions;
@@ -13,50 +12,30 @@ use dbeurive\BackendTest\EntryPoints\Constants\Actions;
 use dbeurive\Util\UtilArray;
 use dbeurive\Util\UtilString;
 
-class Upsert extends AbstractApplication {
+class Upsert extends AbstractSql {
 
     // NOTE: The entry 'user.password' is duplicated. This is OK !!!!!
     private static $__upsertedFields = ['user.login', 'user.password', 'user.description', 'user.password'];
-    private static $__sql = "INSERT INTO user
-                             SET `user`.`login` = ?,
-                                 `user`.`password` = ?,
-                                 `user`.`description` = ?
-                             ON DUPLICATE KEY UPDATE `user`.`password` = ?";
+    private $__sql = "INSERT INTO user
+                      SET `user`.`login` = ?,
+                          `user`.`password` = ?,
+                          `user`.`description` = ?
+                      ON DUPLICATE KEY UPDATE `user`.`password` = ?";
 
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
      */
-    public function _init($inInitConfig=null) {
-        $this->_setSql(self::$__sql);
-    }
-
-    /**
-     * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
-     */
-    protected function _validateExecutionConfig($inExecutionConfig, &$outErrorMessage) {
-        // Make sure that we have all the fields used within the clause "WHERE" of the SQL request.
-        /** @var array $inExecutionConfig */
-        if (! UtilArray::array_keys_exists(self::$__upsertedFields, $this->_executionConfig)) {
-            $outErrorMessage = "Invalid SQL configuration. Mandatory fields are: " . implode(', ', self::$__upsertedFields) . "\nSee: " . __FILE__;
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
-     */
-    protected function _execute($inExecutionConfig, AbstractConnector $inConnector) {
+    public function execute($inExecutionConfig) {
         /* @var \PDO $pdo */
-        $pdo = $inConnector->getDatabaseHandler();
+        $pdo = $this->getDbh();
 
         // Execute the request.
         $result = new BaseResult();
         $fieldsValues = UtilArray::array_keep_keys(self::$__upsertedFields, $inExecutionConfig, true);
-        $req = $pdo->prepare(self::$__sql);
+        $req = $pdo->prepare($this->__sql);
         if (false === $req->execute($fieldsValues)) {
             $message = "SQL request failed:\n" .
-                UtilString::text_linearize($this->_getSql(), true, true) . "\n" .
+                UtilString::text_linearize($this->__sql, true, true) . "\n" .
                 "Condition fields: " .
                 implode(', ', self::$__upsertedFields) . "\n" .
                 "Bound to values: " .
@@ -69,10 +48,6 @@ class Upsert extends AbstractApplication {
         return $result;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    // Mandatory static methods.
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
      */
@@ -81,7 +56,7 @@ class Upsert extends AbstractApplication {
         $doc->setDescription('This request insert or update a user.')
             ->addEntityActionsRelationship(Entities::USER, Actions::UPSERT)
             ->setType($doc::TYPE_UPSERT)
-            ->setSql(self::$__sql)
+            ->setSql($this->__sql)
             ->addTable('user')
             ->setUpsertedFields(['user.login', 'user.password', 'user.description']);
 

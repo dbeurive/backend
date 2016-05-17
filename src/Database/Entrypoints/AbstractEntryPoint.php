@@ -1,210 +1,51 @@
 <?php
 
-/**
- * This file implements the base class for all API's entry points.
- */
-
 namespace dbeurive\Backend\Database\Entrypoints;
-use dbeurive\Backend\Database\Connector\AbstractConnector;
-use dbeurive\Backend\Database\DatabaseInterface;
 
-/**
- * Class AbstractEntryPoint
- *
- * This class is the base class for all API's entry points.
- * An API's entry point can be:
- *    * an SQL request
- *    * a procedure
- *
- * @package dbeurive\Backend\Database\Entrypoints
- */
-
-abstract class AbstractEntryPoint {
+abstract class AbstractEntryPoint
+{
+    /**
+     * @var null|callable Function used to return the list of fields within a given table.
+     */
+    private $__fieldsProvider = null;
 
     /**
-     * @var \dbeurive\Backend\Database\Entrypoints\Application\Sql\Result|\dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result Result for the last execution.
+     * Set the function used to return the list of fields within a given table.
+     * @param callable $inFieldsProvider Function used to return the list of fields within a given table.
+     * @throws \Exception
      */
-    protected $_result = null;
-    /**
-     * @var array Configuration for the API's entry point execution.
-     *      The structure of this variable depends on the type of the API's entry point (SQL request or procedure).
-     *      Although it is possible to define a structure for procedures' configuration, it's not the case for SQL requests.
-     *      SQL requests' organisations may be complex (with sub selections).
-     *      Thus, for SQL requests, the configuration's structure is free.
-     */
-    protected $_execConfig = [];
-    /**
-     * @var AbstractConnector Handler to the database connector.
-     */
-    protected $_connector = null;
-    /**
-     * @var \dbeurive\Backend\Database\Entrypoints\Provider Entry point provider.
-     *      This attribute has been introduced for the procedures.
-     *      Procedures need to get SQL requests.
-     */
-    protected $_provider = null;
-
-
-
-    /**
-     * Create a new API's entry point.
-     * @param null|AbstractConnector $inConnector Handler to the database connector.
-     * @param Provider $inEntryPointProvider Entry point provider that handles this entry point.
-     * @param array $inOptInitConfig Configuration for the entry point's initialization.
-     */
-    public function __construct(AbstractConnector $inConnector, Provider $inEntryPointProvider, array $inOptInitConfig=[]) {
-        if (! is_null($inConnector)) {
-            $this->_connector = $inConnector;
+    public function setFieldsProvider(callable $inFieldsProvider) {
+        if (is_null($this->__fieldsProvider)) {
+            $this->__fieldsProvider = $inFieldsProvider;
+            return;
         }
-        $this->_provider = $inEntryPointProvider;
-        $this->_init($inOptInitConfig);
+        throw new \Exception("Improper use of the method " . __METHOD__ . " detected.");
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    // Abstract methods.
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
-     * This method must be implemented by all API's entry points.
-     * It validates the configuration prior to the execution.
-     * @param string $outErrorMessage Reference to a string used to store an error message, if an error occurs.
-     * @return bool If the execution configuration is valid, then the method returns the value true.
-     *         Otherwise, it returns the value false.
+     * Return the list of fields within a given table.
+     * @param string $inTableName Name of the table.
+     * @return array The list of fields within the table.
      */
-    abstract protected function _validateExecutionConfig(&$outErrorMessage);
+    public function getTableFieldsNames($inTableName) {
+        return call_user_func($this->__fieldsProvider, $inTableName);
+    }
 
     /**
-     * Execute an API's entry point (an SQL request or a procedure).
-     * @param AbstractConnector $inConnector Handler to the database connector.
-     * @return \dbeurive\Backend\Database\Entrypoints\Application\Sql\Result|\dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result
+     * AbstractEntryPoint constructor.
      */
-    abstract protected function _execute(AbstractConnector $inConnector);
+    final public function __construct() {}
 
     /**
-     * Initialize the entry point.
-     * @param mixed $inConfig Entry point's configuration for its initialisation.
-     */
-    abstract protected function _init($inConfig);
-
-    /**
-     * Return the description of the API's entry point (SQL requests or procedures).
-     * @return \dbeurive\Backend\Database\Entrypoints\Description\Sql|\dbeurive\Backend\Database\Entrypoints\Description\Procedure
-     *         The method returns the description of the API's entry point.
+     * Return the description of the entry point.
+     * @return \dbeurive\Backend\Database\Entrypoints\Description\Sql|\dbeurive\Backend\Database\Entrypoints\Description\Procedure The entry point's description.
      */
     abstract public function getDescription();
 
-    // -----------------------------------------------------------------------------------------------------------------
-    // Protected methods.
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
-     * Set the execution's configuration.
-     * @param array $inExecutionConfig Configuration to set.
-     * @return $this
+     * Execute the entry point.
+     * @param mixed $inConfiguration The configuration for the execution.
+     * @return mixed The result of the execution.
      */
-    protected function _setExecutionConfig(array $inExecutionConfig) {
-        $this->_execConfig = $inExecutionConfig;
-        return $this;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // Getters.
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Return the result of the last execution.
-     * @return \dbeurive\Backend\Database\Entrypoints\Application\BaseResult Result of the last execution.
-     */
-    public function getResult() {
-        return $this->_result;
-    }
-
-    /**
-     * Get all fields' names within a given table.
-     * @return array The method returns the list of fields within the table.
-     * @throws \Exception
-     */
-    public function getTableFieldsNames($inTableName) {
-        return $this->_provider->getDataInterface()->getTableFieldsNames($inTableName);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // Public methods.
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Reset the execution's configuration.
-     * @return $this
-     */
-    public function resetExecutionConfig() {
-        $this->_execConfig = [];
-        return $this;
-    }
-
-    /**
-     * Execute the API's entry point.
-     * @return \dbeurive\Backend\Database\Entrypoints\Application\Sql\Result|\dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result The method returns the result of the execution.
-     * @throws \Exception
-     */
-    public function execute()
-    {
-        $outErrorMessage = null;
-        if (! $this->_validateExecutionConfig($outErrorMessage)) {
-            throw new \Exception("The configuration for the API's execution is not valid.\n${outErrorMessage}\nGiven configuration is: " . print_r($this->_execConfig, true));
-        }
-
-        $this->_result = $this->_execute($this->_connector);
-        return $this->_result;
-    }
-
-    /**
-     * Test if the request has been successfully executed.
-     * @return bool If the request has been successfully executed, then the method returns the value true.
-     *         Otherwise, it returns the value false.
-     */
-    public function isSuccess() {
-        return $this->_result->isSuccess();
-    }
-
-    /**
-     * Test if the request failed due to an error.
-     * @return bool If the request failed due to en error, then the method returns the value true.
-     *         Otherwise, it returns the value false.
-     */
-    public function isError() {
-        return $this->_result->isError();
-    }
-
-    /**
-     * Test if the execution of the API's entry point returned at least one data set.
-     * Please note that the term "data set" represents a set of data (which forms a "row") extracted from the database.
-     * A "row" of data may contain fields' values and calculated values.
-     * All data sets are returned by the SGBDR to the PHP client.
-     * @return bool If the execution of the API's entry point returned at least one data set, then the method returns the value true.
-     *         Otherwise, the method returns the value false.
-     */
-    public function isDataSetEmpty() {
-        return $this->_result->isDataSetsEmpty();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // Protected methods.
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Convert a configuration array into string.
-     * @param array $inConfig Configuration array.
-     * @return string The string that represents the configuration.
-     */
-    protected function _confToString(array $inConfig) {
-        return json_encode($inConfig);
-    }
-
-    /**
-     * Return the execution's configuration.
-     * @return array
-     */
-    protected function _getConfig() {
-        return $this->_execConfig;
-    }
+    abstract public function execute($inConfiguration);
 }

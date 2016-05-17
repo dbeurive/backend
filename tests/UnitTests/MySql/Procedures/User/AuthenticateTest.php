@@ -8,6 +8,8 @@ use dbeurive\BackendTest\Utils\Pdo as TestTools;
 use dbeurive\Backend\Database\DatabaseInterface;
 use dbeurive\Backend\Phpunit\PHPUnit_Backend_TestCase;
 use dbeurive\Backend\Cli\Lib\CliWriter;
+use dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result;
+
 
 /**
  * @runTestsInSeparateProcesses
@@ -38,36 +40,38 @@ class AuthenticateTest extends PHPUnit_Backend_TestCase
         /** @var \dbeurive\BackendTest\EntryPoints\Brands\MySql\Procedures\User\Authenticate $procedure */
         $procedure = $dataInterface->getProcedure($PROCEDURE_NAME);
 
+        /** @var Result $result */
+
         // -----------------------------------------------------------------------------------------------------------------
         // Test: Login exists, and password is valid.
         // -----------------------------------------------------------------------------------------------------------------
 
         $user = TestTools::select("SELECT login as 'user.login', password as 'user.password' FROM user LIMIT 1", []);
-        $procedure->setExecutionConfig([
+        $result = $procedure->execute([
             'user.login' => $user[0]['user.login'],
             'user.password' => $user[0]['user.password']
-        ])->execute();
+        ]);
 
-        $this->assertStatusIsOk($procedure);
-        $this->assertResultDataSetIsNotEmpty($procedure);
-        $this->assertResultValueSetIsNotEmpty($procedure);
-        $this->assertResultValuesCount(1, $procedure);
-        $this->assertTrue($procedure->isAuthorized());
-        $this->assertResultDataSetCount(1, $procedure);
+        $this->assertStatusIsOk($result);
+        $this->assertResultDataSetIsNotEmpty($result);
+        $this->assertResultValueSetIsNotEmpty($result);
+        $this->assertResultValuesCount(1, $result);
+        $this->assertTrue($result->isSuccess());
+        $this->assertResultDataSetCount(1, $result);
 
         // -----------------------------------------------------------------------------------------------------------------
         // Test: Login exists, and password is not valid.
         // -----------------------------------------------------------------------------------------------------------------
 
         $user = TestTools::select("SELECT login as 'user.login', password as 'user.password' FROM user LIMIT 1", []);
-        $procedure->setExecutionConfig([
+        $result = $procedure->execute([
             'user.login'    => $user[0]['user.login'],
             'user.password' => $user[0]['user.password'] . '__'
-        ])->execute();
+        ]);
 
-        $this->assertStatusIsOk($procedure);
-        $this->assertResultDataSetIsEmpty($procedure);
-        $this->assertFalse($procedure->isAuthorized());
-        $this->assertResultDataSetCount(0, $procedure);
+        $this->assertStatusIsOk($result);
+        $this->assertResultDataSetIsEmpty($result);
+        $this->assertFalse($result->isError());
+        $this->assertResultDataSetCount(0, $result);
     }
 }

@@ -2,11 +2,9 @@
 
 namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Procedures\User;
 
-use dbeurive\Backend\Database\Entrypoints\Application\Procedure\AbstractApplication;
+use dbeurive\Backend\Database\Entrypoints\AbstractProcedure;
 use dbeurive\Backend\Database\Entrypoints\Application\Procedure\Result;
 use dbeurive\Backend\Database\Entrypoints\Description;
-use dbeurive\Backend\Database\Connector\AbstractConnector;
-use dbeurive\Backend\Database\SqlService\InterfaceSqlService as SqlService;
 
 use dbeurive\BackendTest\EntryPoints\Constants\OutputValues;
 use dbeurive\BackendTest\EntryPoints\Constants\Tags;
@@ -14,7 +12,7 @@ use dbeurive\BackendTest\EntryPoints\Constants\Entities;
 use dbeurive\BackendTest\EntryPoints\Constants\Actions;
 
 
-class Delete extends AbstractApplication {
+class Delete extends AbstractProcedure {
 
     const SQL_DELETE    = 'User/Delete';
     const PARAM_SUSPEND = 'suspend';
@@ -23,22 +21,9 @@ class Delete extends AbstractApplication {
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
      */
-    public function _init($inInitConfig=null) {
-    }
-
-    /**
-     * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
-     */
-    protected function _validateExecutionConfig($inExecutionConfig, &$outErrorMessage) {
-        return true;
-    }
-
-    /**
-     * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
-     */
-    protected function _execute($inExecutionConfig, AbstractConnector $inConnector) {
-        $sql = $this->_getSql(self::SQL_DELETE, [], $inExecutionConfig);
-        $resultSql = $sql->execute();
+    public function execute($inExecutionConfig) {
+        $sql = $this->getSql(self::SQL_DELETE);
+        $resultSql = $sql->execute($inExecutionConfig);
         $result = new Result(Result::STATUS_SUCCESS,
             $resultSql->getDataSets() // Should be empty, since it is a DELETE.
         );

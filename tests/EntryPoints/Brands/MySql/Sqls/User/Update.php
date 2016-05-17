@@ -3,9 +3,8 @@
 namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls\User;
 
 use dbeurive\Backend\Database\Entrypoints\Application\BaseResult;
-use dbeurive\Backend\Database\Entrypoints\Application\Sql\AbstractApplication;
 use dbeurive\Backend\Database\Entrypoints\Description;
-use dbeurive\Backend\Database\Connector\AbstractConnector;
+use dbeurive\Backend\Database\Entrypoints\AbstractSql;
 
 use dbeurive\BackendTest\EntryPoints\Constants\Entities;
 use dbeurive\BackendTest\EntryPoints\Constants\Actions;
@@ -13,51 +12,40 @@ use dbeurive\BackendTest\EntryPoints\Constants\Actions;
 use dbeurive\Util\UtilArray;
 use dbeurive\Util\UtilString;
 
-class Update extends AbstractApplication {
+class Update extends AbstractSql {
 
     private static $__conditionFields = ['user.id'];
-    private static $__sql = "UPDATE user
-                             SET __UPDATE__
-                             WHERE  `user`.`id`=?";
+    private $__sql = "UPDATE user
+                     SET __UPDATE__
+                     WHERE  `user`.`id`=?";
+
+    /**
+     * Create the SQL request from the request's template.
+     * @param array $inConfig Configuration.
+     * @param \PDO $inPdo Handler to the database.
+     * @return string The method returns a string that represents the SQL request.
+     */
+    private function __sql(array $inConfig, \PDO $inPdo) {
+        $update = [];
+        foreach ($inConfig as $_field => $_value) {
+            if ('user.id' == $_field) {
+                continue;
+            }
+            $update[] = $_field . " = " . $inPdo->quote($_value);
+        }
+
+        $update = implode(',', $update);
+        $sql = str_replace('__UPDATE__', $update, $this->__sql);
+        return $sql;
+    }
 
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
      */
-    public function _init($inInitConfig=null) {
-        $this->_setSql(self::$__sql);
-    }
-
-    /**
-     * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
-     */
-    protected function _validateExecutionConfig($inExecutionConfig, &$outErrorMessage) {
-        // Make sure that we have all the fields used within the clause "WHERE" of the SQL request.
-        /** @var array $inExecutionConfig */
-        if (! UtilArray::array_keys_exists(self::$__conditionFields, $this->_executionConfig)) {
-            $outErrorMessage = "Invalid SQL configuration. Mandatory fields are: " . implode(', ', self::$__conditionFields) . "\nSee: " . __FILE__;
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * @see \dbeurive\Backend\Database\Entrypoints\Application\AbstractApplication
-     */
-    protected function _execute($inExecutionConfig, AbstractConnector $inConnector) {
+    public function execute($inExecutionConfig) {
         /* @var \PDO $pdo */
-        $pdo = $inConnector->getDatabaseHandler();
-
-        // Build the __UPDATE__ statement.
-        $update = [];
-        foreach ($this->_executionConfig as $_field => $_value) {
-            if ('user.id' == $_field) {
-                continue;
-            }
-            $update[] = $_field . " = " . $pdo->quote($_value);
-        }
-
-        $update = implode(',', $update);
-        $sql = str_replace('__UPDATE__', $update, $this->_getSql());
+        $pdo = $this->getDbh();
+        $sql = $this->__sql($inExecutionConfig, $pdo);
 
         // Execute the request.
         $result = new BaseResult();
@@ -78,19 +66,32 @@ class Update extends AbstractApplication {
         return $result;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    // Mandatory static methods.
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
      */
     public function getDescription() {
+
+        $copy = $this;
+        $sql = function() use ($copy) {
+            $update = [];
+
+            foreach ($copy->getTableFieldsNames('user') as $_fieldName) {
+                if ('user.id' == $_fieldName) {
+                    continue;
+                }
+                $update[] = $_fieldName . ' = <value>';
+            }
+
+            $update = implode(',', $update);
+            $sql = str_replace('__UPDATE__', $update, $this->__sql);
+            return $sql;
+        };
+
         $doc = new \dbeurive\Backend\Database\Entrypoints\Description\Sql();
-        $doc->setDescription('This request upadates a user.')
+        $doc->setDescription('This request updates a user.')
             ->addEntityActionsRelationship(Entities::USER, Actions::UPDATE)
             ->setType($doc::TYPE_UPDATE)
-            ->setSql(self::$__sql)
+            ->setSql($sql())
             ->addTable('user')
             ->setUpdatedFields(['user.login', 'user.password', 'user.description'])
             ->setConditionFields(self::$__conditionFields);
@@ -106,4 +107,6 @@ class Update extends AbstractApplication {
 
         return $doc;
     }
+
+
 }
