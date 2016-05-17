@@ -45,18 +45,12 @@ Then create the class:
 ```php
 class Authenticate extends AbstractApplication
 {
-    // Initialize the request.
-    public function _init(array $inInitConfig=[]) { /* ... */ }
-
-    // Validate the configuration for the execution of the request (return true if OK, false otherwise).
-    protected function _validateExecutionConfig($inExecutionConfig, &$outErrorMessage) { /* ... */ }
-
     // Execute request.
-    protected function _execute($inExecutionConfig, AbstractConnector $inConnector) { /* ... */ } 
+    public function execute($inExecutionConfig) { /* ... */ }
 
     // Document the request.
     public function getDescription() {
-        $doc = new \dbeurive\Backend\Database\Entrypoints\Description\Sql();
+        $doc = new \dbeurive\Backend\Database\EntryPoints\Description\Sql();
 
         /* ... */
 
@@ -66,10 +60,10 @@ class Authenticate extends AbstractApplication
 
 See:
 
-* [API common to SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/AbstractEntryPoint.php)
-* [API for an SQL request](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/Application/Sql/AbstractApplication.php)
-* [Elements of documentation common to SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/Description/AbstractDescription.php)
-* [Elements of documentation specific to SQL requests](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/Description/Sql.php)
+* [API common to SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/AbstractEntryPoint.php)
+* [API for an SQL request](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/AbstractSql.php)
+* [Elements of documentation common to SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/Description/AbstractDescription.php)
+* [Elements of documentation specific to SQL requests](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/Description/Sql.php)
 * [Examples of SQL requests](https://github.com/dbeurive/backend/tree/master/tests/EntryPoints/Brands/MySql/Sqls)
 
 
