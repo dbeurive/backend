@@ -3,8 +3,8 @@
 namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls\User;
 
 use dbeurive\BackendTest\EntryPoints\Result\BaseResult;
-use dbeurive\Backend\Database\Entrypoints\Description;
-use dbeurive\Backend\Database\Entrypoints\AbstractSql;
+use dbeurive\Backend\Database\EntryPoints\Description;
+use dbeurive\Backend\Database\EntryPoints\AbstractSql;
 
 use dbeurive\BackendTest\EntryPoints\Constants\Entities;
 use dbeurive\BackendTest\EntryPoints\Constants\Actions;
@@ -23,7 +23,7 @@ class Upsert extends AbstractSql {
                       ON DUPLICATE KEY UPDATE `user`.`password` = ?";
 
     /**
-     * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
+     * @see \dbeurive\Backend\Database\EntryPoints\AbstractEntryPoint
      */
     public function execute($inExecutionConfig) {
         /* @var \PDO $pdo */
@@ -49,10 +49,10 @@ class Upsert extends AbstractSql {
     }
 
     /**
-     * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
+     * @see \dbeurive\Backend\Database\EntryPoints\AbstractEntryPoint
      */
     public function getDescription() {
-        $doc = new \dbeurive\Backend\Database\Entrypoints\Description\Sql();
+        $doc = new \dbeurive\Backend\Database\EntryPoints\Description\Sql();
         $doc->setDescription('This request insert or update a user.')
             ->addEntityActionsRelationship(Entities::USER, Actions::UPSERT)
             ->setType($doc::TYPE_UPSERT)

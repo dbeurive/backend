@@ -30,7 +30,7 @@ class DatabaseInterfaceTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testGetEntryPointProvider() {
-        $this->assertInstanceOf('\dbeurive\Backend\Database\Entrypoints\Provider', $this->__di->getEntryPointProvider());
+        $this->assertInstanceOf('\dbeurive\Backend\Database\EntryPoints\Provider', $this->__di->getEntryPointProvider());
     }
 
     public function testGetDatabaseSchema() {

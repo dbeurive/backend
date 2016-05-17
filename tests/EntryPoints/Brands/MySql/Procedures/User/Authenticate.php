@@ -2,9 +2,9 @@
 
 namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Procedures\User;
 
-use dbeurive\Backend\Database\Entrypoints\AbstractProcedure;
+use dbeurive\Backend\Database\EntryPoints\AbstractProcedure;
 use dbeurive\BackendTest\EntryPoints\Result\ProcedureResult;
-use dbeurive\Backend\Database\Entrypoints\Description;
+use dbeurive\Backend\Database\EntryPoints\Description;
 
 
 use dbeurive\BackendTest\EntryPoints\Constants\Tags;
@@ -15,7 +15,7 @@ use dbeurive\BackendTest\EntryPoints\Constants\OutputValues;
 
 /**
  * Class Authenticate
- * @package dbeurive\BackendTest\Database\Entrypoints\Procedure\User
+ * @package dbeurive\BackendTest\Database\EntryPoints\Procedure\User
  */
 
 class Authenticate extends AbstractProcedure {
@@ -25,7 +25,7 @@ class Authenticate extends AbstractProcedure {
     static private $__mandatoryFields = [['user.login'], ['user.password']];
 
     /**
-     * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
+     * @see \dbeurive\Backend\Database\EntryPoints\AbstractEntryPoint
      */
     public function execute($inExecutionConfig) {
         $sql = $this->getSql(self::SQL_AUTHENTICATE);
@@ -38,7 +38,7 @@ class Authenticate extends AbstractProcedure {
     }
 
     /**
-     * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
+     * @see \dbeurive\Backend\Database\EntryPoints\AbstractEntryPoint
      */
     public function getDescription() {
         $doc = new Description\Procedure();

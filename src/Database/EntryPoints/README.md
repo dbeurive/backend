@@ -43,7 +43,10 @@ namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls\User;
 Then create the class:
 
 ```php
-class Authenticate extends AbstractApplication
+
+use dbeurive\Backend\Database\EntryPoints\AbstractSql;
+
+class Authenticate extends AbstractSql
 {
     // Execute request.
     public function execute($inExecutionConfig) { /* ... */ }
@@ -64,7 +67,7 @@ See:
 * [API for an SQL request](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/AbstractSql.php)
 * [Elements of documentation common to SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/Description/AbstractDescription.php)
 * [Elements of documentation specific to SQL requests](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/Description/Sql.php)
-* [Examples of SQL requests](https://github.com/dbeurive/backend/tree/master/tests/EntryPoints/Brands/MySql/Sqls)
+* [Examples of SQL requests](https://github.com/dbeurive/backend/tree/master/tests/EntryPoints/Brands/MySql/Sqls/User)
 
 
 

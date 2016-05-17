@@ -2,9 +2,9 @@
 
 namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Procedures\User;
 
-use dbeurive\Backend\Database\Entrypoints\AbstractProcedure;
+use dbeurive\Backend\Database\EntryPoints\AbstractProcedure;
 use dbeurive\BackendTest\EntryPoints\Result\ProcedureResult;
-use dbeurive\Backend\Database\Entrypoints\Description;
+use dbeurive\Backend\Database\EntryPoints\Description;
 
 use dbeurive\BackendTest\EntryPoints\Constants\OutputValues;
 use dbeurive\BackendTest\EntryPoints\Constants\Tags;
@@ -19,7 +19,7 @@ class Delete extends AbstractProcedure {
     static private $__mandatoryFields = [['user.id']];
 
     /**
-     * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
+     * @see \dbeurive\Backend\Database\EntryPoints\AbstractEntryPoint
      */
     public function execute($inExecutionConfig) {
         $sql = $this->getSql(self::SQL_DELETE);
@@ -31,7 +31,7 @@ class Delete extends AbstractProcedure {
     }
 
     /**
-     * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
+     * @see \dbeurive\Backend\Database\EntryPoints\AbstractEntryPoint
      */
     public function getDescription() {
         $doc = new Description\Procedure();

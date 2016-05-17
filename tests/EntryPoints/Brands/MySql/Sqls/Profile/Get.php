@@ -3,9 +3,9 @@
 namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls\Profile;
 
 use dbeurive\BackendTest\EntryPoints\Result\SqlResult;
-use dbeurive\Backend\Database\Entrypoints\Description;
+use dbeurive\Backend\Database\EntryPoints\Description;
 use dbeurive\Backend\Database\SqlService\MySql;
-use dbeurive\Backend\Database\Entrypoints\AbstractSql;
+use dbeurive\Backend\Database\EntryPoints\AbstractSql;
 use dbeurive\BackendTest\EntryPoints\Constants\Entities;
 use dbeurive\BackendTest\EntryPoints\Constants\Actions;
 use dbeurive\Util\UtilArray;
@@ -29,7 +29,7 @@ class Get extends AbstractSql {
     }
 
     /**
-     * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
+     * @see \dbeurive\Backend\Database\EntryPoints\AbstractEntryPoint
      */
     public function execute($inExecutionConfig) {
         /* @var \PDO $pdo */
@@ -54,11 +54,11 @@ class Get extends AbstractSql {
     }
 
     /**
-     * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
+     * @see \dbeurive\Backend\Database\EntryPoints\AbstractEntryPoint
      */
     public function getDescription() {
 
-        $doc = new \dbeurive\Backend\Database\Entrypoints\Description\Sql();
+        $doc = new \dbeurive\Backend\Database\EntryPoints\Description\Sql();
         $doc->setDescription('This request delete a user.')
             ->addEntityActionsRelationship(Entities::USER_PROFILE, Actions::SELECT)
             ->setType($doc::TYPE_SELECT)

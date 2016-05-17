@@ -3,9 +3,9 @@
 namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls\User;
 
 use dbeurive\BackendTest\EntryPoints\Result\SqlResult;
-use dbeurive\Backend\Database\Entrypoints\Description;
+use dbeurive\Backend\Database\EntryPoints\Description;
 use dbeurive\Backend\Database\SqlService\MySql;
-use dbeurive\Backend\Database\Entrypoints\AbstractSql;
+use dbeurive\Backend\Database\EntryPoints\AbstractSql;
 
 use dbeurive\BackendTest\EntryPoints\Constants\Tags;
 use dbeurive\BackendTest\EntryPoints\Constants\Entities;
@@ -18,7 +18,7 @@ use dbeurive\Util\UtilString;
 
 /**
  * Class Authenticate
- * @package dbeurive\BackendTest\Database\Entrypoints\Sql\User
+ * @package dbeurive\BackendTest\Database\EntryPoints\Sql\User
  */
 
 class Authenticate extends AbstractSql
@@ -43,7 +43,7 @@ class Authenticate extends AbstractSql
     }
 
     /**
-     * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
+     * @see \dbeurive\Backend\Database\EntryPoints\AbstractEntryPoint
      */
     public function execute($inExecutionConfig) {
         /* @var \PDO $pdo */
@@ -68,11 +68,11 @@ class Authenticate extends AbstractSql
     }
 
     /**
-     * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
+     * @see \dbeurive\Backend\Database\EntryPoints\AbstractEntryPoint
      */
     public function getDescription() {
 
-        $doc = new \dbeurive\Backend\Database\Entrypoints\Description\Sql();
+        $doc = new \dbeurive\Backend\Database\EntryPoints\Description\Sql();
         $doc->setDescription('This request checks that the authentication data is valid.')
             ->addTags(Tags::AUTHENTICATION)
             ->addOutputDataValue(OutputValues::OUTPUT_VALUE_IS_AUTHENTICATED, 'This value indicates whether the user is authenticated or not.')

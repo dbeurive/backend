@@ -3,8 +3,8 @@
 namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls\User;
 
 use dbeurive\BackendTest\EntryPoints\Result\BaseResult;
-use dbeurive\Backend\Database\Entrypoints\Description;
-use dbeurive\Backend\Database\Entrypoints\AbstractSql;
+use dbeurive\Backend\Database\EntryPoints\Description;
+use dbeurive\Backend\Database\EntryPoints\AbstractSql;
 
 use dbeurive\BackendTest\EntryPoints\Constants\Entities;
 use dbeurive\BackendTest\EntryPoints\Constants\Actions;
@@ -22,7 +22,7 @@ class Insert extends AbstractSql {
 
 
     /**
-     * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
+     * @see \dbeurive\Backend\Database\EntryPoints\AbstractEntryPoint
      */
     public function execute($inExecutionConfig) {
         /* @var \PDO $pdo */
@@ -48,10 +48,10 @@ class Insert extends AbstractSql {
     }
 
     /**
-     * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
+     * @see \dbeurive\Backend\Database\EntryPoints\AbstractEntryPoint
      */
     public function getDescription() {
-        $doc = new \dbeurive\Backend\Database\Entrypoints\Description\Sql();
+        $doc = new \dbeurive\Backend\Database\EntryPoints\Description\Sql();
         $doc->setDescription('This request creates a user.')
             ->addEntityActionsRelationship(Entities::USER, Actions::CREATE)
             ->setType($doc::TYPE_INSERT)

@@ -1,10 +1,9 @@
 <?php
 
-use dbeurive\Backend\Database\Entrypoints\ConfigurationParameter as EntryPointOption;
+use dbeurive\Backend\Database\EntryPoints\ConfigurationParameter as EntryPointOption;
 use dbeurive\Backend\Database\Doc\ConfigurationParameter as DocOption;
 use dbeurive\Backend\Cli\Adapter\Database\Connector\ConfigurationParameter as ConnectorParameter;
 use dbeurive\Backend\Cli\Adapter\Database\Connector\MySqlPdo;
-
 
 
 return call_user_func(function() {
@@ -69,7 +68,7 @@ return call_user_func(function() {
         ],
         'mysql' => $mysqlConf,
         'mysql-connector' => [
-            // This parameter is used when the application is running.
+            // This parameter is used by the schema extractor.
             ConnectorParameter::CONNECTOR_CONFIG => $mysqlConf,
             // This represents the name of the class that implements the database connector.
             ConnectorParameter::CONNECTOR_CLASS_NAME => '\\dbeurive\\Backend\\Database\\Connector\\MySqlPdo'

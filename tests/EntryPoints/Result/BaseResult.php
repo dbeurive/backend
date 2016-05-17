@@ -19,7 +19,7 @@ namespace dbeurive\BackendTest\EntryPoints\Result;
  *
  * Please note that data sets may be returned by SQL requests or procedures.
  *
- * @package dbeurive\Backend\Database\Entrypoints
+ * @package dbeurive\Backend\Database\EntryPoints
  */
 
 class BaseResult {

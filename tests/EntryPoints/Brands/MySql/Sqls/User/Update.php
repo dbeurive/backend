@@ -3,8 +3,8 @@
 namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls\User;
 
 use dbeurive\BackendTest\EntryPoints\Result\BaseResult;
-use dbeurive\Backend\Database\Entrypoints\Description;
-use dbeurive\Backend\Database\Entrypoints\AbstractSql;
+use dbeurive\Backend\Database\EntryPoints\Description;
+use dbeurive\Backend\Database\EntryPoints\AbstractSql;
 
 use dbeurive\BackendTest\EntryPoints\Constants\Entities;
 use dbeurive\BackendTest\EntryPoints\Constants\Actions;
@@ -40,7 +40,7 @@ class Update extends AbstractSql {
     }
 
     /**
-     * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
+     * @see \dbeurive\Backend\Database\EntryPoints\AbstractEntryPoint
      */
     public function execute($inExecutionConfig) {
         /* @var \PDO $pdo */
@@ -67,7 +67,7 @@ class Update extends AbstractSql {
     }
 
     /**
-     * @see \dbeurive\Backend\Database\Entrypoints\AbstractEntryPoint
+     * @see \dbeurive\Backend\Database\EntryPoints\AbstractEntryPoint
      */
     public function getDescription() {
 
@@ -87,7 +87,7 @@ class Update extends AbstractSql {
             return $sql;
         };
 
-        $doc = new \dbeurive\Backend\Database\Entrypoints\Description\Sql();
+        $doc = new \dbeurive\Backend\Database\EntryPoints\Description\Sql();
         $doc->setDescription('This request updates a user.')
             ->addEntityActionsRelationship(Entities::USER, Actions::UPDATE)
             ->setType($doc::TYPE_UPDATE)
