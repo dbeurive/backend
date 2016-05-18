@@ -113,7 +113,7 @@ $databaseInterface->setSqlBaseNameSpace($inOptConfig['/Users/denisbeurive/php-pu
 $databaseInterface->setProcedureRepositoryBasePath('\\dbeurive\\BackendTest\\EntryPoints\\Brands\\MySql\\Sqls');
 $databaseInterface->setProcedureBaseNameSpace($inOptConfig['\\dbeurive\\BackendTest\\EntryPoints\\Brands\\MySql\\Procedures');
 $databaseInterface->setPhpDatabaseRepresentationPath($inOptConfig['/Users/denisbeurive/php-public/backend/tests/cache/mysql_db_schema.php');
-$databaseInterface->setDbHandler($connector);
+$databaseInterface->setDbHandler($dbh);
 ```
 
 > NOTE: The three examples above are **strictly equivalent**.
