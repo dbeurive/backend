@@ -91,7 +91,7 @@ class DatabaseInterface {
      *          DocOption::SCHEMA_PATH
      *
      *        Optional:
-     *          EntryPointOption::DB_CONNECTOR (used only when the application is running)
+     *          EntryPointOption::DB_HANDLER (used only when the application is running)
      *
      * @return DatabaseInterface The method returns a new data interface.
      *
@@ -100,7 +100,7 @@ class DatabaseInterface {
      * @see EntryPointOption::PROC_REPO_PATH
      * @see EntryPointOption::PROC_BASE_NS
      * @see DocOption::SCHEMA_PATH
-     * @see EntryPointOption::DB_CONNECTOR
+     * @see EntryPointOption::DB_HANDLER
      * @see setDbHandler
      */
     static public function getInstance($inName='default', array $inOptConfig=null) {
