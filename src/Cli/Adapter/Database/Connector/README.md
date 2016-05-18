@@ -1,4 +1,4 @@
-# Description
+# Introduction
 
 This namespace implements all "database connectors".
 
@@ -14,10 +14,11 @@ See [an example](https://github.com/dbeurive/backend/blob/master/src/Cli/Adapter
 
 Connectors' API is:
 
+  * `__construct(array $inOptConfiguration, $inOtpConnect=false)`
   * `getConfigurationParameters()` (static)
   * `checkConfiguration(array $inConfiguration)` (static)
-  * `__construct(array $inOptConfiguration, $inOtpConnect=false)`
   * `connect()`
+  * `getDatabaseHandler()`
  
 See [AbstractConnector](https://github.com/dbeurive/backend/blob/master/src/Cli/Adapter/Database/Connector/AbstractConnector.php).
 
