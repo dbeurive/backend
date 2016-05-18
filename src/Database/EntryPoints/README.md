@@ -1,4 +1,4 @@
-# introduction
+# Introduction
 
 API's entry points are:
 
