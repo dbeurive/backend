@@ -141,7 +141,7 @@ Note:
 
 # Synopsis
 
-## Document an SQL request
+## Documenting a SQL request
 
 Note: this is a fictional example.
 
@@ -171,7 +171,7 @@ By using constants:
 * You ensure that you don't make any typo.
 * You can rely on your IDE's search capacity.
 
-## Document a procedure
+## Documenting a procedure
 
 ```php
     public function getDescription() {
