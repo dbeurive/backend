@@ -40,7 +40,7 @@ The following command will extract the schema of the database and store it into 
 | db-port                   | TCP port used by the server to listen to incoming requests.    |
 | schema-path               | Path to the PHP file that will be used to store the schema.    |
 
-### Step 2: Generate the documentation for all API's entry points (SQL requests and procedures).
+### Step 2: Generate the documentation for all entry points (SQL requests and procedures).
 
 Once the schema has been extracted, you can scan all your SQL requests and all your procedures in order to generate the documentation.
 
@@ -75,9 +75,8 @@ A "configuration loader" is just a class the implements the method `load()`.
 
 Examples:
 
-* [\dbeurive\BackendTest\config\MySqlSchemaConfLoader](https://github.com/dbeurive/backend/blob/master/tests/config/MySqlSchemaConfLoader.php)
-* [\dbeurive\BackendTest\config\MySqlDocConfLoader](https://github.com/dbeurive/backend/blob/master/tests/config/MySqlDocConfLoader.php)
-
+* [MySqlSchemaConfLoader](https://github.com/dbeurive/backend/blob/master/tests/config/MySqlSchemaConfLoader.php) 
+* [MySqlDocConfLoader](https://github.com/dbeurive/backend/blob/master/tests/config/MySqlDocConfLoader.php)
 
 Using the configuration loader is pretty simple:
 
@@ -91,6 +90,5 @@ Or
 backend db:doc-writer --config-loader=\\dbeurive\\BackendTest\\config\\MySqlDocConfLoader
 ```
 
-* See [MySqlSchemaConfLoader](https://github.com/dbeurive/backend/blob/master/tests/config/MySqlSchemaConfLoader.php) 
-* See [MySqlDocConfLoader](https://github.com/dbeurive/backend/blob/master/tests/config/MySqlDocConfLoader.php)
+
 
