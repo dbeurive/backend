@@ -32,16 +32,9 @@ If you access your database through this API, then you can get a SQLite database
 # Contents
 
 * [Installation notes](https://github.com/dbeurive/backend/blob/master/doc/INSTALL.md)
-* General description of entry points (SQL requests and procedures)
-  * [Writing SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/README.md)
-  * [Using SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/Application/README.md)
-* Writing entry points
-  * [Procedures](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/Application/Procedure/README.md)
-  * [SQL requests](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/Application/Sql/README.md)
-* [Documenting entry points](https://github.com/dbeurive/backend/blob/master/src/Database/Entrypoints/Description/README.md)
-* [The database connector](https://github.com/dbeurive/backend/blob/master/src/Database/Connector/README.md)
-* [The database interface](https://github.com/dbeurive/backend/blob/master/src/Database/README.md)
-* [Extension for PHP Unit](https://github.com/dbeurive/backend/tree/master/src/Phpunit)
+* [Writing and using SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/README.md)
+* [Documenting SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/Description/README.md)
+* [Using the database interface](https://github.com/dbeurive/backend/blob/master/src/Database/README.md)
 * [Generating the database's access layer documentation](https://github.com/dbeurive/backend/blob/master/src/Cli/Bin/README.md) - that is: the SQLite database.
 
 # Additional notes
