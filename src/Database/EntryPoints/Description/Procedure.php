@@ -123,7 +123,7 @@ class Procedure extends \dbeurive\Backend\Database\EntryPoints\Description\Abstr
      * @see $__inOptionalFields
      */
     public function addOptionalInputField($inFieldName, $inDescription=null) {
-        $this->__inOptionalFields[] = array(self::KEY_NAME        => $inFieldName,
+        $this->__inOptionalFields[] = array(self::KEY_NAME => $inFieldName,
             self::KEY_DESCRIPTION => $inDescription);
         return $this;
     }
@@ -155,7 +155,7 @@ class Procedure extends \dbeurive\Backend\Database\EntryPoints\Description\Abstr
      * @see $__inOptionalParams
      */
     public function addOptionalInputParam($inParamName, $inDescription=null) {
-        $this->__inOptionalParams[] = array(self::KEY_NAME        => $inParamName,
+        $this->__inOptionalParams[] = array(self::KEY_NAME => $inParamName,
             self::KEY_DESCRIPTION => $inDescription);
         return $this;
     }
@@ -168,7 +168,7 @@ class Procedure extends \dbeurive\Backend\Database\EntryPoints\Description\Abstr
      * @return $this
      */
     function addOutputField($inFieldName, $inDescription=null) {
-        $this->__outputFields[] = array(self::KEY_NAME        => $inFieldName,
+        $this->__outputFields[] = array(self::KEY_NAME => $inFieldName,
             self::KEY_DESCRIPTION => $inDescription);
         return $this;
     }
