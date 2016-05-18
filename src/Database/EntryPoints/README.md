@@ -80,12 +80,15 @@ class Authenticate extends AbstractSql
 
 See:
 
-* [API common to SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/AbstractEntryPoint.php)
-* [API for an SQL request](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/AbstractSql.php)
-* [Elements of documentation common to SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/Description/AbstractDescription.php)
-* [Elements of documentation specific to SQL requests](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/Description/Sql.php)
-* [Examples of SQL requests](https://github.com/dbeurive/backend/tree/master/tests/EntryPoints/Brands/MySql/Sqls/User)
-
+* Documentation
+  * [Documenting an SQL request](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/Description/README.md)
+* Examples
+  * [Examples of SQL requests](https://github.com/dbeurive/backend/tree/master/tests/EntryPoints/Brands/MySql/Sqls/User)
+* Code
+  * [API common to SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/AbstractEntryPoint.php)
+  * [API for an SQL request](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/AbstractSql.php)
+  * [Elements of documentation common to SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/Description/AbstractDescription.php)
+  * [Elements of documentation specific to SQL requests](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/Description/Sql.php)
 
 
 
@@ -145,11 +148,18 @@ class Authenticate extends AbstractProcedure {
 }
 ```
 
-* [API common to SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/AbstractEntryPoint.php)
-* [API for a procedure](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/AbstractProcedure.php)
-* [Elements of documentation common to SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/Description/AbstractDescription.php)
-* [Elements of documentation specific to procedures](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/AbstractProcedure.php)
-* [Examples of procedures](https://github.com/dbeurive/backend/tree/master/tests/EntryPoints/Brands/MySql/Procedures/User)
+See:
+
+* Documentation
+  * [Documenting a procedure](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/Description/README.md)
+* Examples
+  * [Examples of procedures](https://github.com/dbeurive/backend/tree/master/tests/EntryPoints/Brands/MySql/Procedures/User)
+* Code
+  * [API common to SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/AbstractEntryPoint.php)
+  * [API for an SQL request](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/AbstractSql.php)
+  * [Elements of documentation common to SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/Description/AbstractDescription.php)
+  * [Elements of documentation specific to procedures](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/AbstractProcedure.php)
+
 
 
 
