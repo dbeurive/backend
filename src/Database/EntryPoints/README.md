@@ -27,41 +27,54 @@ You can think about traditional databases' stored procedures that act as an acce
 
 ## Writing an SQL request
 
-All SQL requests share a common (prefixed) namespace.
-In this example, we decide that the namespace for all SQL requests start with `dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls`.
-`dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls` is the "base namespace" for SQL request.
+All SQL requests share a common (prefixed) namespace and a common (prefixed) path.
 
-> Fully qualified names and paths of the classes that implement SQL requests follow the [PSR4 specification](http://www.php-fig.org/psr/psr-4/).
-> Therefore, all classes that implement SQL requests are stored under a common directory.
+In this example, we decide that:
 
-Specify the namespace:
+* Base namespace: `dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls`
+* Base path: `/backend/tests/EntryPoints/Brands/MySql/Sqls`
+
+> Fully qualified class names and paths of the classes that implement SQL requests must follow the [PSR4 specification](http://www.php-fig.org/psr/psr-4/).
+
+| Path to the class that implements the SQL request                  | Fully qualified name of the class                                     | Name of the request |   
+|--------------------------------------------------------------------|-----------------------------------------------------------------------|---------------------|
+| /backend/tests/EntryPoints/Brands/MySql/Sqls/User/Authenticate.php | \dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls\User\Authenticate | User/Authenticate   |
+| /backend/tests/EntryPoints/Brands/MySql/Sqls/User/Delete.php       | \dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls\User\Delete       | User/Delete         |
+| ...                                                                | ...                                                                   | ...                 |
+
+
+Below, we create the SQL request which name will be `User/Authenticate`.
 
 ```php
 namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls\User;
-```
-
-Then create the class:
-
-```php
 use dbeurive\Backend\Database\EntryPoints\AbstractSql;
 
 class Authenticate extends AbstractSql
 {
     // Execute request.
     public function execute($inExecutionConfig) {
+    
+        // Retrieve the database handler.
+        // What you get is what you set during the configuration of the database interface.
+        // Here, we suppose that we've set an instance of \PFO.
+        // However, you can set whatever database handler that you may think about.
+        
         /* @var \PDO $pdo */
         $pdo = $this->getDbh();
         
         // ...
+        
+        // Return the result. You are free to return the type of data you want.
+        return $result;
     }
 
     // Document the request.
     public function getDescription() {
-        $doc = new \dbeurive\Backend\Database\EntryPoints\Description\Sql();
+        $documentation = new \dbeurive\Backend\Database\EntryPoints\Description\Sql();
 
-        /* ... */
+        // Add information to the documentation.
 
-        return $doc;
+        return $documentation;
     }
 ```
 
@@ -78,22 +91,25 @@ See:
 
 ## Writing a procedure
 
-All procedures share a common (prefixed) namespace.
-In this example, we decide that the namespace for all procedures start with `dbeurive\BackendTest\EntryPoints\Brands\MySql\Procedures`.
-`dbeurive\BackendTest\EntryPoints\Brands\MySql\Procedures` is the "base namespace" for procedures.
+All SQL requests share a common (prefixed) namespace and a common (prefixed) path.
 
-> Fully qualified names and paths of the classes that implement procedures follow the [PSR4 specification](http://www.php-fig.org/psr/psr-4/).
-> Therefore, all classes that implement procedures are stored under a common directory.
+In this example, we decide that:
 
-Specify the namespace:
+* Base namespace: `dbeurive\BackendTest\EntryPoints\Brands\MySql\Procedures`
+* Base path: `/backend/tests/EntryPoints/Brands/MySql/Procedures`
+
+> Fully qualified class names and paths of the classes that implement procedures must follow the [PSR4 specification](http://www.php-fig.org/psr/psr-4/).
+
+| Path to the class that implements the procedure                          | Fully qualified name of the class                                           | Name of the procedure |   
+|--------------------------------------------------------------------------|-----------------------------------------------------------------------------|-----------------------|
+| /backend/tests/EntryPoints/Brands/MySql/Procedures/User/Authenticate.php | \dbeurive\BackendTest\EntryPoints\Brands\MySql\Procedures\User\Authenticate | User/Authenticate     |
+| /backend/tests/EntryPoints/Brands/MySql/Procedures/User/Delete.php       | \dbeurive\BackendTest\EntryPoints\Brands\MySql\Procedures\User\Delete       | User/Delete           |
+| ...                                                                      | ...                                                                         | ...                   |
+
+Below, we create the procedure which name will be `User/Authenticate`.
 
 ```php
-namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Procedures\User
-```
-
-Then create the class:
-
-```php
+namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Procedures\User;
 use dbeurive\Backend\Database\EntryPoints\AbstractProcedure;
 
 class Authenticate extends AbstractProcedure {
@@ -101,15 +117,30 @@ class Authenticate extends AbstractProcedure {
     const SQL_AUTHENTICATE = 'User/Authenticate';
 
     // Execute the procedure.
-    public function execute($inExecutionConfig) { /* ... */ }
+    public function execute($inExecutionConfig) {
+    
+        // Retrieve a SQL request.
+        $sql = $this->getSql(self::SQL_AUTHENTICATE);
+        
+        // ...
+        
+        // Execute the request.
+        $requestConfiguration = [ /* ... */ ];
+        $resultSql = $sql->execute($requestConfiguration);
+    
+        // ...
+        
+        // Return the result. You are free to return the type of data you want.
+        return $result;
+    }
 
     // Document the procedure/
     public function getDescription() {
-        $doc = new Description\Procedure();
+        $documentation = new Description\Procedure();
 
-        /* ... */
+        // Add information to the documentation.
 
-        return $doc;
+        return $documentation;
     }
 }
 ```
@@ -128,22 +159,29 @@ class Authenticate extends AbstractProcedure {
 
 ```php
 
+    // Execute the procedure.
     public function execute($inExecutionConfig) {
+    
+        // Retrieve a SQL request.
         $sql = $this->getSql(self::SQL_AUTHENTICATE);
-        $resultSql = $sql->execute($inExecutionConfig);
-        $result = new ProcedureResult(ProcedureResult::STATUS_SUCCESS,
-            $resultSql->getDataSets(),
-            [self::KEY_AUTHENTICATED => ! $resultSql->isDataSetsEmpty()]
-        );
-        return $result;
+        
+        // ...
+        
+        // Execute the request.
+        $requestConfiguration = [ /* ... */ ];
+        $resultSql = $sql->execute($requestConfiguration);
+    
+        // ...
+        
+        // Return the result. You are free to return the type of data you want.
+        $result;
     }
     
 ```
 
 > Please note that:
 > * You are free to pass any kind of data as execution configuration (`$inExecutionConfig`).
-> * You are free to return any kind of object. In this example we return an instance of `\dbeurive\BackendTest\EntryPoints\Result\ProcedureResult`.
->   However, you can define your own class for holding a result.
+> * You are free to return any kind of object. 
 
 See [examples](https://github.com/dbeurive/backend/tree/master/tests/EntryPoints/Brands/MySql/Procedures/User)
 
@@ -152,33 +190,36 @@ See [examples](https://github.com/dbeurive/backend/tree/master/tests/EntryPoints
 
 ## Calling an SQL request from the application
 
-We assume that `$di` is an instance if the database interface.
+We assume that `$dataInterface` is an instance of the database interface.
 
 ```php
 $request = $dataInterface->getSql('User/Authenticate');
 $result  = $request->execute(['user.login' => 'toto', 'user.password' => 'titi']);
 ```
 
-> 
+> Please note that:
+> * You are free to pass any kind of data for `$request->execute(...)`.
+> * The type of the value returned by the SQL request depends on you. You are free to return any type of data from SQL requests. 
 
-See [examples](https://github.com/dbeurive/backend/blob/master/tests/EntryPoints/UnitTests/MySql/Sqls/User/AuthenticateTest.php).
+See [examples](https://github.com/dbeurive/backend/blob/master/tests/EntryPoints/Brands/MySql/Sqls/User/Authenticate.php).
 
 
 
 
 ## Calling a procedure from the application
 
-We assume that `$di` is an instance if the database interface.
+We assume that `$dataInterface` is an instance of the database interface.
 
 ```php
-$procedure = $di->getProcedure('User/Authenticate');
-$procedure->setExecutionConfig(['user.login' => 'foo', 'user.password' => 'bar'])
-          ->execute();
+$procedure = $dataInterface->getProcedure('User/Authenticate');
+$result    = $procedure->execute(['user.login' => 'foo', 'user.password' => 'bar']);
 ```
 
-> Please note that you are free to pass any kind of data for `$procedure->setExecutionConfig(...)`.
+> Please note that
+> * You are free to pass any kind of data for `$procedure->execute(...)`.
+> * The type of the value returned by the procedure depends on you. You are free to return any type of data from procedures. 
 
-See [examples](https://github.com/dbeurive/backend/blob/master/tests/EntryPoints/UnitTests/MySql/Procedures/User/AuthenticateTest.php).
+See [examples](https://github.com/dbeurive/backend/blob/master/tests/EntryPoints/Brands/MySql/Procedures/User/Authenticate.php).
 
 
 
