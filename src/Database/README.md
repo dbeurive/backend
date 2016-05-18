@@ -46,7 +46,7 @@ See [how to write the use SQL requests and procedures](https://github.com/dbeuri
 
 # Initialization in details
 
-First you crate a database handler that you will use within your SQL requests.
+First you create a database handler that you will use within your SQL requests.
 In this example, we use an instance of PDO. But you can use any type of database handler. The choice is up to you. 
 
 ```php
