@@ -21,10 +21,15 @@ return call_user_func(function() {
     /**
      * This array contains the configuration required to open a connection to the MySql database.
      * Please, customise the values.
+     *
+     * !!! WARNING !!!
+     *
+     * You can change the name of the database. However, if you do so, then you must also modify the script that creates the database.
+     * See the file "tests/fixtures/MySql/schema.php".
      */
     $mysqlConf = [
         MySqlPdo::DB_HOST      => 'localhost',
-        MySqlPdo::DB_NAME      => 'phptools',
+        MySqlPdo::DB_NAME      => 'phptools',  // !!! WARNING !!! See the file "tests/fixtures/MySql/schema.php"
         MySqlPdo::DB_USER      => 'root',
         MySqlPdo::DB_PASSWORD  => '',
         MySqlPdo::DB_PORT      => 3306
