@@ -82,6 +82,8 @@ See:
 
 * Documentation
   * [Documenting an SQL request](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/Description/README.md)
+* Useful utility functions:
+  * [UtilMySql::developSql()](https://github.com/dbeurive/util/blob/master/README.md)
 * Examples
   * [Examples of SQL requests](https://github.com/dbeurive/backend/tree/master/tests/EntryPoints/Brands/MySql/Sqls/User)
 * Code

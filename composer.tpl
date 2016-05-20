@@ -13,7 +13,7 @@
   "require": {
     "symfony/console": "*",
     "dbeurive/input": "*",
-    "dbeurive/util": ">=1.0.16",
+    "dbeurive/util": ">=1.0.18",
     "phpunit/phpunit": "5.3.*"
   },
   "autoload": {

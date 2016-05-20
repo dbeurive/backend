@@ -32,6 +32,7 @@ If you access your database through this API, then you can get a SQLite database
 * [Documenting SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/Description/README.md)
 * [Using the database interface](https://github.com/dbeurive/backend/blob/master/src/Database/README.md)
 * [Generating the database's access layer documentation](https://github.com/dbeurive/backend/blob/master/src/Cli/Bin/README.md) - that is: the SQLite database.
+* See this utility to manipulate MySql SQL requests: [UtilMySql::developSql()](https://github.com/dbeurive/util/blob/master/README.md)
 
 # Additional notes
 

@@ -4,17 +4,17 @@ namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls\Profile;
 
 use dbeurive\BackendTest\EntryPoints\Result\SqlResult;
 use dbeurive\Backend\Database\EntryPoints\Description;
-use dbeurive\Backend\Database\SqlService\MySql;
 use dbeurive\Backend\Database\EntryPoints\AbstractSql;
 use dbeurive\BackendTest\EntryPoints\Constants\Entities;
 use dbeurive\BackendTest\EntryPoints\Constants\Actions;
 use dbeurive\Util\UtilArray;
 use dbeurive\Util\UtilString;
+use dbeurive\Util\UtilSql\MySql as UtilMySql;
 
 class Get extends AbstractSql {
 
     private static $__conditionFields = ['profile.fk_user_id'];
-    private $__sql = "SELECT     __PROFILE__
+    private $__sql = "SELECT     profile.*
                       FROM       profile
                       WHERE      `profile`.`fk_user_id`=?
                       ORDER BY   `profile`.`id`";
@@ -24,8 +24,7 @@ class Get extends AbstractSql {
      * @return string The method returns a string that represents the SQL request.
      */
     private function __sql() {
-        $profile = MySql::getFullyQualifiedFieldsAsSql('profile', $this->getTableFieldsNames('profile'));
-        return str_replace('__PROFILE__', $profile, $this->__sql);
+        return UtilMySql::developSql($this->__sql, $this->getDatabaseSchema(), true, true);
     }
 
     /**

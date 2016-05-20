@@ -4,11 +4,11 @@ namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls\User;
 
 use dbeurive\BackendTest\EntryPoints\Result\BaseResult;
 use dbeurive\Backend\Database\EntryPoints\Description;
-use dbeurive\Backend\Database\SqlService\MySql;
 use dbeurive\Backend\Database\EntryPoints\AbstractSql;
 
 use dbeurive\BackendTest\EntryPoints\Constants\Entities;
 use dbeurive\BackendTest\EntryPoints\Constants\Actions;
+use dbeurive\Util\UtilSql\MySql as UtilMySql;
 
 use dbeurive\Util\UtilArray;
 use dbeurive\Util\UtilString;
@@ -18,16 +18,14 @@ class Select extends AbstractSql {
     const KEY_LIMIT_FROM  = 'limit_from';
     const KEY_LIMIT_COUNT = 'limit_count';
     private static $__pdoParams = [self::KEY_LIMIT_FROM, self::KEY_LIMIT_COUNT];
-    private $__sql = "SELECT __USER__ FROM user LIMIT ?,?";
+    private $__sql = "SELECT user.* FROM user LIMIT ?,?";
 
     /**
      * Create the SQL request from the request's template.
      * @return string The method returns a string that represents the SQL request.
      */
     private function __getSql() {
-        $user = MySql::getFullyQualifiedQuotedFieldsAsSql('user', $this->getTableFieldsNames('user'));
-        $sql = preg_replace('/__USER__/', $user, $this->__sql);
-        return $sql;
+        return UtilMySql::developSql($this->__sql, $this->getDatabaseSchema(), true, true);
     }
 
     /**

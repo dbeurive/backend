@@ -127,7 +127,9 @@ class Provider
         require_once $this->__sqlRepositoryBasePath . DIRECTORY_SEPARATOR . $inName . '.php';
         $class = self::__getFullyQualifiedClassName($this->__sqlBaseNameSpace, $inName);
         $class = new \ReflectionClass($class);
+        /** @var AbstractSql $sql */
         $sql = $class->newInstanceArgs();
+        $sql->setDatabaseSchema($this->getDataInterface()->getDatabaseSchema());
         return $sql;
     }
 
@@ -145,7 +147,9 @@ class Provider
         require_once $this->__sqlRepositoryBasePath . DIRECTORY_SEPARATOR . $inName . '.php';
         $class = self::__getFullyQualifiedClassName($this->__procedureBaseNameSpace, $inName);
         $class = new \ReflectionClass($class);
+        /** @var AbstractProcedure $procedure */
         $procedure =  $class->newInstanceArgs();
+        $procedure->setDatabaseSchema($this->getDataInterface()->getDatabaseSchema());
         return $procedure;
     }
 
@@ -296,7 +300,7 @@ class Provider
             $class = new \ReflectionClass($class);
             /* @var AbstractSql $element */
             $element = $class->newInstanceArgs();
-            $element->setFieldsProvider( function($inName) { return $this->getDataInterface()->getTableFieldsNames($inName); } );
+            $element->setDatabaseSchema($this->getDataInterface()->getDatabaseSchema());
             /** @var \dbeurive\Backend\Database\EntryPoints\Description\AbstractDescription $description */
             $description = $element->getDescription();
             $description->setName_($name);

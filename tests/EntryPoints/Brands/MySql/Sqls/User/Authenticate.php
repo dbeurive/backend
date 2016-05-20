@@ -4,16 +4,18 @@ namespace dbeurive\BackendTest\EntryPoints\Brands\MySql\Sqls\User;
 
 use dbeurive\BackendTest\EntryPoints\Result\SqlResult;
 use dbeurive\Backend\Database\EntryPoints\Description;
-use dbeurive\Backend\Database\SqlService\MySql;
 use dbeurive\Backend\Database\EntryPoints\AbstractSql;
+
 
 use dbeurive\BackendTest\EntryPoints\Constants\Tags;
 use dbeurive\BackendTest\EntryPoints\Constants\Entities;
 use dbeurive\BackendTest\EntryPoints\Constants\Actions;
 use dbeurive\BackendTest\EntryPoints\Constants\OutputValues;
 
+
 use dbeurive\Util\UtilArray;
 use dbeurive\Util\UtilString;
+use dbeurive\Util\UtilSql\MySql as UtilMySql;
 
 
 /**
@@ -24,8 +26,8 @@ use dbeurive\Util\UtilString;
 class Authenticate extends AbstractSql
 {
     private static $__conditionFields = ['user.login', 'user.password'];
-    private $__sql = "SELECT __USER__,
-                             1 as '__VALUE__'
+    private $__sql = "SELECT user.*,
+                             1 as '__V__'
                       FROM   user
                       WHERE  `user`.`login`=?
                         AND  `user`.`password`=?";
@@ -36,10 +38,8 @@ class Authenticate extends AbstractSql
      * @return string The method returns a string that represents the SQL request.
      */
     private function __sql() {
-        $user = MySql::getFullyQualifiedFieldsAsSql('user', $this->getTableFieldsNames('user'));
-        $sql = str_replace('__USER__', $user, $this->__sql);
-        $sql = str_replace('__VALUE__', OutputValues::OUTPUT_VALUE_IS_AUTHENTICATED, $sql);
-        return $sql;
+        $sql = UtilMySql::developSql($this->__sql, $this->getDatabaseSchema(), true, true);
+        return str_replace('__V__', OutputValues::OUTPUT_VALUE_IS_AUTHENTICATED, $sql);
     }
 
     /**

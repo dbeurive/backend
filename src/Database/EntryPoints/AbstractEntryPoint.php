@@ -1,25 +1,58 @@
 <?php
 
+/**
+ * This file implements the base class for all entry points (SQL requests and procedures).
+ */
+
 namespace dbeurive\Backend\Database\EntryPoints;
 
+/**
+ * Class AbstractEntryPoint
+ *
+ * Base class for all entry points (SQL requests and procedures).
+ *
+ * @package dbeurive\Backend\Database\EntryPoints
+ */
 abstract class AbstractEntryPoint
 {
     /**
-     * @var null|callable Function used to return the list of fields within a given table.
+     * @var null|array The schema of the database.
+     * @see \dbeurive\Backend\Database\DatabaseInterface
      */
-    private $__fieldsProvider = null;
+    private $__databaseSchema = null;
 
     /**
-     * Set the function used to return the list of fields within a given table.
-     * @param callable $inFieldsProvider Function used to return the list of fields within a given table.
+     * @var mixed Handler to the database (ex: an instance of PDO).
+     */
+    protected $__dbh = null;
+
+    /**
+     * Set the handler to the database.
+     * @param mixed $inDbh Handler to the database.
      * @throws \Exception
      */
-    public function setFieldsProvider(callable $inFieldsProvider) {
-        if (is_null($this->__fieldsProvider)) {
-            $this->__fieldsProvider = $inFieldsProvider;
+    public function setDbh($inDbh) {
+        if (is_null($this->__dbh)) {
+            $this->__dbh = $inDbh;
             return;
         }
         throw new \Exception("Improper use of the method " . __METHOD__ . " detected.");
+    }
+
+    /**
+     * Get the handler to the database.
+     * @return mixed The handler to the database.
+     */
+    protected function getDbh() {
+        return $this->__dbh;
+    }
+
+    /**
+     * Set the schema of the database.
+     * @param array $inSchema Schema of the database.
+     */
+    public function setDatabaseSchema(array $inSchema) {
+        $this->__databaseSchema = $inSchema;
     }
 
     /**
@@ -28,7 +61,16 @@ abstract class AbstractEntryPoint
      * @return array The list of fields within the table.
      */
     public function getTableFieldsNames($inTableName) {
-        return call_user_func($this->__fieldsProvider, $inTableName);
+        return $this->__databaseSchema[$inTableName];
+    }
+
+    /**
+     * Return the schema of the database.
+     * @return array|null
+     * @see __databaseSchema
+     */
+    public function getDatabaseSchema() {
+        return $this->__databaseSchema;
     }
 
     /**

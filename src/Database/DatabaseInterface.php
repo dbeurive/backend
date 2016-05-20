@@ -326,7 +326,7 @@ class DatabaseInterface {
         /** @var \dbeurive\Backend\Database\EntryPoints\AbstractSql $sql */
         $sql = $this->__entryPointProvider->getSql($inName);
         $sql->setDbh($this->__dbh);
-        $sql->setFieldsProvider(function($inName) { return $this->getTableFieldsNames($inName); } );
+        $sql->setDatabaseSchema($this->__databaseSchema);
         return $sql;
     }
 
@@ -341,6 +341,7 @@ class DatabaseInterface {
         /** @var \dbeurive\Backend\Database\EntryPoints\AbstractProcedure $procedure */
         $procedure = $this->__entryPointProvider->getProcedure($inName);
         $procedure->setSqlProvider(function($inName) { return $this->getSql($inName); });
+        $this->setDatabaseSchema($this->__databaseSchema);
         return $procedure;
     }
 

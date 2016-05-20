@@ -6,7 +6,6 @@
 
 namespace dbeurive\Backend\Database\EntryPoints;
 
-
 /**
  * Class ConfigurationParameter
  *

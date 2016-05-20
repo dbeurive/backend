@@ -1,7 +1,18 @@
 <?php
 
+/**
+ * This file implement the base class for all procedures.
+ */
+
 namespace dbeurive\Backend\Database\EntryPoints;
 
+/**
+ * Class AbstractProcedure
+ *
+ * Base class for all procedures.
+ *
+ * @package dbeurive\Backend\Database\EntryPoints
+ */
 
 abstract class AbstractProcedure extends AbstractEntryPoint
 {
