@@ -1,10 +1,6 @@
-- [Introduction](#a0)
-- [Overview](#a1)
-- [Contents](#a2)
-- [Additional notes](#a3)
+INSERT-TOC-HERE
 
-
-# <a name="a0"></a>Introduction
+# Introduction
 
 Although ORM exist, using SQL is a valid strategy.
 
@@ -27,11 +23,11 @@ If you access your database through this API, then you can get a SQLite database
 * You can download an example of the generated database [here](https://github.com/dbeurive/backend/blob/master/tests/cache/mysql_doc.sqlite).
 * Click [here](https://github.com/dbeurive/backend/blob/master/doc/SQLITE_USAGE.md) to have an overview of what you can do with the SQLite database that contains the generated documentation.
 
-# <a name="a1"></a>Overview
+# Overview
 
 ![Generic overview](https://github.com/dbeurive/backend/blob/master/doc/overview.png)
 
-# <a name="a2"></a>Contents
+# Contents
 
 * [Installation notes](https://github.com/dbeurive/backend/blob/master/doc/INSTALL.md)
 * [Writing and using SQL requests and procedures](https://github.com/dbeurive/backend/blob/master/src/Database/EntryPoints/README.md)
@@ -40,7 +36,7 @@ If you access your database through this API, then you can get a SQLite database
 * [Generating the database's access layer documentation](https://github.com/dbeurive/backend/blob/master/src/Cli/Bin/README.md) - that is: the SQLite database.
 * See this utility to manipulate MySql SQL requests: [UtilMySql::developSql()](https://github.com/dbeurive/util/blob/master/README.md)
 
-# <a name="a3"></a>Additional notes
+# Additional notes
 
 * [Using the Makefile](https://github.com/dbeurive/backend/blob/master/doc/MAKEFILE.md)
 
